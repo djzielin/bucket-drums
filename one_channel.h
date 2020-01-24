@@ -21,15 +21,15 @@ private:
 	float delay_tunings[8]={1117, 1187, 1277, 1361, 1423, 1489, 1559, 1619}; 
 	
 	simple_moving_average *sma;
-	hit hit_pool[POOL_SIZE];
+	//hit hit_pool[POOL_SIZE];
 	int state=STATE_WAITING;
 	hit *current_hit;
-    wave_generator *our_tremolo_wave;
+    //wave_generator *our_tremolo_wave;
     
     //comb_filter our_comb;
-    chorus *our_chorus;
+    //chorus *our_chorus;
     
-    //TODO or look for oldest hit
+   /* //TODO or look for oldest hit
 	int find_free_slot()
 	{
 		bool blank_found=false;
@@ -59,7 +59,7 @@ private:
 		return oldest_index;
          
 
-	}      	 
+	}      	*/ 
 
 	
 
@@ -79,22 +79,24 @@ public:
     float sample_rate;
 
     
-    void set_tremolo_speed(float hz)
+   /* void set_tremolo_speed(float hz)
     {
        our_tremolo_wave->set_pitch(hz);
     }
+    */
     
 	one_channel(float _sample_rate)
 	{
 		sma=new simple_moving_average(5);
         sample_rate=_sample_rate;
-	    our_tremolo_wave=new wave_generator(sample_rate);
-	    our_tremolo_wave->set_pitch(440);
+        current_hit=new hit();
+	   // our_tremolo_wave=new wave_generator(sample_rate);
+	   // our_tremolo_wave->set_pitch(440);
 	    
 	   
-	       our_chorus=new chorus(sample_rate);
-	       our_chorus->set_delay_length(delay_tunings[7]);
-	       our_chorus->set_lfo_hz(1000);
+	   //    our_chorus=new chorus(sample_rate);
+	   //    our_chorus->set_delay_length(delay_tunings[7]);
+	   //    our_chorus->set_lfo_hz(1000);
 
 	    //printf("Done initing channel\n");
 	}
@@ -107,16 +109,16 @@ public:
 			float pow_sample=input*input;
 
 			//TODO sma tick here
-			float current_avg=sma->tick(pow_sample);
+			//float current_avg=sma->tick(pow_sample);
 			
-			if(current_avg>hit_threshold)
+			if(fabs(input)>hit_threshold) //no longer doing SMA
 		    {
 				state=STATE_HIT;
 				counter=0;
        
-				int free_slot=find_free_slot();
+				//int free_slot=find_free_slot();
 				//int free_slot=0; //make monophonic
-				current_hit=&hit_pool[free_slot];
+				//current_hit=&hit_pool[free_slot];
 				current_hit->reset();
 				//current_hit->set_low_pass(0.0f);
 				current_hit->set_channel(this);
@@ -130,29 +132,22 @@ public:
 		{
 			current_hit->add_sample(input);
 
-			if(counter>=2500) 
+			if(counter>=5000) 
       	 	{	
       	 		state=STATE_WAITING;
       		  	current_hit->recording_done();
           		//rt_printf("  Counter expired, returning to STATE_WAITING\n");
-          		
-          	    //reset sma
+
       	 	}
       	 	
       	 	counter++;
-		}   
-        
-         float out=0.0f;
-         for(int i=0;i<POOL_SIZE;i++) 
-         {
-               out+=hit_pool[i].tick();
-         }
-         
-         total_samples++;
-         
+		}
+       
+        float out=current_hit->tick();
+  
          //out+=our_chorus->tick(out);
-         if(our_tremolo_wave->get_hz()>0.0f)
-           out=out*our_tremolo_wave->tick_square(1.0); //*2.0f-1.0f;
+         //if(our_tremolo_wave->get_hz()>0.0f)
+         //  out=out*our_tremolo_wave->tick_square(1.0); //*2.0f-1.0f;
          return out;
 	}
 };

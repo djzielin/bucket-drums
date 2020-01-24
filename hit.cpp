@@ -57,6 +57,7 @@
         samples_available=2500;
         time_running=0;
         retrig_count=0;
+        play_index=0;
         
         //extend_count=0;
 		//extend_index=0;
@@ -103,19 +104,29 @@
 	float hit::calc_normal_sample()
 	{
 		
-		float env= env_precompute[samples_played];
-		//float index_floored=floor(play_index);
-		//float percent_current_sample=1.0f-(play_index-index_floored);
-		//float percent_next_sample=1.0f-percent_current_sample;
+		//float env= env_precompute[samples_played];
 		
-		//int ind1=(int)index_floored;
-		//int ind2=ind1+1;
+		float index_floored=floor(play_index);
+		float percent_current_sample=1.0f-(play_index-index_floored);
+		float percent_next_sample=1.0f-percent_current_sample;
 		
-		//float sample=(content[ind1]*percent_current_sample+content[ind2]*percent_next_sample)*env; //now with linear interpolation
+		int ind1=(int)index_floored;
+		int ind2=ind1+1;
 		
-        float sample=content[(int)play_index]; //no interpolation
+		float sample=(content[ind1]*percent_current_sample+content[ind2]*percent_next_sample);
+		
+        /*float sample=content[(int)play_index]; //no interpolation
+		play_index+=0.5f;
+		
+		if(play_index2<samples_available )
+		{
+		  sample+=content[(int)play_index2];
+		  play_index2+=0.77777;
+		}*/
 		play_index+=advance_amount;
-	
+		float percent_complete=play_index/10000.0f;
+		advance_amount=0.5f*(1.0-percent_complete);
+		
 	 	return sample;
 		
 		
@@ -143,15 +154,15 @@
 		   return 0.0f;
 		}
 		
-		if(samples_played>=our_channel->env_time)
-		{
-		   //rt_printf("  limiting envelope. stopping playback");
-		   playing=false;
-		   return 0.0f;
-		}
+	//	if(samples_played>=our_channel->env_time)
+	//	{
+	//	   //rt_printf("  limiting envelope. stopping playback");
+//		   playing=false;
+//		   return 0.0f;
+//		}
 		
 		
-		
+		/*
 		
 		if(our_channel->retrig_max > 0) //TODO - store these in a retrig buffer
 		{
@@ -182,10 +193,11 @@
 				
 			}
 		}
-		else //regular render
+		*/
+		///else //regular render
 		{
 			sample=calc_normal_sample();
-			sample=distortion_clamp(sample*our_channel->distortion_amount)*our_channel->volume;
+			//sample=distortion_clamp(sample*our_channel->distortion_amount)*our_channel->volume;
 			samples_played++;
 			
 		}

@@ -19,6 +19,7 @@ private:
 	float *content;
 	float samples_available;
 	float play_index;
+	float play_index2;
 	float advance_amount;
 	int rec_index;
 	int samples_played;

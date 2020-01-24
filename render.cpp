@@ -5,6 +5,7 @@
 #include <cmath>
 #include <Midi.h>
 #include "distortion.h"
+#include <Scope.h>
 
 unsigned int sample_rate;
 
@@ -12,6 +13,7 @@ unsigned int sample_rate;
 #include "one_channel.h"
 one_channel *snare_channel;
 one_channel *kick_channel;
+Scope scope;
 
 Midi midi;
 const char* gMidiPort0 = "hw:1,0,0";
@@ -93,13 +95,6 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 			case 9:
 				kick_channel->volume=float_val;
 				break;		
-			case 5:
-				snare_channel->set_tremolo_speed(float_val*1000.0f);
-				break;		
-			case 12:
-				kick_channel->set_tremolo_speed(float_val*1000.0f);
-				break;		
-				
 			case 28:
 				if(val==127)
 				   kick_channel->retrig_length=calc_cycle_length(26); //D
@@ -174,6 +169,8 @@ bool setup(BelaContext *context, void *userData)
     printf("about to setup kick channel...\n");
     kick_channel=new one_channel(sample_rate);
     
+    scope.setup(4, context->audioSampleRate);
+
 	return true;
 }    
 
@@ -185,30 +182,17 @@ void render(BelaContext *context, void *userData)
 
 	for(unsigned int n = 0; n < context->audioFrames; n++) 
 	{   
-		float snare_sample=distortion_clamp(analogRead(context, n, 0)); //keep within -1 to 1
-		float kick_sample= distortion_clamp(analogRead(context, n, 1)); //keep within -1 to 1
-		
-		if(skip_first_samples==false)
-		{
-			snare_sample=0.0f;
-			kick_sample=0.0f;
-			
-			skip_count++;
-			
-			if(skip_count>100000) //first second or two is junk, throw away!
-			{
-				skip_first_samples=true;
-				//rt_printf("ready to make music!\n");
-			}
-			
-			
-		}
+		float snare_sample=distortion_clamp(audioRead(context, n, 0)); //keep within -1 to 1
+		float kick_sample= distortion_clamp(audioRead(context, n, 1)); //keep within -1 to 1
 		
 		float snare_out = snare_channel->tick(snare_sample);
 		float kick_out  = kick_channel->tick(kick_sample);
 		
-        analogWrite(context,n,0,distortion_clamp(snare_out)); //keep within -1 to 1
-        analogWrite(context,n,1,distortion_clamp(kick_out )); //keep within -1 to 1
+        audioWrite(context,n,0,distortion_clamp(snare_out)); //keep within -1 to 1
+        audioWrite(context,n,1,distortion_clamp(kick_out )); //keep within -1 to 1
+        
+        scope.log(snare_sample,kick_sample,snare_out,kick_out );
+
    }
    
 }
