@@ -14,6 +14,9 @@ private:
 	float low_pass_B;
 	float low_pass_prev;
 	
+	  float release_slope=112;
+     float release_intercept=28;
+	
 	one_channel *our_channel;
 	
 	float *content;
@@ -23,13 +26,14 @@ private:
 	float advance_amount;
 	int rec_index;
 	int samples_played;
+	float max_transient_sample;
 	
 	float prev_sample;
 	
 	//int samples_to_play;
 	//int output;
 	
-
+    int transient_detection_time_samples;
 	int retrig_count=0;
 	float retrig_buffer[20000];
 	/*int extend_max=10;
@@ -43,7 +47,9 @@ private:
     const float atan_scaler=2.0/M_PI;
     
 public:
+	void set_release_parameters(float transient_detection_time, float slope, float intercept);
     void set_channel(one_channel *oc);
+  
     hit();
     void recording_done();
     void set_low_pass(float amount);

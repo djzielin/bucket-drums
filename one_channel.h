@@ -2,6 +2,7 @@
 #define MAXIMUM_LENGTH 44100
 #define STATE_WAITING  0
 #define STATE_HIT      1
+#define STATE_READY_FOR_INTERRUPTION 2
 
 #include "hit.h"
 #include "simple_moving_average.h"
@@ -24,6 +25,8 @@ private:
 	//hit hit_pool[POOL_SIZE];
 	int state=STATE_WAITING;
 	hit *current_hit;
+ 
+   
     //wave_generator *our_tremolo_wave;
     
     //comb_filter our_comb;
@@ -66,7 +69,8 @@ private:
 public:
     //parameters from midi controller
 	float hit_threshold=0.1f; 
-    
+    int release_time;
+    	
     int env_time=5000; //TODO
     bool env_do_gate=false;
     bool env_do_exponential=false;
@@ -78,6 +82,10 @@ public:
     unsigned int total_samples=0;
     float sample_rate;
 
+    void set_hit_release_parameters(float transient_detection_time, float slope, float intercept)
+    {
+       current_hit->set_release_parameters(transient_detection_time, slope,intercept);
+    }
     
    /* void set_tremolo_speed(float hz)
     {
@@ -87,7 +95,7 @@ public:
     
 	one_channel(float _sample_rate)
 	{
-		sma=new simple_moving_average(5);
+		//sma=new simple_moving_average(5);
         sample_rate=_sample_rate;
         current_hit=new hit();
 	   // our_tremolo_wave=new wave_generator(sample_rate);
@@ -101,30 +109,24 @@ public:
 	    //printf("Done initing channel\n");
 	}
 
+    void hit_happened()
+    {
+    	rt_printf("hit happened!\n");
+    		state=STATE_HIT;
+				counter=0;
+				current_hit->reset();
+				release_time=5000;
+				current_hit->set_channel(this);
+				current_hit->set_advance_amount(0.5f); //pitch shift amount here
+    }
 
 	float tick(float input)
 	{
 		if(state==STATE_WAITING )
 		{
-			float pow_sample=input*input;
-
-			//TODO sma tick here
-			//float current_avg=sma->tick(pow_sample);
-			
 			if(fabs(input)>hit_threshold) //no longer doing SMA
 		    {
-				state=STATE_HIT;
-				counter=0;
-       
-				//int free_slot=find_free_slot();
-				//int free_slot=0; //make monophonic
-				//current_hit=&hit_pool[free_slot];
-				current_hit->reset();
-				//current_hit->set_low_pass(0.0f);
-				current_hit->set_channel(this);
-				current_hit->set_advance_amount(0.5f); //pitch shift amount here
-				
-				//rt_printf("HIT! at time: %d\n",total_samples);
+		    	hit_happened();
 		    }
 		}
       
@@ -132,16 +134,24 @@ public:
 		{
 			current_hit->add_sample(input);
 
+
 			if(counter>=5000) 
       	 	{	
       	 		state=STATE_WAITING;
       		  	current_hit->recording_done();
           		//rt_printf("  Counter expired, returning to STATE_WAITING\n");
-
       	 	}
-      	 	
+      	 	if(counter>=release_time)
+      	 	{
+      	 		if(fabs(input)>hit_threshold) //no longer doing SMA
+      	 		{
+      	 			hit_happened();
+      	 		}
+      	 	}
       	 	counter++;
 		}
+		
+		
        
         float out=current_hit->tick();
   

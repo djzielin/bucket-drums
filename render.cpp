@@ -165,9 +165,12 @@ bool setup(BelaContext *context, void *userData)
 	
 	printf("about to setup snare channel...\n");
 	snare_channel=new one_channel(sample_rate);
+    snare_channel->set_hit_release_parameters(6.0f, 85,-5);
     
     printf("about to setup kick channel...\n");
     kick_channel=new one_channel(sample_rate);
+    kick_channel->set_hit_release_parameters(10.0f,112,28);
+
     
     scope.setup(4, context->audioSampleRate);
 
@@ -182,14 +185,14 @@ void render(BelaContext *context, void *userData)
 
 	for(unsigned int n = 0; n < context->audioFrames; n++) 
 	{   
-		float snare_sample=distortion_clamp(audioRead(context, n, 0)); //keep within -1 to 1
-		float kick_sample= distortion_clamp(audioRead(context, n, 1)); //keep within -1 to 1
+		float snare_sample=distortion_clamp(audioRead(context, n, 1)); //keep within -1 to 1
+		float kick_sample= distortion_clamp(audioRead(context, n, 0)); //keep within -1 to 1
 		
 		float snare_out = snare_channel->tick(snare_sample);
 		float kick_out  = kick_channel->tick(kick_sample);
 		
-        audioWrite(context,n,0,distortion_clamp(snare_out)); //keep within -1 to 1
-        audioWrite(context,n,1,distortion_clamp(kick_out )); //keep within -1 to 1
+        audioWrite(context,n,1,distortion_clamp(snare_out)); //keep within -1 to 1
+        audioWrite(context,n,0,distortion_clamp(kick_out )); //keep within -1 to 1
         
         scope.log(snare_sample,kick_sample,snare_out,kick_out );
 

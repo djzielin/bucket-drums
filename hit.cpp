@@ -58,6 +58,7 @@
         time_running=0;
         retrig_count=0;
         play_index=0;
+        max_transient_sample=0.0f;
         
         //extend_count=0;
 		//extend_index=0;
@@ -70,6 +71,15 @@
 	{
 	    return playing;
 	}
+	
+	void hit::set_release_parameters(float transient_detection_time, float slope, float intercept)
+    {
+       transient_detection_time_samples=transient_detection_time*44100.0f/1000.0;
+       release_slope=slope;
+       release_intercept=intercept;
+    }
+    
+	
 	
 	void hit::set_advance_amount(float adv)
 	{
@@ -93,6 +103,24 @@
 		//low_pass_prev=low_passed;
 		//content[rec_index]=low_passed;
 		
+		if(rec_index<260) //first 6ms (transient)
+		{
+			float sample_fabs=fabs(sample);
+			if(sample_fabs>max_transient_sample)
+			{
+				max_transient_sample=sample_fabs;
+			}
+		}
+		if(rec_index==260)
+		{
+			float release_time=(release_slope*max_transient_sample+release_intercept)*44.1;  //dangerous to hardcode to samplerate!!
+			if(release_time<880)
+			   release_time=880;
+			
+			rt_printf("computed release time: %d samples %.02f ms max transient: %.02f\n",(int)release_time,release_time/44100.0f*1000.0f,max_transient_sample);
+			
+			//our_channel->release_time=(int)release_time;
+		}
 		content[rec_index]=sample;
 		rec_index++;
 		playing=true;
@@ -124,7 +152,7 @@
 		  play_index2+=0.77777;
 		}*/
 		play_index+=advance_amount;
-		float percent_complete=play_index/10000.0f;
+		float percent_complete=play_index/5000.0f;
 		advance_amount=0.5f*(1.0-percent_complete);
 		
 	 	return sample;
