@@ -2,7 +2,6 @@
 #define MAXIMUM_LENGTH 44100
 #define STATE_WAITING  0
 #define STATE_HIT      1
-#define STATE_READY_FOR_INTERRUPTION 2
 
 #include "hit.h"
 #include "simple_moving_average.h"
@@ -71,11 +70,7 @@ public:
 	
     //parameters from midi controller
 	float hit_threshold=0.1f; 
-    int release_time;
-    	
-    int env_time=5000; //TODO
-    bool env_do_gate=false;
-    bool env_do_exponential=false;
+    float sma_multiplier=1.0f;
     
     int retrig_max=0;
     int retrig_length=3000;
@@ -85,48 +80,27 @@ public:
     float sample_rate;
     float current_sma=0;
     
-    void set_hit_release_parameters(float transient_detection_time, float slope, float intercept)
-    {
-       current_hit->set_release_parameters(transient_detection_time, slope,intercept);
-    }
-    
-   /* void set_tremolo_speed(float hz)
-    {
-       our_tremolo_wave->set_pitch(hz);
-    }
-    */
-    
-	one_channel(float _sample_rate)
+  	one_channel(float _sample_rate)
 	{
 		sma=new simple_moving_average(2000);
         sample_rate=_sample_rate;
         current_hit=new hit();
-	   // our_tremolo_wave=new wave_generator(sample_rate);
-	   // our_tremolo_wave->set_pitch(440);
-	    
-	   
-	   //    our_chorus=new chorus(sample_rate);
-	   //    our_chorus->set_delay_length(delay_tunings[7]);
-	   //    our_chorus->set_lfo_hz(1000);
-
-	    //printf("Done initing channel\n");
 	}
 
     void hit_happened()
     {
     	rt_printf("hit happened!\n");
-    		state=STATE_HIT;
-				counter=0;
-				current_hit->reset();
-				//sma->reset();
-				release_time=5000;
-				current_hit->set_channel(this);
-				current_hit->set_advance_amount(0.5f); //pitch shift amount here
+    	state=STATE_HIT;
+		counter=0;
+		current_hit->reset();
+    	//release_time=5000;
+		current_hit->set_channel(this);
+		current_hit->set_advance_amount(0.5f); //pitch shift amount here
     }
 
 	float tick(float input)
 	{
-		current_sma=sma->tick(fabs(input)*2.0f); //question: power or fabs of input?
+		current_sma=sma->tick(fabs(input)*sma_multiplier); //question: power or fabs of input?
 		//current_sma=sma->tick(fabs(input*input)*5.0f); //question: power or fabs of input?
 		
 		if(state==STATE_WAITING )
@@ -161,12 +135,10 @@ public:
 			}
 		}
 		
+	
+        float  out=current_hit->tick(); //could add input here or gating
        
-        float out=current_hit->tick();
-  
-         //out+=our_chorus->tick(out);
-         //if(our_tremolo_wave->get_hz()>0.0f)
-         //  out=out*our_tremolo_wave->tick_square(1.0); //*2.0f-1.0f;
+
          return out;
 	}
 };

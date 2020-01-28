@@ -6,7 +6,7 @@
 #include <Midi.h>
 #include "distortion.h"
 #include <Scope.h>
-
+#include "tapped_delay_line.h"
 unsigned int sample_rate;
 
 
@@ -64,10 +64,10 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
         		kick_channel->hit_threshold=float_val;
         		break;
     		case 2:
-				snare_channel->env_time=val*150;
+				//snare_channel->env_time=val*150;
 				break;
     		case 6:
-				kick_channel->env_time=val*150;
+				//kick_channel->env_time=val*150;
 				break;	 
 			case 15:
 				snare_channel->retrig_max=(int)(float_val*20.0f);
@@ -154,6 +154,9 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 	}
 }
 
+
+tapped_delay_line *td1;
+
 bool setup(BelaContext *context, void *userData)
 {
 	midi.readFrom(gMidiPort0);
@@ -165,13 +168,21 @@ bool setup(BelaContext *context, void *userData)
 	
 	printf("about to setup snare channel...\n");
 	snare_channel=new one_channel(sample_rate);
-    snare_channel->set_hit_release_parameters(6.0f, 85,-5);
+    snare_channel->sma_multiplier=1.0f;
+
     
     printf("about to setup kick channel...\n");
     kick_channel=new one_channel(sample_rate);
-    kick_channel->set_hit_release_parameters(10.0f,112,28);
+    kick_channel->sma_multiplier=2.0f;
 
-    
+    /*td1=new tapped_delay_line(sample_rate,1.0f,100);
+	
+	for(int i=0;i<100;i++)
+	{
+		float tap_time=(float)rand()/(float)RAND_MAX*0.100f; //0ms to 100ms;
+		td1->set_tap_time(tap_time,i);
+	}*/
+	
     scope.setup(3, context->audioSampleRate);
 
 	return true;
@@ -191,10 +202,13 @@ void render(BelaContext *context, void *userData)
 		float snare_out = snare_channel->tick(snare_sample);
 		float kick_out  = kick_channel->tick(kick_sample);
 		
-        audioWrite(context,n,1,distortion_clamp(snare_out)); //keep within -1 to 1
-        audioWrite(context,n,0,distortion_clamp(kick_out )); //keep within -1 to 1
+		//float raw_snare=snare_out;
+		//snare_out=td1->tick(raw_snare)*0.1f+raw_snare*0.75;
+		
+        audioWrite(context,n,1,distortion_atan(snare_out*2.0f)); //keep within -1 to 1
+        audioWrite(context,n,0,distortion_atan(kick_out*2.0f )); //keep within -1 to 1
         
-        scope.log(fabs(kick_sample), kick_channel->current_sma, kick_channel->current_hit->advance_amount );
+        scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount );
 
    }
    

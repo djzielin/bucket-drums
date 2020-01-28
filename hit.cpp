@@ -57,14 +57,9 @@
         samples_available=2500;
         time_running=0;
         retrig_count=0;
-        play_index=0;
         max_transient_sample=0.0f;
-        
-        //extend_count=0;
-		//extend_index=0;
-        //sign_changes_found=0;
-        
-        //samples_to_play=2500;
+        delay_hits_occured=0;
+        base_pitch=0.7f;
 	}
 	
 	bool hit::is_playing()
@@ -72,38 +67,18 @@
 	    return playing;
 	}
 	
-	void hit::set_release_parameters(float transient_detection_time, float slope, float intercept)
-    {
-       transient_detection_time_samples=transient_detection_time*44100.0f/1000.0;
-       release_slope=slope;
-       release_intercept=intercept;
-    }
-    
-	
-	
 	void hit::set_advance_amount(float adv)
 	{
 		advance_amount=adv;
 	}
 	
-	/*int search_for_last_threshold()
-	{
-		for(int i=samples_available-1;i>=0;i--)
-		{
-			if(content[i]>hit_threshold)
-			    return i;
-		}
-		
-		return -1;
-	}	*/	
-			
 	void hit::add_sample(float sample)
 	{
 		//float low_passed=low_pass_prev*low_pass_A+sample*low_pass_B;
 		//low_pass_prev=low_passed;
 		//content[rec_index]=low_passed;
 		
-		if(rec_index<260) //first 6ms (transient)
+		if(rec_index<500) //first 10ms (transient) TODO - don't have sample rate specific constants like this! Dangerous!
 		{
 			float sample_fabs=fabs(sample);
 			if(sample_fabs>max_transient_sample)
@@ -111,16 +86,7 @@
 				max_transient_sample=sample_fabs;
 			}
 		}
-		if(rec_index==260)
-		{
-			//float release_time=(release_slope*max_transient_sample+release_intercept)*44.1;  //dangerous to hardcode to samplerate!!
-		//	if(release_time<880)
-		//	   release_time=880;
-			
-		//	rt_printf("computed release time: %d samples %.02f ms max transient: %.02f\n",(int)release_time,release_time/44100.0f*1000.0f,max_transient_sample);
-			
-			//our_channel->release_time=(int)release_time;
-		}
+
 		content[rec_index]=sample;
 		rec_index++;
 		playing=true;
@@ -158,7 +124,7 @@
 		percent_complete=1.0f;
 		
 		float expo=exp(-1.0f*percent_complete);
-		advance_amount=0.0+0.5*expo;
+		advance_amount=base_pitch*expo;
 		
 	 	return sample;
 		
@@ -175,25 +141,35 @@
 	
 	float hit::tick()
 	{
+		
+		time_running++;
+
+		
 		float sample=0.0;
 		
 		if(playing==false) 
 			return 0.0f;
 		
+	
+		   if(delay_hits_occured<delay_hits_max)
+		   {
+		      if(time_running%delay_hits_spacing==0)
+		      {
+		      	  base_pitch-=0.05f;
+		   	      play_index=0;
+		   	      samples_played=0;
+		   	      delay_hits_occured++;
+		      }
+		   }
+		
 		if(play_index>=samples_available )
-		{
-		   //rt_printf("  no more samples left. stopping playback");
-		   playing=false;
-		   return 0.0f;
-		}
+		{   
+			if(delay_hits_occured>delay_hits_max)
+			   playing=false;
+		 	return 0.0f;
+		}    
 		
-	//	if(samples_played>=our_channel->env_time)
-	//	{
-	//	   //rt_printf("  limiting envelope. stopping playback");
-//		   playing=false;
-//		   return 0.0f;
-//		}
-		
+
 		
 		/*
 		
@@ -235,6 +211,5 @@
 			
 		}
 		
-		time_running++;
 		return sample; 
 	}
