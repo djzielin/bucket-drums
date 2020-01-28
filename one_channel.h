@@ -24,7 +24,7 @@ private:
 	simple_moving_average *sma;
 	//hit hit_pool[POOL_SIZE];
 	int state=STATE_WAITING;
-	hit *current_hit;
+
  
    
     //wave_generator *our_tremolo_wave;
@@ -67,6 +67,8 @@ private:
 	
 
 public:
+	hit *current_hit;
+	
     //parameters from midi controller
 	float hit_threshold=0.1f; 
     int release_time;
@@ -81,7 +83,8 @@ public:
     float volume=1.0f;
     unsigned int total_samples=0;
     float sample_rate;
-
+    float current_sma=0;
+    
     void set_hit_release_parameters(float transient_detection_time, float slope, float intercept)
     {
        current_hit->set_release_parameters(transient_detection_time, slope,intercept);
@@ -95,7 +98,7 @@ public:
     
 	one_channel(float _sample_rate)
 	{
-		//sma=new simple_moving_average(5);
+		sma=new simple_moving_average(2000);
         sample_rate=_sample_rate;
         current_hit=new hit();
 	   // our_tremolo_wave=new wave_generator(sample_rate);
@@ -115,6 +118,7 @@ public:
     		state=STATE_HIT;
 				counter=0;
 				current_hit->reset();
+				//sma->reset();
 				release_time=5000;
 				current_hit->set_channel(this);
 				current_hit->set_advance_amount(0.5f); //pitch shift amount here
@@ -122,9 +126,12 @@ public:
 
 	float tick(float input)
 	{
+		current_sma=sma->tick(fabs(input)*2.0f); //question: power or fabs of input?
+		//current_sma=sma->tick(fabs(input*input)*5.0f); //question: power or fabs of input?
+		
 		if(state==STATE_WAITING )
 		{
-			if(fabs(input)>hit_threshold) //no longer doing SMA
+			if(fabs(input)>(current_sma+hit_threshold))
 		    {
 		    	hit_happened();
 		    }
@@ -132,25 +139,27 @@ public:
       
 		if(state==STATE_HIT)
 		{
-			current_hit->add_sample(input);
-
-
-			if(counter>=5000) 
+			if(counter>=10000)
       	 	{	
+      	 		current_hit->add_sample(input);
       	 		state=STATE_WAITING;
       		  	current_hit->recording_done();
-          		//rt_printf("  Counter expired, returning to STATE_WAITING\n");
       	 	}
-      	 	if(counter>=release_time)
+      	 	else if(counter>=1500) //wait for transient to go away
       	 	{
-      	 		if(fabs(input)>hit_threshold) //no longer doing SMA
+      	 		if(fabs(input)>(current_sma+hit_threshold))
       	 		{
       	 			hit_happened();
+      	 			current_hit->add_sample(input);
+      	 		    counter++;
       	 		}
       	 	}
-      	 	counter++;
+      	 	else
+      	 	{   
+      	 		current_hit->add_sample(input);
+      	 		counter++;
+			}
 		}
-		
 		
        
         float out=current_hit->tick();

@@ -22,8 +22,8 @@ private:
 	float *content;
 	float samples_available;
 	float play_index;
-	float play_index2;
-	float advance_amount;
+	//float play_index2;
+	
 	int rec_index;
 	int samples_played;
 	float max_transient_sample;
@@ -47,6 +47,8 @@ private:
     const float atan_scaler=2.0/M_PI;
     
 public:
+     float advance_amount;
+
 	void set_release_parameters(float transient_detection_time, float slope, float intercept);
     void set_channel(one_channel *oc);
   

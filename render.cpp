@@ -172,7 +172,7 @@ bool setup(BelaContext *context, void *userData)
     kick_channel->set_hit_release_parameters(10.0f,112,28);
 
     
-    scope.setup(4, context->audioSampleRate);
+    scope.setup(3, context->audioSampleRate);
 
 	return true;
 }    
@@ -194,7 +194,7 @@ void render(BelaContext *context, void *userData)
         audioWrite(context,n,1,distortion_clamp(snare_out)); //keep within -1 to 1
         audioWrite(context,n,0,distortion_clamp(kick_out )); //keep within -1 to 1
         
-        scope.log(snare_sample,kick_sample,snare_out,kick_out );
+        scope.log(fabs(kick_sample), kick_channel->current_sma, kick_channel->current_hit->advance_amount );
 
    }
    

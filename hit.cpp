@@ -113,11 +113,11 @@
 		}
 		if(rec_index==260)
 		{
-			float release_time=(release_slope*max_transient_sample+release_intercept)*44.1;  //dangerous to hardcode to samplerate!!
-			if(release_time<880)
-			   release_time=880;
+			//float release_time=(release_slope*max_transient_sample+release_intercept)*44.1;  //dangerous to hardcode to samplerate!!
+		//	if(release_time<880)
+		//	   release_time=880;
 			
-			rt_printf("computed release time: %d samples %.02f ms max transient: %.02f\n",(int)release_time,release_time/44100.0f*1000.0f,max_transient_sample);
+		//	rt_printf("computed release time: %d samples %.02f ms max transient: %.02f\n",(int)release_time,release_time/44100.0f*1000.0f,max_transient_sample);
 			
 			//our_channel->release_time=(int)release_time;
 		}
@@ -152,8 +152,13 @@
 		  play_index2+=0.77777;
 		}*/
 		play_index+=advance_amount;
-		float percent_complete=play_index/5000.0f;
-		advance_amount=0.5f*(1.0-percent_complete);
+
+		float percent_complete=samples_played/5000.0f;
+		if(percent_complete>1.0f)
+		percent_complete=1.0f;
+		
+		float expo=exp(-1.0f*percent_complete);
+		advance_amount=0.0+0.5*expo;
 		
 	 	return sample;
 		
