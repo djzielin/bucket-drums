@@ -23,16 +23,7 @@
         set_low_pass(0.0f);
         advance_amount=1.0f;
         reset();
-        
-        for(int i=0;i<3000;i++)
-		{
-		   if(i<1000)
-		     env_precompute[i]=1.0f;
-		  else if(i<5000)  
-		     env_precompute[i]=1.0f-((float)i-1000.0f)/4000.0f;
-    	  else
-    		  env_precompute[i]=0.0f;
-		}
+       
     }
     
     void hit::recording_done()
@@ -69,7 +60,7 @@
 	
 	void hit::set_advance_amount(float adv)
 	{
-		advance_amount=adv;
+		advance_amount=base_pitch;
 	}
 	
 	void hit::add_sample(float sample)
@@ -107,7 +98,7 @@
 		int ind1=(int)index_floored;
 		int ind2=ind1+1;
 		
-		float sample=(content[ind1]*percent_current_sample+content[ind2]*percent_next_sample);
+		float sample=(content[ind1]*percent_current_sample+content[ind2]*percent_next_sample); //TODO - do better then linear interpolation (ie cubic)
 		
         /*float sample=content[(int)play_index]; //no interpolation
 		play_index+=0.5f;
@@ -119,13 +110,19 @@
 		}*/
 		play_index+=advance_amount;
 
-		float percent_complete=samples_played/5000.0f;
-		if(percent_complete>1.0f)
-		percent_complete=1.0f;
+        if(our_channel->pitch_bend!=0.0f)
+        {
+           float inv_p=1.0f-our_channel->pitch_bend; //todo: cache - only recompute on parameter change
+           inv_p=inv_p*0.5f;
+           
+		   float percent_complete=samples_played/(inv_p*20000.0f); //TODO - dont have in terms of samples!!
+		   if(percent_complete>1.0f)
+	       	percent_complete=1.0f;
 		
-		float expo=exp(-1.0f*percent_complete);
-		advance_amount=base_pitch*expo;
-		
+	       float expo=exp(-1.0f*percent_complete);
+		   advance_amount=base_pitch*expo;
+        }
+        
 	 	return sample;
 		
 		
@@ -170,46 +167,14 @@
 		}    
 		
 
+	    sample=calc_normal_sample();
+	    
+		//sample=distortion_clamp(sample*our_channel->distortion_amount)*our_channel->volume;
+		samples_played++;
 		
-		/*
-		
-		if(our_channel->retrig_max > 0) //TODO - store these in a retrig buffer
-		{
-			if(retrig_count==0)
-			{
-				sample=calc_normal_sample();
-				sample=distortion_clamp(sample*our_channel->distortion_amount)*our_channel->volume;
-				retrig_buffer[samples_played]=sample; //store for later
-				samples_played++;
-			}
-			else
-			{
-			    sample=retrig_buffer[samples_played]; //look up from buffer
-			    samples_played++;
-
-			} 
-			   
-			if(retrig_count>our_channel->retrig_max)
-			{
-				playing=false;
-		        return 0.0f;
-			}
-			if(samples_played>(our_channel->retrig_length))
-			{
-				retrig_count++;
-				samples_played=0;
-				play_index=0;
-				
-			}
-		}
-		*/
-		///else //regular render
-		{
-			sample=calc_normal_sample();
-			//sample=distortion_clamp(sample*our_channel->distortion_amount)*our_channel->volume;
-			samples_played++;
-			
-		}
+		if(our_channel->gate_time<1.0f)     //DO GATING
+		   if(samples_played>(our_channel->gate_time*20000)) //TODO - dont do in terms of samples! 
+		      sample=0;
 		
 		return sample; 
 	}

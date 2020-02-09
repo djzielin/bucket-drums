@@ -29,7 +29,7 @@ private:
 	
 	float prev_sample;
 	
-	int delay_hits_max=7;
+	int delay_hits_max=0;
 	int delay_hits_occured=0;
 	int delay_hits_spacing=1000; 
 	

@@ -57,95 +57,68 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 		
 		switch (cc)
 		{
-			case 14:
-        		snare_channel->hit_threshold=float_val; //TODO - don't need whole range
+			case 1:
+			    rt_printf("cc%d: pitch bend1 - %.02f\n",cc,float_val);
+        		snare_channel->pitch_bend=float_val; 
         		break;
-        	case 18:
-        		kick_channel->hit_threshold=float_val;
+        	case 2:
+        		rt_printf("cc%d: pitch bend2 - %.02f\n",cc,float_val);
+        		kick_channel->pitch_bend=float_val; 
         		break;
-    		case 2:
-				//snare_channel->env_time=val*150;
+    		case 3:
+				rt_printf("cc%d: gate time - %.02f\n",cc,float_val);
+				snare_channel->gate_time=float_val; 
+        		kick_channel->gate_time=float_val; 
 				break;
-    		case 6:
+    		case 4:
 				//kick_channel->env_time=val*150;
 				break;	 
-			case 15:
-				snare_channel->retrig_max=(int)(float_val*20.0f);
+			case 5:
+				//snare_channel->retrig_max=(int)(float_val*20.0f);
 				break;	
-			case 19:
-				kick_channel->retrig_max=(int)(float_val*20.0f);
+			case 6:
+				//kick_channel->retrig_max=(int)(float_val*20.0f);
 				break;		
-			case 3:
-				snare_channel->retrig_length=500+val*20;
-				rt_printf("snare retrig length: %d\n",snare_channel->retrig_length);
+			case 7:
+				//snare_channel->retrig_length=500+val*20;
+				//rt_printf("snare retrig length: %d\n",snare_channel->retrig_length);
 				break;		
 			case 8:
-				kick_channel->retrig_length=500+val*20;
-				rt_printf("kick retrig length: %d\n",kick_channel->retrig_length);
+				//kick_channel->retrig_length=500+val*20;
+				//rt_printf("kick retrig length: %d\n",kick_channel->retrig_length);
 				break;			
-			case 16:
-				snare_channel->distortion_amount=1.0f+float_val*100;
-				break;		
-			case 20:
-				kick_channel->distortion_amount=1.0f+float_val*100;
-				break;			
-			case 4:
-				snare_channel->volume=float_val;
-				break;		
 			case 9:
-				kick_channel->volume=float_val;
+				//snare_channel->distortion_amount=1.0f+float_val*100;
 				break;		
-			case 28:
-				if(val==127)
-				   kick_channel->retrig_length=calc_cycle_length(26); //D
+			case 11:
+			    //snare_channel->hit_threshold=float_val; 
+				//kick_channel->distortion_amount=1.0f+float_val*100;
+				break;			
+			case 12:
+				break;		
+			case 13:
+				break;		
+			case 15:
+				//if(val==127)
+				//   kick_channel->retrig_length=calc_cycle_length(26); //D
 				break;
-			case 38:
-				if(val==127)
-				   kick_channel->retrig_length=calc_cycle_length(31); //G
+			case 16:
+				//if(val==127)
+				//   kick_channel->retrig_length=calc_cycle_length(31); //G
 				break;
-			case 29:
-				if(val==127)
-				   kick_channel->retrig_length=calc_cycle_length(34); //Bb
+			case 17:
+				//if(val==127)
+				//   kick_channel->retrig_length=calc_cycle_length(34); //Bb
 				break;
-			case 39:
-				if(val==127)
-				   kick_channel->retrig_length=calc_cycle_length(27); //Eb
+			case 18:
+				//if(val==127)
+				//   kick_channel->retrig_length=calc_cycle_length(27); //Eb
 				break;
-			case 30:
-				if(val==127)
-				   kick_channel->retrig_length=calc_cycle_length(29); //F
+			case 19:
+				//if(val==127)
+				//   kick_channel->retrig_length=calc_cycle_length(29); //F
 				break;
-			case 40:
-				if(val==127)
-				   kick_channel->retrig_length=calc_cycle_length(24); //C
-				break;	
-				
-			case 24:
-				if(val==127)
-				   snare_channel->retrig_length=calc_cycle_length(35); //B
-				break;
-			case 34:
-				if(val==127)
-				   snare_channel->retrig_length=calc_cycle_length(41); //F
-				break;
-			
-			case 25:
-				if(val==127)
-				   snare_channel->retrig_length=calc_cycle_length(23); //B
-				break;
-			case 35:
-				if(val==127)
-				   snare_channel->retrig_length=calc_cycle_length(29); //F
-				break;
-				/*
-			case 26:
-				if(val==127)
-				   snare_channel.retrig_length=calc_cycle_length(29); //F
-				break;
-			case 36:
-				if(val==127)
-				   snare_channel.retrig_length=calc_cycle_length(24); //C
-				break;	*/
+
 				
 			default:
 			 	break;
@@ -183,7 +156,7 @@ bool setup(BelaContext *context, void *userData)
 		td1->set_tap_time(tap_time,i);
 	}*/
 	
-    scope.setup(3, context->audioSampleRate);
+    scope.setup(4, context->audioSampleRate);
 
 	return true;
 }    
@@ -205,10 +178,10 @@ void render(BelaContext *context, void *userData)
 		//float raw_snare=snare_out;
 		//snare_out=td1->tick(raw_snare)*0.1f+raw_snare*0.75;
 		
-        audioWrite(context,n,1,distortion_atan(snare_out*2.0f)); //keep within -1 to 1
-        audioWrite(context,n,0,distortion_atan(kick_out*2.0f )); //keep within -1 to 1
+        audioWrite(context,n,1,distortion_atan(snare_out*1.0f)); //keep within -1 to 1
+        audioWrite(context,n,0,distortion_atan(kick_out*1.0f )); //keep within -1 to 1
         
-        scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount );
+        scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount, snare_out );
 
    }
    

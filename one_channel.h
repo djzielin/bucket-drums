@@ -67,18 +67,22 @@ private:
 
 public:
 	hit *current_hit;
-	
-    //parameters from midi controller
-	float hit_threshold=0.1f; 
-    float sma_multiplier=1.0f;
+    float sma_multiplier=1.0f;	
     
+    //parameters from midi controller
+    float pitch_bend=0.5f;
+    float gate_time=1.0f;    
+	float hit_threshold=0.1f; 
+	
     int retrig_max=0;
     int retrig_length=3000;
     float distortion_amount=1.0f;
     float volume=1.0f;
+    
     unsigned int total_samples=0;
     float sample_rate;
     float current_sma=0;
+
     
   	one_channel(float _sample_rate)
 	{
@@ -93,7 +97,6 @@ public:
     	state=STATE_HIT;
 		counter=0;
 		current_hit->reset();
-    	//release_time=5000;
 		current_hit->set_channel(this);
 		current_hit->set_advance_amount(0.5f); //pitch shift amount here
     }
@@ -119,7 +122,7 @@ public:
       	 		state=STATE_WAITING;
       		  	current_hit->recording_done();
       	 	}
-      	 	else if(counter>=1500) //wait for transient to go away
+      	 	else if(counter>=1500) //wait for transient to go away to allow next hit. TODO: do this in terms of time not samples!!
       	 	{
       	 		if(fabs(input)>(current_sma+hit_threshold))
       	 		{
@@ -136,7 +139,7 @@ public:
 		}
 		
 	
-        float  out=current_hit->tick(); //could add input here or gating
+        float  out=current_hit->tick(); 
        
 
          return out;
