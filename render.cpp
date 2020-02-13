@@ -4,9 +4,11 @@
 #include <string.h>
 #include <cmath>
 #include <Midi.h>
-#include "distortion.h"
 #include <Scope.h>
+
+#include "distortion.h"
 #include "tapped_delay_line.h"
+
 unsigned int sample_rate;
 
 
@@ -17,20 +19,6 @@ Scope scope;
 
 Midi midi;
 const char* gMidiPort0 = "hw:1,0,0";
-
-/*	float hit_threshold=0.1f;          //14   18
-    int env_time=5000;                 //2    6
-    
-    bool env_do_gate=false;            //33  37
-    bool env_do_exponential=false;     //23  27
-    
-    int retrig_count=0;                //15  19
-    int retrig_length=3000;            //3    7
-    
-    float distortion_amount=1.0f;      //16   20
-    float volume=1.0f;                 //4    8
-*/
-
 
 float calc_cycle_length(int midi_note)
 {
@@ -175,9 +163,6 @@ void render(BelaContext *context, void *userData)
 		float snare_out = snare_channel->tick(snare_sample);
 		float kick_out  = kick_channel->tick(kick_sample);
 		
-		//float raw_snare=snare_out;
-		//snare_out=td1->tick(raw_snare)*0.1f+raw_snare*0.75;
-		
         audioWrite(context,n,1,distortion_atan(snare_out*1.0f)); //keep within -1 to 1
         audioWrite(context,n,0,distortion_atan(kick_out*1.0f )); //keep within -1 to 1
         
@@ -189,5 +174,6 @@ void render(BelaContext *context, void *userData)
 
 void cleanup(BelaContext *context, void *userData)
 {
+	
 }
 
