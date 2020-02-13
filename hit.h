@@ -2,7 +2,7 @@
 #define HIT_DJZ_H
 
 
-class one_channel;
+class hit_manager;
 
 class hit
 {
@@ -16,7 +16,7 @@ private:
 	
 
 	
-	one_channel *our_channel;
+	hit_manager *our_manager;
 	
 	float *content;
 	float samples_available;
@@ -42,7 +42,7 @@ private:
 public:
      float advance_amount;
 
-    void set_channel(one_channel *oc);
+    void set_manager(hit_manager *oc);
   
     hit();
     void recording_done();

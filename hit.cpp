@@ -5,14 +5,14 @@
 #include <cmath>
 
 #include "hit.h"
-#include "one_channel.h"
+#include "hit_manager.h"
 #include "distortion.h"
 
 //TODO fix indenting
 
-    void hit::set_channel(one_channel *oc)
+    void hit::set_manager(hit_manager *oc)
     {
-        our_channel=oc;	
+        our_manager=oc;	
     }
     
     hit::hit()
@@ -110,9 +110,9 @@
 		}*/
 		play_index+=advance_amount;
 
-        if(our_channel->pitch_bend!=0.0f)
+        if(our_manager->pitch_bend!=0.0f)
         {
-           float inv_p=1.0f-our_channel->pitch_bend; //todo: cache - only recompute on parameter change
+           float inv_p=1.0f-our_manager->pitch_bend; //todo: cache - only recompute on parameter change
            inv_p=inv_p*0.5f;
            
 		   float percent_complete=samples_played/(inv_p*20000.0f); //TODO - dont have in terms of samples!!
@@ -172,8 +172,8 @@
 		//sample=distortion_clamp(sample*our_channel->distortion_amount)*our_channel->volume;
 		samples_played++;
 		
-		if(our_channel->gate_time<1.0f)     //DO GATING
-		   if(samples_played>(our_channel->gate_time*20000)) //TODO - dont do in terms of samples! 
+		if(our_manager->gate_time<1.0f)     //DO GATING
+		   if(samples_played>(our_manager->gate_time*20000)) //TODO - dont do in terms of samples! 
 		      sample=0;
 		
 		return sample; 

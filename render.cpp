@@ -12,9 +12,9 @@
 unsigned int sample_rate;
 
 
-#include "one_channel.h"
-one_channel *snare_channel;
-one_channel *kick_channel;
+#include "hit_manager.h"
+hit_manager *snare_channel;
+hit_manager *kick_channel;
 Scope scope;
 
 Midi midi;
@@ -128,12 +128,12 @@ bool setup(BelaContext *context, void *userData)
 	sample_rate=context->analogSampleRate;
 	
 	printf("about to setup snare channel...\n");
-	snare_channel=new one_channel(sample_rate);
+	snare_channel=new hit_manager(sample_rate);
     snare_channel->sma_multiplier=1.0f;
 
     
     printf("about to setup kick channel...\n");
-    kick_channel=new one_channel(sample_rate);
+    kick_channel=new hit_manager(sample_rate);
     kick_channel->sma_multiplier=2.0f;
 
     /*td1=new tapped_delay_line(sample_rate,1.0f,100);

@@ -1,13 +1,15 @@
 /***** distortion.cpp *****/
-#include<math.h>
+#include<distortion.h>
+
 const float atan_scaler=2.0/M_PI;
+
 
 float distortion_atan(float input)
 {
 	return atan(input)*atan_scaler; //keep within -1 to 1
 }
 
-//TODO, add atan neon (fast)
+//TODO, add atan neon (fast) ?
 
 float distortion_clamp(float input)
 {
@@ -18,4 +20,3 @@ float distortion_clamp(float input)
 	
    return input; 
 }
-
