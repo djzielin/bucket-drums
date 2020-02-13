@@ -42,72 +42,61 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 		float float_val=(float)val/127.0f;
 		
 		//rt_printf("cc message received: %d %d\n",cc,val);
-		
+   
 		switch (cc)
 		{
 			case 1:
-			    rt_printf("cc%d: pitch bend1 - %.02f\n",cc,float_val);
-        		snare_channel->pitch_bend=float_val; 
+			    rt_printf("cc%d: pitch bend1: %.02f\n",cc,float_val);
+        		snare_channel->set_pitch_bend(float_val);
         		break;
         	case 2:
-        		rt_printf("cc%d: pitch bend2 - %.02f\n",cc,float_val);
-        		kick_channel->pitch_bend=float_val; 
+        		rt_printf("cc%d: pitch bend2: %.02f\n",cc,float_val);
+        		kick_channel->set_pitch_bend(float_val); 
         		break;
     		case 3:
-				rt_printf("cc%d: gate time - %.02f\n",cc,float_val);
-				snare_channel->gate_time=float_val; 
-        		kick_channel->gate_time=float_val; 
+				rt_printf("cc%d: gate time: %.02f\n",cc,float_val);
+				snare_channel->set_gate_time(float_val); 
+        		kick_channel->set_gate_time(float_val);
 				break;
     		case 4:
-				//kick_channel->env_time=val*150;
-				break;	 
+    		     rt_printf("cc%d: stut length: %.02f\n",cc,float_val);
+				 snare_channel->set_stut_length(float_val);
+                 kick_channel->set_stut_length(float_val);
 			case 5:
-				//snare_channel->retrig_max=(int)(float_val*20.0f);
+			    rt_printf("cc%d: stut pitch mod: %.02f\n",cc,float_val);
+				snare_channel->set_stut_pitch_mod(float_val);
+				kick_channel->set_stut_pitch_mod(float_val);
 				break;	
 			case 6:
-				//kick_channel->retrig_max=(int)(float_val*20.0f);
 				break;		
 			case 7:
-				//snare_channel->retrig_length=500+val*20;
-				//rt_printf("snare retrig length: %d\n",snare_channel->retrig_length);
 				break;		
 			case 8:
-				//kick_channel->retrig_length=500+val*20;
-				//rt_printf("kick retrig length: %d\n",kick_channel->retrig_length);
 				break;			
 			case 9:
-				//snare_channel->distortion_amount=1.0f+float_val*100;
 				break;		
 			case 11:
-			    //snare_channel->hit_threshold=float_val; 
-				//kick_channel->distortion_amount=1.0f+float_val*100;
+			    rt_printf("cc%d: hi threshold: %.02f\n",cc,float_val);
+			    snare_channel->set_hit_threshold(float_val);
 				break;			
 			case 12:
+		     	rt_printf("cc%d: low threshold: %.02f\n",cc,float_val);
+				kick_channel ->set_hit_threshold(float_val);
 				break;		
 			case 13:
-				break;		
+			    rt_printf("cc%d: boost: %.02f\n",cc,float_val);
+			    snare_channel->set_boost(float_val);
+			    kick_channel->set_boost(float_val);
+				break;
+			case 14:
+			    rt_printf("cc%d: stut count: %.02f\n",cc,float_val);
+			    snare_channel->set_stut_max_count(float_val);
+                kick_channel->set_stut_max_count(float_val);
 			case 15:
-				//if(val==127)
-				//   kick_channel->retrig_length=calc_cycle_length(26); //D
+			    rt_printf("cc%d: stut length mmod: %.02f\n",cc,float_val);
+				snare_channel->set_stut_length_mod(float_val);
+				kick_channel->set_stut_length_mod(float_val);
 				break;
-			case 16:
-				//if(val==127)
-				//   kick_channel->retrig_length=calc_cycle_length(31); //G
-				break;
-			case 17:
-				//if(val==127)
-				//   kick_channel->retrig_length=calc_cycle_length(34); //Bb
-				break;
-			case 18:
-				//if(val==127)
-				//   kick_channel->retrig_length=calc_cycle_length(27); //Eb
-				break;
-			case 19:
-				//if(val==127)
-				//   kick_channel->retrig_length=calc_cycle_length(29); //F
-				break;
-
-				
 			default:
 			 	break;
 		}   
@@ -157,7 +146,7 @@ void render(BelaContext *context, void *userData)
 
 	for(unsigned int n = 0; n < context->audioFrames; n++) 
 	{   
-		float snare_sample=distortion_clamp(audioRead(context, n, 1)); //keep within -1 to 1
+		float snare_sample=distortion_clamp(audioRead(context, n, 1)); //keep within -1 to 1 //TODO: check if that is really a problem!
 		float kick_sample= distortion_clamp(audioRead(context, n, 0)); //keep within -1 to 1
 		
 		float snare_out = snare_channel->tick(snare_sample);

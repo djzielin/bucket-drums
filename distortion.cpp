@@ -1,5 +1,6 @@
 /***** distortion.cpp *****/
 #include<distortion.h>
+#include<math.h>
 
 const float atan_scaler=2.0/M_PI;
 

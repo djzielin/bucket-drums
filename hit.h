@@ -9,52 +9,44 @@ class hit
 private:
 
 	bool playing=false;
-	float env_precompute[15000];
-	float low_pass_A;
-	float low_pass_B;
-	float low_pass_prev;
-	
 
+	//float low_pass_A;
+	//float low_pass_B;
+	//float low_pass_prev;
 	
 	hit_manager *our_manager;
 	
 	float *content;
-	float samples_available;
-	float play_index;
-	//float play_index2;
-	
+	int samples_available;
+
 	int rec_index;
 	int samples_played;
-	float max_transient_sample;
+	int total_played;
+	int stut_length;
 	
-	float prev_sample;
+	int stut_hits_occured=0;
 	
-	int delay_hits_max=0;
-	int delay_hits_occured=0;
-	int delay_hits_spacing=1000; 
-	
-    int transient_detection_time_samples;
-	int retrig_count=0;
-	float retrig_buffer[20000];
-    float base_pitch=0.5f;
-    const float atan_scaler=2.0/M_PI;
+    float play_index;
     
-public:
-     float advance_amount;
+    float base_pitch;
+    	
+    float calc_normal_sample();
 
-    void set_manager(hit_manager *oc);
-  
-    hit();
+public:
+    float advance_amount; //advance play head at different rates to achieve pitch bends (need to make public so scope can get access)
+
+
+    hit(hit_manager *hm);
     void recording_done();
-    void set_low_pass(float amount);
+    //void set_low_pass(float amount);
    	void reset();
 	bool is_playing();
-	void set_advance_amount(float adv);
+	
 	void add_sample(float sample);
-	float calc_normal_sample();
     bool is_positive(float a);
 	float tick();
-	unsigned int time_running;
+	
+	//unsigned int time_running;
 };
 
 #endif
