@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <cmath>
-#include <Midi.h>
-#include <Scope.h>
+#include <libraries/Midi/Midi.h>
+#include <libraries/Scope/Scope.h>
 
 #include "distortion.h"
 #include "tapped_delay_line.h"
@@ -30,18 +30,38 @@ void cc_write(midi_byte_t cc,  midi_byte_t val)
 {
     midi_byte_t bytes[3] = {0xB0, cc, val}; 
     midi.writeOutput(bytes, 3);
-    midi.writeTo(gMidiPort0);
 }
+
+void sysexCallback(std::vector<unsigned char>* v)
+{
+    rt_printf("got sysex message size: %d\n",v->size());
+    
+   if((*v)[6]==0x5F)
+   {
+   	  if((*v)[7]==0x4F)
+   	     rt_printf("scene was switched to: %d!\n", (*v)[8]+1);
+   
+   }
+   
+   for(int i=6;i<v->size();i++)
+   {
+   	   rt_printf("%02X ",(*v)[i]);
+   }
+   rt_printf("\n");
+}
+
 
 void midiMessageCallback(MidiChannelMessage message, void* arg)
 {
+	//rt_printf("getting midi message!\n");
+	
 	if(message.getType() == kmmControlChange)
 	{
 		int cc=	 message.getDataByte(0);
 		int val= message.getDataByte(1);
 		float float_val=(float)val/127.0f;
 		
-		//rt_printf("cc message received: %d %d\n",cc,val);
+		rt_printf("cc message received: %d %d\n",cc,val);
    
 		switch (cc)
 		{
@@ -100,7 +120,10 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 			default:
 			 	break;
 		}   
-     
+	}
+	if(message.getType()==kmmSystem)
+	{
+		rt_printf("getting system message!\n");
 	}
 }
 
@@ -111,8 +134,10 @@ bool setup(BelaContext *context, void *userData)
 {
 	midi.readFrom(gMidiPort0);
 	midi.writeTo(gMidiPort0);
+	
 	midi.enableParser(true);
 	midi.setParserCallback(midiMessageCallback, (void*) gMidiPort0);
+	//midi.setSysExCallback(sysexCallback);
 	
 	sample_rate=context->analogSampleRate;
 	
@@ -134,6 +159,8 @@ bool setup(BelaContext *context, void *userData)
 	}*/
 	
     scope.setup(4, context->audioSampleRate);
+    
+    rt_printf("setup complete");
 
 	return true;
 }    

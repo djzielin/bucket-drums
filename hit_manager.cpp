@@ -5,6 +5,13 @@
 #include "hit_manager.h"
 
 
+float hit_manager::map_to_range(float input, float min, float max)
+{
+	float range=max-min;
+   	float input_range_adjusted=input*range;
+   	return min+input_range_adjusted;
+}
+
 hit_manager::hit_manager(float _sample_rate)
 {
   sma = new simple_moving_average(2000);
@@ -19,27 +26,21 @@ hit_manager::hit_manager(float _sample_rate)
 
 void hit_manager::set_pitch_bend(float knob)    
 { 
-   float inv_knob=1.0f-knob;
-   float num_samples=inv_knob*0.250f*sample_rate;
+   pitch_bend=knob*0.250f*sample_rate;
 
-   if(knob==0.0f)
-      pitch_bend=0;
-   else
-      pitch_bend=num_samples;
-      
    rt_printf("   computed pitch bend: %.02f\n",pitch_bend);
 }
     
 void hit_manager::set_hit_threshold(float knob)
 { 
-   	hit_threshold=map_to_range(knob,0.0f,0.2f); 
+   	hit_threshold=map_to_range(knob,0.1f,0.3f); 
    	rt_printf("   computed threshold: %.02f\n",hit_threshold);
 
 }
 
 void hit_manager::set_gate_time(float knob) 
 { 
-	gate_time=map_to_range(knob,0.0,max_samples_to_record*2.0f);
+	gate_time=map_to_range(knob,max_samples_to_record*2.0f,0.0f);
 	
 	if(knob==1.0f)
 	  gate_time=-1;
@@ -64,7 +65,7 @@ void hit_manager::set_stut_length(float knob)
     
 void hit_manager::set_stut_max_count(float knob) 
 { 
-     stut_max_count=map_to_range(knob,0.0,20);	
+     stut_max_count=map_to_range(knob,0.0f,20.0f);	
       rt_printf("   computed stut_max_count: %d\n",stut_max_count);
 }
     

@@ -44,12 +44,7 @@ private:
     //delay pmod
     //delay smod
     
-    float map_to_range(float input, float min, float max)
-    {
-    	float range=max-min;
-    	float input_range_adjusted=input*range;
-    	return min+input_range_adjusted;
-    }
+    float map_to_range(float input, float min, float max);
     
 public:
 	hit *current_hit;

@@ -1,5 +1,5 @@
 #include <Bela.h>
-#include <sndfile.h>
+#include <libraries/sndfile/sndfile.h>
 #include <stdio.h>
 #include <string.h>
 #include <cmath>

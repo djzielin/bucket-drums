@@ -1,1 +1,1 @@
-{"fileName":"hit_manager.cpp","CLArgs":{"-p":"8","-C":"4","-B":"16","-H":"-6","-N":1,"-G":0,"-M":"0","-D":"0","-A":"0","--pga-gain-left":"10","--pga-gain-right":"10","user":"","make":"","-X":"0","audioExpander":"1","-Y":"0,1","-Z":"0,1"}}
+{"fileName":"hit.cpp","CLArgs":{"-p":"8","-C":"4","-B":"16","-H":"-6","-N":1,"-G":1,"-M":"0","-D":"0","-A":"0","--pga-gain-left":"10","--pga-gain-right":"10","user":"","make":"","-X":"0","audioExpander":"1","-Y":"0,1","-Z":"0,1"}}
