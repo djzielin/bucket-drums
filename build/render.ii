@@ -45080,8 +45080,6 @@ void sysexCallback(std::vector<unsigned char>* v)
 
 void midiMessageCallback(MidiChannelMessage message, void* arg)
 {
-
-
  if(message.getType() == kmmControlChange)
  {
   int cc= message.getDataByte(0);
@@ -45176,7 +45174,7 @@ bool setup(BelaContext *context, void *userData)
     printf("about to setup kick channel...\n");
     kick_channel=new hit_manager(sample_rate);
     kick_channel->sma_multiplier=2.0f;
-# 161 "/root/Bela/projects/bucket-drums/render.cpp"
+# 159 "/root/Bela/projects/bucket-drums/render.cpp"
     scope.setup(4, context->audioSampleRate);
 
     rt_printf("setup complete");

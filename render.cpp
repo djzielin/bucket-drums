@@ -53,8 +53,6 @@ void sysexCallback(std::vector<unsigned char>* v)
 
 void midiMessageCallback(MidiChannelMessage message, void* arg)
 {
-	//rt_printf("getting midi message!\n");
-	
 	if(message.getType() == kmmControlChange)
 	{
 		int cc=	 message.getDataByte(0);
