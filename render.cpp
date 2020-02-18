@@ -58,7 +58,8 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 		int cc=	 message.getDataByte(0);
 		int val= message.getDataByte(1);
 		float float_val=(float)val/127.0f;
-		
+        bool bool_val=(val==127);
+
 		rt_printf("cc message received: %d %d\n",cc,val);
    
 		switch (cc)
@@ -86,12 +87,20 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 				kick_channel->set_stut_pitch_mod(float_val);
 				break;	
 			case 6:
+		    	rt_printf("cc%d: delay length: %.02f\n",cc,float_val);
+				snare_channel->set_delay_length(float_val);
+				kick_channel->set_delay_length(float_val);
 				break;		
 			case 7:
+			    rt_printf("cc%d: delay pmod: %.02f\n",cc,float_val);
+				snare_channel->set_delay_pmod(float_val);
+				kick_channel->set_delay_pmod(float_val);
 				break;		
 			case 8:
+			    rt_printf("cc%d: rev len: %.02f\n",cc,float_val);
 				break;			
 			case 9:
+			    rt_printf("cc%d: rev vol: %.02f\n",cc,float_val);
 				break;		
 			case 11:
 			    rt_printf("cc%d: hi threshold: %.02f\n",cc,float_val);
@@ -115,6 +124,32 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 				snare_channel->set_stut_length_mod(float_val);
 				kick_channel->set_stut_length_mod(float_val);
 				break;
+			case 16:
+			    rt_printf("cc%d: delay count: %.02f\n",cc,float_val);
+				snare_channel->set_delay_count(float_val);
+				kick_channel->set_delay_count(float_val);
+				break;
+			case 17:
+			    rt_printf("cc%d: delay smod: %.02f\n",cc,float_val);
+				snare_channel->set_delay_smod(float_val);
+				kick_channel->set_delay_smod(float_val);
+				break;
+			case 18:
+			    rt_printf("cc%d: rev feedback: %.02f\n",cc,float_val);
+				break;
+			case 19:
+			    rt_printf("cc%d: early vol: %.02f\n",cc,float_val);
+				break;
+			case 25:
+			    rt_printf("cc%d: stut lmod_up: %s\n",cc,bool_val?"ON":"OFF");
+			    snare_channel->set_stut_lmod_up_button(bool_val);
+			    kick_channel->set_stut_lmod_up_button(bool_val);
+				break;
+		   case 35:
+			    rt_printf("cc%d: stut pmod_up: %s\n",cc,bool_val?"ON":"OFF");
+			    snare_channel->set_stut_pmod_up_button(bool_val);
+			    kick_channel->set_stut_pmod_up_button(bool_val);
+				break;
 			default:
 			 	break;
 		}   
@@ -136,7 +171,7 @@ bool setup(BelaContext *context, void *userData)
 	midi.enableParser(true);
 	midi.setParserCallback(midiMessageCallback, (void*) gMidiPort0);
 	//midi.setSysExCallback(sysexCallback);
-	
+	cc_write(21,127);
 	sample_rate=context->analogSampleRate;
 	
 	printf("about to setup snare channel...\n");

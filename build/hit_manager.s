@@ -67,13 +67,14 @@ _ZN11hit_managerC2Ef:                   @ @_ZN11hit_managerC2Ef
 	mov	r0, #1065353216
 	str	r0, [r4, #40]
 	str	r1, [r4, #44]
-	str	r6, [r4, #48]
 	str	r6, [r4, #52]
-	str	r6, [r4, #56]
-	str	r6, [r4, #76]
-	str	r0, [r4, #64]
+	str	r6, [r4, #48]
+	str	r6, [r4, #58]
+	str	r6, [r4, #54]
+	str	r6, [r4, #96]
+	str	r0, [r4, #84]
 	mov	r0, #20
-	str	r6, [r4, #68]
+	str	r6, [r4, #88]
 	bl	_Znwj
 	mov	r5, r0
 	mov	r0, #2000
@@ -95,14 +96,14 @@ _ZN11hit_managerC2Ef:                   @ @_ZN11hit_managerC2Ef
 	movw	r0, :lower16:.L.str
 	movt	r0, :upper16:.L.str
 	str	r5, [r4, #16]
-	vstr	s16, [r4, #72]
+	vstr	s16, [r4, #92]
 	vmul.f32	d16, d8, d16
 	vcvt.s32.f32	d0, d16
 	vmov	r1, s0
 	str	r1, [r4, #4]
 	bl	printf
 	vldr	s0, .LCPI1_1
-	vldr	s2, [r4, #72]
+	vldr	s2, [r4, #92]
 	vmul.f32	d16, d1, d0
 	vcvt.s32.f32	d0, d16
 	vmov	r0, s0
@@ -115,7 +116,7 @@ _ZN11hit_managerC2Ef:                   @ @_ZN11hit_managerC2Ef
 	bl	_ZN3hitC1EP11hit_manager
 .Ltmp4:
 @ BB#2:
-	str	r5, [r4, #60]
+	str	r5, [r4, #80]
 	mov	r0, r4
 	vpop	{d8}
 	pop	{r4, r5, r6, r10, r11, pc}
@@ -189,7 +190,7 @@ _ZN11hit_manager14set_pitch_bendEf:     @ @_ZN11hit_manager14set_pitch_bendEf
 	vmov.f32	d16, #2.500000e-01
                                         @ kill: %S0<def> %S0<kill> %D0<def>
 	vmul.f32	d16, d0, d16
-	vldr	s0, [r0, #72]
+	vldr	s0, [r0, #92]
 	vmul.f32	d0, d16, d0
 	vcvt.f64.f32	d16, s0
 	vmov	r2, r3, d16
@@ -306,7 +307,7 @@ _ZN11hit_manager15set_stut_lengthEf:    @ @_ZN11hit_manager15set_stut_lengthEf
 	vldr	s2, .LCPI6_0
                                         @ kill: %S0<def> %S0<kill> %D0<def>
 	vmul.f32	d16, d0, d1
-	vldr	s0, [r0, #72]
+	vldr	s0, [r0, #92]
 	vmul.f32	d16, d16, d0
 	vcvt.s32.f32	d0, d16
 	vmov	r1, s0
@@ -381,9 +382,81 @@ _ZN11hit_manager18set_stut_pitch_modEf: @ @_ZN11hit_manager18set_stut_pitch_modE
 _ZN11hit_manager19set_stut_length_modEf: @ @_ZN11hit_manager19set_stut_length_modEf
 	.fnstart
 @ BB#0:
+	vmov.f32	d16, #1.000000e+00
+                                        @ kill: %S0<def> %S0<kill> %D0<def>
+	vsub.f32	d0, d16, d0
+	vstr	s0, [r0, #56]
 	bx	lr
 .Lfunc_end9:
 	.size	_ZN11hit_manager19set_stut_length_modEf, .Lfunc_end9-_ZN11hit_manager19set_stut_length_modEf
+	.fnend
+
+	.globl	_ZN11hit_manager16set_delay_lengthEf
+	.p2align	2
+	.type	_ZN11hit_manager16set_delay_lengthEf,%function
+_ZN11hit_manager16set_delay_lengthEf:   @ @_ZN11hit_manager16set_delay_lengthEf
+	.fnstart
+@ BB#0:
+	bx	lr
+.Lfunc_end10:
+	.size	_ZN11hit_manager16set_delay_lengthEf, .Lfunc_end10-_ZN11hit_manager16set_delay_lengthEf
+	.fnend
+
+	.globl	_ZN11hit_manager15set_delay_countEf
+	.p2align	2
+	.type	_ZN11hit_manager15set_delay_countEf,%function
+_ZN11hit_manager15set_delay_countEf:    @ @_ZN11hit_manager15set_delay_countEf
+	.fnstart
+@ BB#0:
+	bx	lr
+.Lfunc_end11:
+	.size	_ZN11hit_manager15set_delay_countEf, .Lfunc_end11-_ZN11hit_manager15set_delay_countEf
+	.fnend
+
+	.globl	_ZN11hit_manager14set_delay_pmodEf
+	.p2align	2
+	.type	_ZN11hit_manager14set_delay_pmodEf,%function
+_ZN11hit_manager14set_delay_pmodEf:     @ @_ZN11hit_manager14set_delay_pmodEf
+	.fnstart
+@ BB#0:
+	bx	lr
+.Lfunc_end12:
+	.size	_ZN11hit_manager14set_delay_pmodEf, .Lfunc_end12-_ZN11hit_manager14set_delay_pmodEf
+	.fnend
+
+	.globl	_ZN11hit_manager14set_delay_smodEf
+	.p2align	2
+	.type	_ZN11hit_manager14set_delay_smodEf,%function
+_ZN11hit_manager14set_delay_smodEf:     @ @_ZN11hit_manager14set_delay_smodEf
+	.fnstart
+@ BB#0:
+	bx	lr
+.Lfunc_end13:
+	.size	_ZN11hit_manager14set_delay_smodEf, .Lfunc_end13-_ZN11hit_manager14set_delay_smodEf
+	.fnend
+
+	.globl	_ZN11hit_manager23set_stut_lmod_up_buttonEb
+	.p2align	2
+	.type	_ZN11hit_manager23set_stut_lmod_up_buttonEb,%function
+_ZN11hit_manager23set_stut_lmod_up_buttonEb: @ @_ZN11hit_manager23set_stut_lmod_up_buttonEb
+	.fnstart
+@ BB#0:
+	strb	r1, [r0, #61]
+	bx	lr
+.Lfunc_end14:
+	.size	_ZN11hit_manager23set_stut_lmod_up_buttonEb, .Lfunc_end14-_ZN11hit_manager23set_stut_lmod_up_buttonEb
+	.fnend
+
+	.globl	_ZN11hit_manager23set_stut_pmod_up_buttonEb
+	.p2align	2
+	.type	_ZN11hit_manager23set_stut_pmod_up_buttonEb,%function
+_ZN11hit_manager23set_stut_pmod_up_buttonEb: @ @_ZN11hit_manager23set_stut_pmod_up_buttonEb
+	.fnstart
+@ BB#0:
+	strb	r1, [r0, #60]
+	bx	lr
+.Lfunc_end15:
+	.size	_ZN11hit_manager23set_stut_pmod_up_buttonEb, .Lfunc_end15-_ZN11hit_manager23set_stut_pmod_up_buttonEb
 	.fnend
 
 	.globl	_ZN11hit_manager12hit_happenedEv
@@ -404,11 +477,11 @@ _ZN11hit_manager12hit_happenedEv:       @ @_ZN11hit_manager12hit_happenedEv
 	str	r0, [r4, #20]
 	mov	r0, #0
 	str	r0, [r4, #12]
-	ldr	r0, [r4, #60]
+	ldr	r0, [r4, #80]
 	pop	{r4, r10, r11, lr}
 	b	_ZN3hit5resetEv
-.Lfunc_end10:
-	.size	_ZN11hit_manager12hit_happenedEv, .Lfunc_end10-_ZN11hit_manager12hit_happenedEv
+.Lfunc_end16:
+	.size	_ZN11hit_manager12hit_happenedEv, .Lfunc_end16-_ZN11hit_manager12hit_happenedEv
 	.fnend
 
 	.globl	_ZN11hit_manager4tickEf
@@ -427,7 +500,7 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	mov	r4, r0
 	ldr	r5, [r4, #16]
 	vabs.f32	d9, d8
-	vldr	s0, [r4, #64]
+	vldr	s0, [r4, #84]
 	ldr	r0, [r5, #4]
 	ldr	r1, [r5]
 	vldr	s4, [r5, #8]
@@ -445,16 +518,16 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	vldr	s0, [r5, #8]
 	vldr	s2, [r5, #16]
 	vmul.f32	d0, d1, d0
-	vstr	s0, [r4, #76]
+	vstr	s0, [r4, #96]
 	ldr	r0, [r4, #20]
 	cmp	r0, #0
-	bne	.LBB11_3
+	bne	.LBB17_3
 @ BB#1:
 	vldr	s2, [r4, #28]
 	vadd.f32	d0, d1, d0
 	vcmpe.f32	s18, s0
 	vmrs	APSR_nzcv, fpscr
-	ble	.LBB11_10
+	ble	.LBB17_10
 @ BB#2:
 	movw	r0, :lower16:.L.str.8
 	movt	r0, :upper16:.L.str.8
@@ -463,28 +536,28 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	str	r0, [r4, #20]
 	mov	r0, #0
 	str	r0, [r4, #12]
-	ldr	r0, [r4, #60]
+	ldr	r0, [r4, #80]
 	bl	_ZN3hit5resetEv
 	ldr	r0, [r4, #20]
-.LBB11_3:                               @ %thread-pre-split
+.LBB17_3:                               @ %thread-pre-split
 	cmp	r0, #1
-	bne	.LBB11_10
+	bne	.LBB17_10
 @ BB#4:
 	ldr	r0, [r4, #12]
 	ldr	r1, [r4, #4]
 	cmp	r0, r1
-	bge	.LBB11_9
+	bge	.LBB17_9
 @ BB#5:
 	ldr	r1, [r4, #8]
 	cmp	r0, r1
-	blt	.LBB11_8
+	blt	.LBB17_8
 @ BB#6:
 	vldr	s0, [r4, #28]
-	vldr	s2, [r4, #76]
+	vldr	s2, [r4, #96]
 	vadd.f32	d0, d0, d1
 	vcmpe.f32	s18, s0
 	vmrs	APSR_nzcv, fpscr
-	ble	.LBB11_10
+	ble	.LBB17_10
 @ BB#7:
 	movw	r0, :lower16:.L.str.8
 	movt	r0, :upper16:.L.str.8
@@ -493,29 +566,29 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	str	r0, [r4, #20]
 	mov	r0, #0
 	str	r0, [r4, #12]
-	ldr	r0, [r4, #60]
+	ldr	r0, [r4, #80]
 	bl	_ZN3hit5resetEv
-.LBB11_8:
+.LBB17_8:
 	vmov.f32	s0, s16
-	ldr	r0, [r4, #60]
+	ldr	r0, [r4, #80]
 	bl	_ZN3hit10add_sampleEf
 	ldr	r0, [r4, #12]
 	add	r0, r0, #1
 	str	r0, [r4, #12]
-	b	.LBB11_10
-.LBB11_9:
+	b	.LBB17_10
+.LBB17_9:
 	vmov.f32	s0, s16
-	ldr	r0, [r4, #60]
+	ldr	r0, [r4, #80]
 	bl	_ZN3hit10add_sampleEf
 	mov	r0, #0
 	str	r0, [r4, #20]
-.LBB11_10:                              @ %thread-pre-split.thread
-	ldr	r0, [r4, #60]
+.LBB17_10:                              @ %thread-pre-split.thread
+	ldr	r0, [r4, #80]
 	vpop	{d8, d9}
 	pop	{r4, r5, r11, lr}
 	b	_ZN3hit4tickEv
-.Lfunc_end11:
-	.size	_ZN11hit_manager4tickEf, .Lfunc_end11-_ZN11hit_manager4tickEf
+.Lfunc_end17:
+	.size	_ZN11hit_manager4tickEf, .Lfunc_end17-_ZN11hit_manager4tickEf
 	.fnend
 
 	.type	.L.str,%object          @ @.str

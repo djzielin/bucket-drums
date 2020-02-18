@@ -149,8 +149,8 @@ _Z13sysexCallbackPSt6vectorIhSaIhEE:    @ @_Z13sysexCallbackPSt6vectorIhSaIhEE
 _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiChannelMessagePv
 	.fnstart
 @ BB#0:
-	.save	{r4, r5, r6, r10, r11, lr}
-	push	{r4, r5, r6, r10, r11, lr}
+	.save	{r4, r5, r6, r7, r11, lr}
+	push	{r4, r5, r6, r7, r11, lr}
 	.setfp	r11, sp, #16
 	add	r11, sp, #16
 	.vsave	{d8, d9}
@@ -158,7 +158,7 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	mov	r4, r0
 	bl	_ZN18MidiChannelMessage7getTypeEv
 	cmp	r0, #3
-	bne	.LBB3_18
+	bne	.LBB3_30
 @ BB#1:
 	ldrb	r5, [r4, #5]
 	movw	r0, :lower16:.L.str.6
@@ -170,9 +170,9 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	vmov	s2, r6
 	sub	r0, r5, #1
 	vcvt.f32.u32	d16, d1
-	vldr	s0, .LCPI3_0
-	cmp	r0, #14
-	bhi	.LBB3_18
+	vldr	s0, .LCPI3_2
+	cmp	r0, #34
+	bhi	.LBB3_30
 @ BB#2:
 	adr	r1, .LJTI3_0
 	lsl	r0, r0, #2
@@ -186,16 +186,36 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	.long	.LBB3_7
 	.long	.LBB3_8
 	.long	.LBB3_9
-	.long	.LBB3_18
-	.long	.LBB3_18
-	.long	.LBB3_18
-	.long	.LBB3_18
-	.long	.LBB3_18
 	.long	.LBB3_11
 	.long	.LBB3_12
+	.long	.LBB3_13
 	.long	.LBB3_14
+	.long	.LBB3_30
 	.long	.LBB3_15
 	.long	.LBB3_16
+	.long	.LBB3_18
+	.long	.LBB3_19
+	.long	.LBB3_20
+	.long	.LBB3_22
+	.long	.LBB3_23
+	.long	.LBB3_24
+	.long	.LBB3_25
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_28
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_30
+	.long	.LBB3_29
 .LBB3_4:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.7
@@ -220,7 +240,7 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 .LBB3_6:
 	vmov.f32	s0, s16
 	bl	_ZN11hit_manager14set_pitch_bendEf
-	b	.LBB3_18
+	b	.LBB3_30
 .LBB3_7:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.9
@@ -236,7 +256,7 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	vmov.f32	s0, s16
 	ldr	r0, [r5, #8]
 	bl	_ZN11hit_manager13set_gate_timeEf
-	b	.LBB3_18
+	b	.LBB3_30
 .LBB3_8:
 	vcvt.f64.f32	d9, s16
 	movw	r0, :lower16:.L.str.10
@@ -253,7 +273,7 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	ldr	r0, [r6, #8]
 	bl	_ZN11hit_manager15set_stut_lengthEf
 	b	.LBB3_10
-.LBB3_9:                                @ %._crit_edge44
+.LBB3_9:                                @ %._crit_edge77
 	vcvt.f64.f32	d9, s16
 .LBB3_10:
 	vmov	r2, r3, d9
@@ -269,7 +289,7 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	vmov.f32	s0, s16
 	ldr	r0, [r5, #8]
 	bl	_ZN11hit_manager18set_stut_pitch_modEf
-	b	.LBB3_18
+	b	.LBB3_30
 .LBB3_11:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.12
@@ -277,10 +297,15 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	mov	r1, r5
 	vmov	r2, r3, d16
 	bl	rt_printf
-	movw	r0, :lower16:.L_MergedGlobals
-	movt	r0, :upper16:.L_MergedGlobals
-	ldr	r0, [r0, #4]
-	b	.LBB3_13
+	vmov.f32	s0, s16
+	movw	r5, :lower16:.L_MergedGlobals
+	movt	r5, :upper16:.L_MergedGlobals
+	ldr	r0, [r5, #4]
+	bl	_ZN11hit_manager16set_delay_lengthEf
+	vmov.f32	s0, s16
+	ldr	r0, [r5, #8]
+	bl	_ZN11hit_manager16set_delay_lengthEf
+	b	.LBB3_30
 .LBB3_12:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.13
@@ -288,17 +313,54 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	mov	r1, r5
 	vmov	r2, r3, d16
 	bl	rt_printf
-	movw	r0, :lower16:.L_MergedGlobals
-	movt	r0, :upper16:.L_MergedGlobals
-	ldr	r0, [r0, #8]
-.LBB3_13:
 	vmov.f32	s0, s16
-	bl	_ZN11hit_manager17set_hit_thresholdEf
-	b	.LBB3_18
-.LBB3_14:
+	movw	r5, :lower16:.L_MergedGlobals
+	movt	r5, :upper16:.L_MergedGlobals
+	ldr	r0, [r5, #4]
+	bl	_ZN11hit_manager14set_delay_pmodEf
+	vmov.f32	s0, s16
+	ldr	r0, [r5, #8]
+	bl	_ZN11hit_manager14set_delay_pmodEf
+	b	.LBB3_30
+.LBB3_13:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.14
 	movt	r0, :upper16:.L.str.14
+	b	.LBB3_26
+.LBB3_14:
+	vcvt.f64.f32	d16, s16
+	movw	r0, :lower16:.L.str.15
+	movt	r0, :upper16:.L.str.15
+	b	.LBB3_26
+.LBB3_15:
+	vcvt.f64.f32	d16, s16
+	movw	r0, :lower16:.L.str.16
+	movt	r0, :upper16:.L.str.16
+	mov	r1, r5
+	vmov	r2, r3, d16
+	bl	rt_printf
+	movw	r0, :lower16:.L_MergedGlobals
+	movt	r0, :upper16:.L_MergedGlobals
+	ldr	r0, [r0, #4]
+	b	.LBB3_17
+.LBB3_16:
+	vcvt.f64.f32	d16, s16
+	movw	r0, :lower16:.L.str.17
+	movt	r0, :upper16:.L.str.17
+	mov	r1, r5
+	vmov	r2, r3, d16
+	bl	rt_printf
+	movw	r0, :lower16:.L_MergedGlobals
+	movt	r0, :upper16:.L_MergedGlobals
+	ldr	r0, [r0, #8]
+.LBB3_17:
+	vmov.f32	s0, s16
+	bl	_ZN11hit_manager17set_hit_thresholdEf
+	b	.LBB3_30
+.LBB3_18:
+	vcvt.f64.f32	d16, s16
+	movw	r0, :lower16:.L.str.18
+	movt	r0, :upper16:.L.str.18
 	mov	r1, r5
 	vmov	r2, r3, d16
 	bl	rt_printf
@@ -310,11 +372,11 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	vmov.f32	s0, s16
 	ldr	r0, [r5, #8]
 	bl	_ZN11hit_manager9set_boostEf
-	b	.LBB3_18
-.LBB3_15:
+	b	.LBB3_30
+.LBB3_19:
 	vcvt.f64.f32	d9, s16
-	movw	r0, :lower16:.L.str.15
-	movt	r0, :upper16:.L.str.15
+	movw	r0, :lower16:.L.str.19
+	movt	r0, :upper16:.L.str.19
 	mov	r1, r5
 	vmov	r2, r3, d9
 	bl	rt_printf
@@ -326,13 +388,13 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	vmov.f32	s0, s16
 	ldr	r0, [r6, #8]
 	bl	_ZN11hit_manager18set_stut_max_countEf
-	b	.LBB3_17
-.LBB3_16:                               @ %._crit_edge
+	b	.LBB3_21
+.LBB3_20:                               @ %._crit_edge
 	vcvt.f64.f32	d9, s16
-.LBB3_17:
+.LBB3_21:
 	vmov	r2, r3, d9
-	movw	r0, :lower16:.L.str.16
-	movt	r0, :upper16:.L.str.16
+	movw	r0, :lower16:.L.str.20
+	movt	r0, :upper16:.L.str.20
 	mov	r1, r5
 	bl	rt_printf
 	vmov.f32	s0, s16
@@ -343,22 +405,115 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	vmov.f32	s0, s16
 	ldr	r0, [r5, #8]
 	bl	_ZN11hit_manager19set_stut_length_modEf
-.LBB3_18:
+	b	.LBB3_30
+.LBB3_22:
+	vcvt.f64.f32	d16, s16
+	movw	r0, :lower16:.L.str.21
+	movt	r0, :upper16:.L.str.21
+	mov	r1, r5
+	vmov	r2, r3, d16
+	bl	rt_printf
+	vmov.f32	s0, s16
+	movw	r5, :lower16:.L_MergedGlobals
+	movt	r5, :upper16:.L_MergedGlobals
+	ldr	r0, [r5, #4]
+	bl	_ZN11hit_manager15set_delay_countEf
+	vmov.f32	s0, s16
+	ldr	r0, [r5, #8]
+	bl	_ZN11hit_manager15set_delay_countEf
+	b	.LBB3_30
+.LBB3_23:
+	vcvt.f64.f32	d16, s16
+	movw	r0, :lower16:.L.str.22
+	movt	r0, :upper16:.L.str.22
+	mov	r1, r5
+	vmov	r2, r3, d16
+	bl	rt_printf
+	vmov.f32	s0, s16
+	movw	r5, :lower16:.L_MergedGlobals
+	movt	r5, :upper16:.L_MergedGlobals
+	ldr	r0, [r5, #4]
+	bl	_ZN11hit_manager14set_delay_smodEf
+	vmov.f32	s0, s16
+	ldr	r0, [r5, #8]
+	bl	_ZN11hit_manager14set_delay_smodEf
+	b	.LBB3_30
+.LBB3_24:
+	vcvt.f64.f32	d16, s16
+	movw	r0, :lower16:.L.str.23
+	movt	r0, :upper16:.L.str.23
+	b	.LBB3_26
+.LBB3_25:
+	vcvt.f64.f32	d16, s16
+	movw	r0, :lower16:.L.str.24
+	movt	r0, :upper16:.L.str.24
+.LBB3_26:
+	vmov	r2, r3, d16
+	mov	r1, r5
+	bl	rt_printf
+	b	.LBB3_30
+	.p2align	2
+@ BB#27:
+.LCPI3_2:
+	.long	1006699012              @ float 0.00787401571
+.LBB3_28:
+	movw	r0, :lower16:.L.str.26
+	movw	r2, :lower16:.L.str.27
+	movt	r0, :upper16:.L.str.26
+	movt	r2, :upper16:.L.str.27
+	cmp	r6, #127
+	mov	r1, r5
+	moveq	r2, r0
+	movw	r0, :lower16:.L.str.25
+	movt	r0, :upper16:.L.str.25
+	bl	rt_printf
+	movw	r7, :lower16:.L_MergedGlobals
+	mov	r5, #0
+	movt	r7, :upper16:.L_MergedGlobals
+	cmp	r6, #127
+	ldr	r0, [r7, #4]
+	movweq	r5, #1
+	mov	r1, r5
+	bl	_ZN11hit_manager23set_stut_lmod_up_buttonEb
+	ldr	r0, [r7, #8]
+	mov	r1, r5
+	bl	_ZN11hit_manager23set_stut_lmod_up_buttonEb
+	b	.LBB3_30
+.LBB3_29:
+	movw	r0, :lower16:.L.str.26
+	movw	r2, :lower16:.L.str.27
+	movt	r0, :upper16:.L.str.26
+	movt	r2, :upper16:.L.str.27
+	cmp	r6, #127
+	mov	r1, r5
+	moveq	r2, r0
+	movw	r0, :lower16:.L.str.28
+	movt	r0, :upper16:.L.str.28
+	bl	rt_printf
+	movw	r7, :lower16:.L_MergedGlobals
+	mov	r5, #0
+	movt	r7, :upper16:.L_MergedGlobals
+	cmp	r6, #127
+	ldr	r0, [r7, #4]
+	movweq	r5, #1
+	mov	r1, r5
+	bl	_ZN11hit_manager23set_stut_pmod_up_buttonEb
+	ldr	r0, [r7, #8]
+	mov	r1, r5
+	bl	_ZN11hit_manager23set_stut_pmod_up_buttonEb
+.LBB3_30:
 	mov	r0, r4
 	bl	_ZN18MidiChannelMessage7getTypeEv
 	cmp	r0, #7
-	bne	.LBB3_20
-@ BB#19:
-	movw	r0, :lower16:.L.str.17
-	movt	r0, :upper16:.L.str.17
+	bne	.LBB3_32
+@ BB#31:
+	movw	r0, :lower16:.L.str.29
+	movt	r0, :upper16:.L.str.29
 	bl	rt_printf
-.LBB3_20:
+.LBB3_32:
 	vpop	{d8, d9}
-	pop	{r4, r5, r6, r10, r11, pc}
-	.p2align	2
-@ BB#21:
-.LCPI3_0:
-	.long	1006699012              @ float 0.00787401571
+	pop	{r4, r5, r6, r7, r11, pc}
+@ BB#33:
 .Lfunc_end3:
 	.size	_Z19midiMessageCallback18MidiChannelMessagePv, .Lfunc_end3-_Z19midiMessageCallback18MidiChannelMessagePv
 	.fnend
@@ -374,12 +529,14 @@ setup:                                  @ @setup
 	push	{r4, r5, r6, r7, r8, r10, r11, lr}
 	.setfp	r11, sp, #24
 	add	r11, sp, #24
+	.pad	#8
+	sub	sp, sp, #8
 	movw	r6, :lower16:.L_MergedGlobals
 	movw	r5, :lower16:midi
 	movt	r6, :upper16:.L_MergedGlobals
 	movt	r5, :upper16:midi
 	ldr	r1, [r6, #12]
-	mov	r4, r0
+	mov	r8, r0
 	mov	r0, r5
 	bl	_ZN4Midi8readFromEPKc
 	ldr	r1, [r6, #12]
@@ -387,27 +544,35 @@ setup:                                  @ @setup
 	bl	_ZN4Midi7writeToEPKc
 	mov	r0, r5
 	mov	r1, #1
-	mov	r8, #1
+	mov	r7, #1
 	bl	_ZN4Midi12enableParserEb
 	mov	r0, r5
 	mov	r1, #1
-	ldr	r7, [r6, #12]
+	ldr	r4, [r6, #12]
 	bl	_ZN4Midi12enableParserEb
 	mov	r0, r5
 	bl	_ZN4Midi9getParserEv
 	movw	r1, :lower16:_Z19midiMessageCallback18MidiChannelMessagePv
-	str	r7, [r0, #36]
+	str	r4, [r0, #36]
 	movt	r1, :upper16:_Z19midiMessageCallback18MidiChannelMessagePv
+	mov	r2, #3
 	str	r1, [r0, #28]
-	strb	r8, [r0, #32]
-	vldr	s0, [r4, #48]
+	add	r1, sp, #5
+	strb	r7, [r0, #32]
+	movw	r0, #5552
+	strh	r0, [sp, #5]
+	mov	r0, #127
+	strb	r0, [sp, #7]
+	mov	r0, r5
+	bl	_ZN4Midi11writeOutputEPhj
+	vldr	s0, [r8, #48]
 	vcvt.u32.f32	d0, d0
 	vmov	r0, s0
 	str	r0, [r6]
 	movw	r0, :lower16:.Lstr
 	movt	r0, :upper16:.Lstr
 	bl	puts
-	mov	r0, #80
+	mov	r0, #100
 	bl	_Znwj
 	mov	r5, r0
 	ldr	r0, [r6]
@@ -421,11 +586,11 @@ setup:                                  @ @setup
 @ BB#1:
 	mov	r0, #1065353216
 	str	r5, [r6, #4]
-	str	r0, [r5, #64]
+	str	r0, [r5, #84]
 	movw	r0, :lower16:.Lstr.1
 	movt	r0, :upper16:.Lstr.1
 	bl	puts
-	mov	r0, #80
+	mov	r0, #100
 	bl	_Znwj
 	mov	r5, r0
 	ldr	r0, [r6]
@@ -439,16 +604,17 @@ setup:                                  @ @setup
 @ BB#2:
 	mov	r0, #1073741824
 	str	r5, [r6, #8]
-	str	r0, [r5, #64]
+	str	r0, [r5, #84]
 	movw	r0, :lower16:scope
-	vldr	s0, [r4, #32]
+	vldr	s0, [r8, #32]
 	movt	r0, :upper16:scope
 	mov	r1, #4
 	bl	_ZN5Scope5setupEjf
-	movw	r0, :lower16:.L.str.20
-	movt	r0, :upper16:.L.str.20
+	movw	r0, :lower16:.L.str.32
+	movt	r0, :upper16:.L.str.32
 	bl	rt_printf
 	mov	r0, #1
+	sub	sp, r11, #24
 	pop	{r4, r5, r6, r7, r8, r10, r11, pc}
 .LBB4_3:
 .Ltmp5:
@@ -564,8 +730,8 @@ render:                                 @ @render
 	vstr	s0, [r0]
 	ldr	r0, [r7, #4]
 	vcvt.f64.f32	d16, s20
-	ldr	r1, [r0, #60]
-	vldr	s0, [r0, #76]
+	ldr	r1, [r0, #80]
+	vldr	s0, [r0, #96]
 	mov	r0, r5
 	vldr	s2, [r1, #44]
 	vcvt.f64.f32	d17, s0
@@ -704,33 +870,93 @@ midi:
 
 	.type	.L.str.12,%object       @ @.str.12
 .L.str.12:
-	.asciz	"cc%d: hi threshold: %.02f\n"
+	.asciz	"cc%d: delay length: %.02f\n"
 	.size	.L.str.12, 27
 
 	.type	.L.str.13,%object       @ @.str.13
 .L.str.13:
-	.asciz	"cc%d: low threshold: %.02f\n"
-	.size	.L.str.13, 28
+	.asciz	"cc%d: delay pmod: %.02f\n"
+	.size	.L.str.13, 25
 
 	.type	.L.str.14,%object       @ @.str.14
 .L.str.14:
-	.asciz	"cc%d: boost: %.02f\n"
-	.size	.L.str.14, 20
+	.asciz	"cc%d: rev len: %.02f\n"
+	.size	.L.str.14, 22
 
 	.type	.L.str.15,%object       @ @.str.15
 .L.str.15:
-	.asciz	"cc%d: stut count: %.02f\n"
-	.size	.L.str.15, 25
+	.asciz	"cc%d: rev vol: %.02f\n"
+	.size	.L.str.15, 22
 
 	.type	.L.str.16,%object       @ @.str.16
 .L.str.16:
-	.asciz	"cc%d: stut length mmod: %.02f\n"
-	.size	.L.str.16, 31
+	.asciz	"cc%d: hi threshold: %.02f\n"
+	.size	.L.str.16, 27
 
 	.type	.L.str.17,%object       @ @.str.17
 .L.str.17:
+	.asciz	"cc%d: low threshold: %.02f\n"
+	.size	.L.str.17, 28
+
+	.type	.L.str.18,%object       @ @.str.18
+.L.str.18:
+	.asciz	"cc%d: boost: %.02f\n"
+	.size	.L.str.18, 20
+
+	.type	.L.str.19,%object       @ @.str.19
+.L.str.19:
+	.asciz	"cc%d: stut count: %.02f\n"
+	.size	.L.str.19, 25
+
+	.type	.L.str.20,%object       @ @.str.20
+.L.str.20:
+	.asciz	"cc%d: stut length mmod: %.02f\n"
+	.size	.L.str.20, 31
+
+	.type	.L.str.21,%object       @ @.str.21
+.L.str.21:
+	.asciz	"cc%d: delay count: %.02f\n"
+	.size	.L.str.21, 26
+
+	.type	.L.str.22,%object       @ @.str.22
+.L.str.22:
+	.asciz	"cc%d: delay smod: %.02f\n"
+	.size	.L.str.22, 25
+
+	.type	.L.str.23,%object       @ @.str.23
+.L.str.23:
+	.asciz	"cc%d: rev feedback: %.02f\n"
+	.size	.L.str.23, 27
+
+	.type	.L.str.24,%object       @ @.str.24
+.L.str.24:
+	.asciz	"cc%d: early vol: %.02f\n"
+	.size	.L.str.24, 24
+
+	.type	.L.str.25,%object       @ @.str.25
+.L.str.25:
+	.asciz	"cc%d: stut lmod_up: %s\n"
+	.size	.L.str.25, 24
+
+	.type	.L.str.26,%object       @ @.str.26
+.L.str.26:
+	.asciz	"ON"
+	.size	.L.str.26, 3
+
+	.type	.L.str.27,%object       @ @.str.27
+.L.str.27:
+	.asciz	"OFF"
+	.size	.L.str.27, 4
+
+	.type	.L.str.28,%object       @ @.str.28
+.L.str.28:
+	.asciz	"cc%d: stut pmod_up: %s\n"
+	.size	.L.str.28, 24
+
+	.type	.L.str.29,%object       @ @.str.29
+.L.str.29:
 	.asciz	"getting system message!\n"
-	.size	.L.str.17, 25
+	.size	.L.str.29, 25
 
 	.type	td1,%object             @ @td1
 	.bss
@@ -740,11 +966,11 @@ td1:
 	.long	0
 	.size	td1, 4
 
-	.type	.L.str.20,%object       @ @.str.20
+	.type	.L.str.32,%object       @ @.str.32
 	.section	.rodata.str1.1,"aMS",%progbits,1
-.L.str.20:
+.L.str.32:
 	.asciz	"setup complete"
-	.size	.L.str.20, 15
+	.size	.L.str.32, 15
 
 	.type	skip_first_samples,%object @ @skip_first_samples
 	.bss

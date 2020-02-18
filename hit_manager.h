@@ -34,15 +34,15 @@ private:
 
     int stut_length=3000;
     int stut_max_count=0;
-
     float stut_pitch_mod=0.0;
     float stut_length_mod=0.0;
+    bool is_stut_pmod_up=false;
+    bool is_stut_lmod_up=false;
    
-    //delay length
-    //delay counter
-    
-    //delay pmod
-    //delay smod
+    int delay_count;
+    int delay_length;
+    float delay_pitch_mod;
+    float delay_smod;
     
     float map_to_range(float input, float min, float max);
     
@@ -54,11 +54,22 @@ public:
     void set_hit_threshold(float knob);
     void set_gate_time(float knob);
     void set_boost(float knob);
+    
     void set_stut_length(float knob);
     void set_stut_max_count(float knob);
     void set_stut_pitch_mod(float knob);
     void set_stut_length_mod(float knob);
+    
+    void set_delay_length(float knob);
+    void set_delay_count(float knob);
+    void set_delay_pmod(float knob);
+    void set_delay_smod(float knob);
+    void set_stut_lmod_up_button(bool value);
+    void set_stut_pmod_up_button(bool value);
 
+  
+    
+    
     unsigned int total_samples=0;
     float sample_rate;
     float current_sma=0;

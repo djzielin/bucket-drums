@@ -77,10 +77,38 @@ void hit_manager::set_stut_pitch_mod(float knob)
     
 void hit_manager::set_stut_length_mod(float knob) 
 { 
+    stut_length_mod=1.0f-knob;
+}
+
+void hit_manager::set_delay_length(float knob) 
+{ 
     //int stut_length_mod=0.0;
 }
 
+void hit_manager::set_delay_count(float knob) 
+{ 
+    //int stut_length_mod=0.0;
+}
 
+void hit_manager::set_delay_pmod(float knob) 
+{ 
+    //int stut_length_mod=0.0;
+}
+
+void hit_manager::set_delay_smod(float knob) 
+{ 
+    //int stut_length_mod=0.0;
+}
+
+void hit_manager::set_stut_lmod_up_button(bool value)
+{
+	is_stut_lmod_up=value;
+}
+
+void hit_manager::set_stut_pmod_up_button(bool value)
+{
+	is_stut_pmod_up=value;
+}
 
 void hit_manager::hit_happened()
 {

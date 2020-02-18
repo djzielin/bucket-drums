@@ -122,8 +122,12 @@ float hit::tick()
 		{
 			stut_hits_occured++;
 			
-		    base_pitch-=our_manager->stut_pitch_mod;
-		    //stut_length-=our_manager->stut_length_mod;
+			if(our_manager->is_stut_pmod_up) base_pitch+=our_manager->stut_pitch_mod;
+		    else                             base_pitch-=our_manager->stut_pitch_mod;
+		       
+		    if(our_manager->is_stut_lmod_up) stut_length=stut_length*=((1.0f-our_manager->stut_length_mod)+1.0f); //1.0 to 2.0
+		    else                             stut_length=stut_length*our_manager->stut_length_mod;   //1 to 0
+		    
 		    play_index=0;
 		   	samples_played=0;
 		  
