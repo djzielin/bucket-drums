@@ -1,5 +1,5 @@
 #include <Bela.h>
-#include <sndfile.h>
+#include <libraries/sndfile/sndfile.h>
 #include <stdio.h>
 #include <string.h>
 #include <cmath>
@@ -8,13 +8,16 @@
 
 #include "distortion.h"
 #include "tapped_delay_line.h"
+#include "freeverb.h"
+#include "hit_manager.h"
 
 unsigned int sample_rate;
 
-
-#include "hit_manager.h"
+freeverb *ourReverb;
+float reverbVol=0.0f;
 hit_manager *snare_channel;
 hit_manager *kick_channel;
+
 Scope scope;
 
 Midi midi;
@@ -50,13 +53,8 @@ void sysexCallback(std::vector<unsigned char>* v)
    rt_printf("\n");
 }
 
-
-void midiMessageCallback(MidiChannelMessage message, void* arg)
+void process_midi_cc(int cc, int val)
 {
-	if(message.getType() == kmmControlChange)
-	{
-		int cc=	 message.getDataByte(0);
-		int val= message.getDataByte(1);
 		float float_val=(float)val/127.0f;
         bool bool_val=(val==127);
 
@@ -98,9 +96,11 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 				break;		
 			case 8:
 			    rt_printf("cc%d: rev len: %.02f\n",cc,float_val);
-				break;			
+			    ourReverb->set_delay_times(snare_channel->map_to_range(float_val,1.0f,10.0f));
+				break;		
 			case 9:
 			    rt_printf("cc%d: rev vol: %.02f\n",cc,float_val);
+			    reverbVol=float_val;
 				break;		
 			case 11:
 			    rt_printf("cc%d: hi threshold: %.02f\n",cc,float_val);
@@ -136,6 +136,7 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 				break;
 			case 18:
 			    rt_printf("cc%d: rev feedback: %.02f\n",cc,float_val);
+			    ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
 				break;
 			case 19:
 			    rt_printf("cc%d: early vol: %.02f\n",cc,float_val);
@@ -145,18 +146,48 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
 			    snare_channel->set_stut_lmod_up_button(bool_val);
 			    kick_channel->set_stut_lmod_up_button(bool_val);
 				break;
+			 case 31:
+			    rt_printf("cc%d: hi pitch up: %s\n",cc,bool_val?"ON":"OFF");
+			    //snare_channel->set_stut_pmod_up_button(bool_val);
+				break;
+		    case 32:
+			    rt_printf("cc%d: low pitch up: %s\n",cc,bool_val?"ON":"OFF");
+			    //kick_channel->set_stut_pmod_up_button(bool_val);
+				break;
 		   case 35:
 			    rt_printf("cc%d: stut pmod_up: %s\n",cc,bool_val?"ON":"OFF");
 			    snare_channel->set_stut_pmod_up_button(bool_val);
 			    kick_channel->set_stut_pmod_up_button(bool_val);
 				break;
+			case 38:
+			    rt_printf("cc%d: reverb hold: %s\n",cc,bool_val?"ON":"OFF");
+			    ourReverb->set_hold(bool_val);
+				break;
 			default:
 			 	break;
-		}   
+		} 
+}
+
+void midiMessageCallback(MidiChannelMessage message, void* arg)
+{
+	if(message.getType() == kmmControlChange)
+	{
+		int cc=	 message.getDataByte(0);
+		int val= message.getDataByte(1);
+		
+	    process_midi_cc(cc,val);
 	}
 	if(message.getType()==kmmSystem)
 	{
 		rt_printf("getting system message!\n");
+	}
+}
+
+void zero_all_cc()
+{
+	for(int i=0;i<40;i++)
+	{
+		process_midi_cc(i,0);
 	}
 }
 
@@ -172,7 +203,8 @@ bool setup(BelaContext *context, void *userData)
 	midi.setParserCallback(midiMessageCallback, (void*) gMidiPort0);
 	//midi.setSysExCallback(sysexCallback);
 	cc_write(21,127);
-	sample_rate=context->analogSampleRate;
+	sample_rate=context->audioSampleRate;
+	rt_printf("sample rate is: %d\n",(int)sample_rate);
 	
 	printf("about to setup snare channel...\n");
 	snare_channel=new hit_manager(sample_rate);
@@ -183,15 +215,11 @@ bool setup(BelaContext *context, void *userData)
     kick_channel=new hit_manager(sample_rate);
     kick_channel->sma_multiplier=2.0f;
 
-    /*td1=new tapped_delay_line(sample_rate,1.0f,100);
-	
-	for(int i=0;i<100;i++)
-	{
-		float tap_time=(float)rand()/(float)RAND_MAX*0.100f; //0ms to 100ms;
-		td1->set_tap_time(tap_time,i);
-	}*/
-	
+    ourReverb=new freeverb(sample_rate);
+
     scope.setup(4, context->audioSampleRate);
+    
+    zero_all_cc();
     
     rt_printf("setup complete");
 
@@ -212,8 +240,10 @@ void render(BelaContext *context, void *userData)
 		float snare_out = snare_channel->tick(snare_sample);
 		float kick_out  = kick_channel->tick(kick_sample);
 		
-        audioWrite(context,n,1,distortion_atan(snare_out*1.0f)); //keep within -1 to 1
-        audioWrite(context,n,0,distortion_atan(kick_out*1.0f )); //keep within -1 to 1
+		float rev=ourReverb->tick(snare_out);
+		
+        audioWrite(context,n,1,distortion_atan(snare_out + rev*reverbVol)); //keep within -1 to 1
+        audioWrite(context,n,0,distortion_atan(kick_out)); //keep within -1 to 1
         
         scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount, snare_out );
 

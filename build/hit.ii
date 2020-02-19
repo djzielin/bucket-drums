@@ -8410,9 +8410,9 @@ private:
     float delay_pitch_mod;
     float delay_smod;
 
+public:
     float map_to_range(float input, float min, float max);
 
-public:
  hit *current_hit;
     float sma_multiplier=1.0f;
 

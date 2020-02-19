@@ -143,250 +143,278 @@ _Z13sysexCallbackPSt6vectorIhSaIhEE:    @ @_Z13sysexCallbackPSt6vectorIhSaIhEE
 	.size	_Z13sysexCallbackPSt6vectorIhSaIhEE, .Lfunc_end2-_Z13sysexCallbackPSt6vectorIhSaIhEE
 	.fnend
 
-	.globl	_Z19midiMessageCallback18MidiChannelMessagePv
+	.globl	_Z15process_midi_ccii
 	.p2align	2
-	.type	_Z19midiMessageCallback18MidiChannelMessagePv,%function
-_Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiChannelMessagePv
+	.type	_Z15process_midi_ccii,%function
+_Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	.fnstart
 @ BB#0:
-	.save	{r4, r5, r6, r7, r11, lr}
-	push	{r4, r5, r6, r7, r11, lr}
+	.save	{r4, r5, r6, r10, r11, lr}
+	push	{r4, r5, r6, r10, r11, lr}
 	.setfp	r11, sp, #16
 	add	r11, sp, #16
 	.vsave	{d8, d9}
 	vpush	{d8, d9}
+	mov	r5, r1
 	mov	r4, r0
-	bl	_ZN18MidiChannelMessage7getTypeEv
-	cmp	r0, #3
-	bne	.LBB3_30
-@ BB#1:
-	ldrb	r5, [r4, #5]
 	movw	r0, :lower16:.L.str.6
-	ldrb	r6, [r4, #6]
+	mov	r1, r4
 	movt	r0, :upper16:.L.str.6
-	mov	r1, r5
-	mov	r2, r6
+	mov	r2, r5
 	bl	rt_printf
-	vmov	s2, r6
-	sub	r0, r5, #1
-	vcvt.f32.u32	d16, d1
-	vldr	s0, .LCPI3_2
-	cmp	r0, #34
-	bhi	.LBB3_30
-@ BB#2:
+	vmov	s2, r5
+	sub	r0, r4, #1
+	vcvt.f32.s32	d16, d1
+	vldr	s0, .LCPI3_3
+	cmp	r0, #37
+	bhi	.LBB3_14
+@ BB#1:
 	adr	r1, .LJTI3_0
 	lsl	r0, r0, #2
 	vmul.f32	d8, d16, d0
 	ldr	pc, [r0, r1]
-@ BB#3:
+@ BB#2:
 	.p2align	2
 .LJTI3_0:
+	.long	.LBB3_3
 	.long	.LBB3_4
-	.long	.LBB3_5
+	.long	.LBB3_6
 	.long	.LBB3_7
 	.long	.LBB3_8
-	.long	.LBB3_9
+	.long	.LBB3_10
 	.long	.LBB3_11
 	.long	.LBB3_12
 	.long	.LBB3_13
 	.long	.LBB3_14
-	.long	.LBB3_30
 	.long	.LBB3_15
 	.long	.LBB3_16
 	.long	.LBB3_18
 	.long	.LBB3_19
 	.long	.LBB3_20
-	.long	.LBB3_22
 	.long	.LBB3_23
 	.long	.LBB3_24
 	.long	.LBB3_25
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
+	.long	.LBB3_26
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_27
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
 	.long	.LBB3_28
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
-	.long	.LBB3_30
 	.long	.LBB3_29
-.LBB3_4:
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_31
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_32
+.LBB3_3:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.7
 	movt	r0, :upper16:.L.str.7
-	mov	r1, r5
+	mov	r1, #1
 	vmov	r2, r3, d16
 	bl	rt_printf
 	movw	r0, :lower16:.L_MergedGlobals
 	movt	r0, :upper16:.L_MergedGlobals
-	ldr	r0, [r0, #4]
-	b	.LBB3_6
-.LBB3_5:
+	ldr	r0, [r0, #12]
+	b	.LBB3_5
+.LBB3_4:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.8
 	movt	r0, :upper16:.L.str.8
-	mov	r1, r5
+	mov	r1, #2
 	vmov	r2, r3, d16
 	bl	rt_printf
 	movw	r0, :lower16:.L_MergedGlobals
 	movt	r0, :upper16:.L_MergedGlobals
-	ldr	r0, [r0, #8]
-.LBB3_6:
+	ldr	r0, [r0, #16]
+.LBB3_5:
 	vmov.f32	s0, s16
-	bl	_ZN11hit_manager14set_pitch_bendEf
-	b	.LBB3_30
-.LBB3_7:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager14set_pitch_bendEf
+.LBB3_6:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.9
 	movt	r0, :upper16:.L.str.9
-	mov	r1, r5
+	mov	r1, #3
 	vmov	r2, r3, d16
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #4]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager13set_gate_timeEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #8]
-	bl	_ZN11hit_manager13set_gate_timeEf
-	b	.LBB3_30
-.LBB3_8:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager13set_gate_timeEf
+.LBB3_7:
 	vcvt.f64.f32	d9, s16
 	movw	r0, :lower16:.L.str.10
 	movt	r0, :upper16:.L.str.10
-	mov	r1, r5
+	mov	r1, #4
 	vmov	r2, r3, d9
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r6, :lower16:.L_MergedGlobals
-	movt	r6, :upper16:.L_MergedGlobals
-	ldr	r0, [r6, #4]
+	movw	r5, :lower16:.L_MergedGlobals
+	movt	r5, :upper16:.L_MergedGlobals
+	ldr	r0, [r5, #12]
 	bl	_ZN11hit_manager15set_stut_lengthEf
 	vmov.f32	s0, s16
-	ldr	r0, [r6, #8]
+	ldr	r0, [r5, #16]
 	bl	_ZN11hit_manager15set_stut_lengthEf
-	b	.LBB3_10
-.LBB3_9:                                @ %._crit_edge77
+	b	.LBB3_9
+.LBB3_8:                                @ %._crit_edge83
 	vcvt.f64.f32	d9, s16
-.LBB3_10:
+.LBB3_9:
 	vmov	r2, r3, d9
 	movw	r0, :lower16:.L.str.11
 	movt	r0, :upper16:.L.str.11
-	mov	r1, r5
+	mov	r1, r4
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #4]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager18set_stut_pitch_modEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #8]
-	bl	_ZN11hit_manager18set_stut_pitch_modEf
-	b	.LBB3_30
-.LBB3_11:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager18set_stut_pitch_modEf
+.LBB3_10:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.12
 	movt	r0, :upper16:.L.str.12
-	mov	r1, r5
+	mov	r1, #6
 	vmov	r2, r3, d16
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #4]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager16set_delay_lengthEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #8]
-	bl	_ZN11hit_manager16set_delay_lengthEf
-	b	.LBB3_30
-.LBB3_12:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager16set_delay_lengthEf
+.LBB3_11:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.13
 	movt	r0, :upper16:.L.str.13
-	mov	r1, r5
+	mov	r1, #7
 	vmov	r2, r3, d16
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #4]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager14set_delay_pmodEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #8]
-	bl	_ZN11hit_manager14set_delay_pmodEf
-	b	.LBB3_30
-.LBB3_13:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager14set_delay_pmodEf
+.LBB3_12:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.14
 	movt	r0, :upper16:.L.str.14
-	b	.LBB3_26
-.LBB3_14:
+	mov	r1, #8
+	vmov	r2, r3, d16
+	bl	rt_printf
+	vmov.f32	d1, #1.000000e+00
+	movw	r0, :lower16:.L_MergedGlobals
+	vmov.f32	s0, s16
+	movt	r0, :upper16:.L_MergedGlobals
+	ldr	r4, [r0, #4]
+	vmov.f32	s1, s2
+	ldr	r0, [r0, #12]
+	vmov.f32	d1, #1.000000e+01
+	bl	_ZN11hit_manager12map_to_rangeEfff
+	mov	r0, r4
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN8freeverb15set_delay_timesEf
+.LBB3_13:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.15
 	movt	r0, :upper16:.L.str.15
-	b	.LBB3_26
+	mov	r1, #9
+	vmov	r2, r3, d16
+	bl	rt_printf
+	movw	r0, :lower16:.L_MergedGlobals
+	movt	r0, :upper16:.L_MergedGlobals
+	vstr	s16, [r0, #8]
+.LBB3_14:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, pc}
 .LBB3_15:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.16
 	movt	r0, :upper16:.L.str.16
-	mov	r1, r5
+	mov	r1, #11
 	vmov	r2, r3, d16
 	bl	rt_printf
 	movw	r0, :lower16:.L_MergedGlobals
 	movt	r0, :upper16:.L_MergedGlobals
-	ldr	r0, [r0, #4]
+	ldr	r0, [r0, #12]
 	b	.LBB3_17
 .LBB3_16:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.17
 	movt	r0, :upper16:.L.str.17
-	mov	r1, r5
+	mov	r1, #12
 	vmov	r2, r3, d16
 	bl	rt_printf
 	movw	r0, :lower16:.L_MergedGlobals
 	movt	r0, :upper16:.L_MergedGlobals
-	ldr	r0, [r0, #8]
+	ldr	r0, [r0, #16]
 .LBB3_17:
 	vmov.f32	s0, s16
-	bl	_ZN11hit_manager17set_hit_thresholdEf
-	b	.LBB3_30
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager17set_hit_thresholdEf
 .LBB3_18:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.18
 	movt	r0, :upper16:.L.str.18
-	mov	r1, r5
+	mov	r1, #13
 	vmov	r2, r3, d16
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #4]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager9set_boostEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #8]
-	bl	_ZN11hit_manager9set_boostEf
-	b	.LBB3_30
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager9set_boostEf
 .LBB3_19:
 	vcvt.f64.f32	d9, s16
 	movw	r0, :lower16:.L.str.19
 	movt	r0, :upper16:.L.str.19
-	mov	r1, r5
+	mov	r1, #14
 	vmov	r2, r3, d9
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r6, :lower16:.L_MergedGlobals
-	movt	r6, :upper16:.L_MergedGlobals
-	ldr	r0, [r6, #4]
+	movw	r5, :lower16:.L_MergedGlobals
+	movt	r5, :upper16:.L_MergedGlobals
+	ldr	r0, [r5, #12]
 	bl	_ZN11hit_manager18set_stut_max_countEf
 	vmov.f32	s0, s16
-	ldr	r0, [r6, #8]
+	ldr	r0, [r5, #16]
 	bl	_ZN11hit_manager18set_stut_max_countEf
 	b	.LBB3_21
 .LBB3_20:                               @ %._crit_edge
@@ -395,127 +423,238 @@ _Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiC
 	vmov	r2, r3, d9
 	movw	r0, :lower16:.L.str.20
 	movt	r0, :upper16:.L.str.20
-	mov	r1, r5
+	mov	r1, r4
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #4]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager19set_stut_length_modEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #8]
-	bl	_ZN11hit_manager19set_stut_length_modEf
-	b	.LBB3_30
-.LBB3_22:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager19set_stut_length_modEf
+	.p2align	2
+@ BB#22:
+.LCPI3_3:
+	.long	1006699012              @ float 0.00787401571
+.LBB3_23:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.21
 	movt	r0, :upper16:.L.str.21
-	mov	r1, r5
+	mov	r1, #16
 	vmov	r2, r3, d16
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #4]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager15set_delay_countEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #8]
-	bl	_ZN11hit_manager15set_delay_countEf
-	b	.LBB3_30
-.LBB3_23:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager15set_delay_countEf
+.LBB3_24:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.22
 	movt	r0, :upper16:.L.str.22
-	mov	r1, r5
+	mov	r1, #17
 	vmov	r2, r3, d16
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #4]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager14set_delay_smodEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #8]
-	bl	_ZN11hit_manager14set_delay_smodEf
-	b	.LBB3_30
-.LBB3_24:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager14set_delay_smodEf
+.LBB3_25:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.23
 	movt	r0, :upper16:.L.str.23
-	b	.LBB3_26
-.LBB3_25:
+	mov	r1, #18
+	vmov	r2, r3, d16
+	bl	rt_printf
+	vmov.f32	s0, s16
+	movw	r0, :lower16:.L_MergedGlobals
+	movt	r0, :upper16:.L_MergedGlobals
+	vmov.f32	d1, #1.000000e+00
+	ldr	r4, [r0, #4]
+	ldr	r0, [r0, #12]
+	vldr	s1, .LCPI3_1
+	bl	_ZN11hit_manager12map_to_rangeEfff
+	mov	r0, r4
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN8freeverb12set_feedbackEf
+.LBB3_26:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.24
 	movt	r0, :upper16:.L.str.24
-.LBB3_26:
+	mov	r1, #19
 	vmov	r2, r3, d16
-	mov	r1, r5
 	bl	rt_printf
-	b	.LBB3_30
-	.p2align	2
-@ BB#27:
-.LCPI3_2:
-	.long	1006699012              @ float 0.00787401571
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, pc}
+.LBB3_27:
+	movw	r0, :lower16:.L.str.26
+	movw	r2, :lower16:.L.str.27
+	movt	r0, :upper16:.L.str.26
+	movt	r2, :upper16:.L.str.27
+	cmp	r5, #127
+	mov	r1, #25
+	moveq	r2, r0
+	movw	r0, :lower16:.L.str.25
+	movt	r0, :upper16:.L.str.25
+	bl	rt_printf
+	movw	r6, :lower16:.L_MergedGlobals
+	mov	r4, #0
+	movt	r6, :upper16:.L_MergedGlobals
+	cmp	r5, #127
+	ldr	r0, [r6, #12]
+	movweq	r4, #1
+	mov	r1, r4
+	bl	_ZN11hit_manager23set_stut_lmod_up_buttonEb
+	ldr	r0, [r6, #16]
+	mov	r1, r4
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager23set_stut_lmod_up_buttonEb
 .LBB3_28:
 	movw	r0, :lower16:.L.str.26
 	movw	r2, :lower16:.L.str.27
 	movt	r0, :upper16:.L.str.26
 	movt	r2, :upper16:.L.str.27
-	cmp	r6, #127
-	mov	r1, r5
+	cmp	r5, #127
+	mov	r1, #31
 	moveq	r2, r0
-	movw	r0, :lower16:.L.str.25
-	movt	r0, :upper16:.L.str.25
-	bl	rt_printf
-	movw	r7, :lower16:.L_MergedGlobals
-	mov	r5, #0
-	movt	r7, :upper16:.L_MergedGlobals
-	cmp	r6, #127
-	ldr	r0, [r7, #4]
-	movweq	r5, #1
-	mov	r1, r5
-	bl	_ZN11hit_manager23set_stut_lmod_up_buttonEb
-	ldr	r0, [r7, #8]
-	mov	r1, r5
-	bl	_ZN11hit_manager23set_stut_lmod_up_buttonEb
+	movw	r0, :lower16:.L.str.28
+	movt	r0, :upper16:.L.str.28
 	b	.LBB3_30
 .LBB3_29:
 	movw	r0, :lower16:.L.str.26
 	movw	r2, :lower16:.L.str.27
 	movt	r0, :upper16:.L.str.26
 	movt	r2, :upper16:.L.str.27
-	cmp	r6, #127
-	mov	r1, r5
+	cmp	r5, #127
+	mov	r1, #32
 	moveq	r2, r0
-	movw	r0, :lower16:.L.str.28
-	movt	r0, :upper16:.L.str.28
-	bl	rt_printf
-	movw	r7, :lower16:.L_MergedGlobals
-	mov	r5, #0
-	movt	r7, :upper16:.L_MergedGlobals
-	cmp	r6, #127
-	ldr	r0, [r7, #4]
-	movweq	r5, #1
-	mov	r1, r5
-	bl	_ZN11hit_manager23set_stut_pmod_up_buttonEb
-	ldr	r0, [r7, #8]
-	mov	r1, r5
-	bl	_ZN11hit_manager23set_stut_pmod_up_buttonEb
+	movw	r0, :lower16:.L.str.29
+	movt	r0, :upper16:.L.str.29
 .LBB3_30:
+	bl	rt_printf
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, pc}
+.LBB3_31:
+	movw	r0, :lower16:.L.str.26
+	movw	r2, :lower16:.L.str.27
+	movt	r0, :upper16:.L.str.26
+	movt	r2, :upper16:.L.str.27
+	cmp	r5, #127
+	mov	r1, #35
+	moveq	r2, r0
+	movw	r0, :lower16:.L.str.30
+	movt	r0, :upper16:.L.str.30
+	bl	rt_printf
+	movw	r6, :lower16:.L_MergedGlobals
+	mov	r4, #0
+	movt	r6, :upper16:.L_MergedGlobals
+	cmp	r5, #127
+	ldr	r0, [r6, #12]
+	movweq	r4, #1
+	mov	r1, r4
+	bl	_ZN11hit_manager23set_stut_pmod_up_buttonEb
+	ldr	r0, [r6, #16]
+	mov	r1, r4
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager23set_stut_pmod_up_buttonEb
+.LBB3_32:
+	movw	r0, :lower16:.L.str.26
+	movw	r2, :lower16:.L.str.27
+	movt	r0, :upper16:.L.str.26
+	movt	r2, :upper16:.L.str.27
+	cmp	r5, #127
+	mov	r1, #38
+	moveq	r2, r0
+	movw	r0, :lower16:.L.str.31
+	movt	r0, :upper16:.L.str.31
+	bl	rt_printf
+	movw	r0, :lower16:.L_MergedGlobals
+	mov	r1, #0
+	movt	r0, :upper16:.L_MergedGlobals
+	cmp	r5, #127
+	ldr	r0, [r0, #4]
+	movweq	r1, #1
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN8freeverb8set_holdEb
+	.p2align	2
+@ BB#33:
+.LCPI3_1:
+	.long	1062668861              @ float 0.839999973
+.Lfunc_end3:
+	.size	_Z15process_midi_ccii, .Lfunc_end3-_Z15process_midi_ccii
+	.fnend
+
+	.globl	_Z19midiMessageCallback18MidiChannelMessagePv
+	.p2align	2
+	.type	_Z19midiMessageCallback18MidiChannelMessagePv,%function
+_Z19midiMessageCallback18MidiChannelMessagePv: @ @_Z19midiMessageCallback18MidiChannelMessagePv
+	.fnstart
+@ BB#0:
+	.save	{r4, r10, r11, lr}
+	push	{r4, r10, r11, lr}
+	.setfp	r11, sp, #8
+	add	r11, sp, #8
+	mov	r4, r0
+	bl	_ZN18MidiChannelMessage7getTypeEv
+	cmp	r0, #3
+	bne	.LBB4_2
+@ BB#1:
+	ldrb	r0, [r4, #5]
+	ldrb	r1, [r4, #6]
+	bl	_Z15process_midi_ccii
+.LBB4_2:
 	mov	r0, r4
 	bl	_ZN18MidiChannelMessage7getTypeEv
 	cmp	r0, #7
-	bne	.LBB3_32
-@ BB#31:
-	movw	r0, :lower16:.L.str.29
-	movt	r0, :upper16:.L.str.29
+	popne	{r4, r10, r11, pc}
+	movw	r0, :lower16:.L.str.32
+	movt	r0, :upper16:.L.str.32
 	bl	rt_printf
-.LBB3_32:
-	vpop	{d8, d9}
-	pop	{r4, r5, r6, r7, r11, pc}
-@ BB#33:
-.Lfunc_end3:
-	.size	_Z19midiMessageCallback18MidiChannelMessagePv, .Lfunc_end3-_Z19midiMessageCallback18MidiChannelMessagePv
+	pop	{r4, r10, r11, pc}
+.Lfunc_end4:
+	.size	_Z19midiMessageCallback18MidiChannelMessagePv, .Lfunc_end4-_Z19midiMessageCallback18MidiChannelMessagePv
+	.fnend
+
+	.globl	_Z11zero_all_ccv
+	.p2align	2
+	.type	_Z11zero_all_ccv,%function
+_Z11zero_all_ccv:                       @ @_Z11zero_all_ccv
+	.fnstart
+@ BB#0:
+	.save	{r4, r10, r11, lr}
+	push	{r4, r10, r11, lr}
+	.setfp	r11, sp, #8
+	add	r11, sp, #8
+	mov	r4, #0
+.LBB5_1:                                @ =>This Inner Loop Header: Depth=1
+	mov	r0, r4
+	mov	r1, #0
+	bl	_Z15process_midi_ccii
+	add	r4, r4, #1
+	cmp	r4, #40
+	bne	.LBB5_1
+@ BB#2:
+	pop	{r4, r10, r11, pc}
+.Lfunc_end5:
+	.size	_Z11zero_all_ccv, .Lfunc_end5-_Z11zero_all_ccv
 	.fnend
 
 	.globl	setup
@@ -535,11 +674,11 @@ setup:                                  @ @setup
 	movw	r5, :lower16:midi
 	movt	r6, :upper16:.L_MergedGlobals
 	movt	r5, :upper16:midi
-	ldr	r1, [r6, #12]
+	ldr	r1, [r6, #20]
 	mov	r8, r0
 	mov	r0, r5
 	bl	_ZN4Midi8readFromEPKc
-	ldr	r1, [r6, #12]
+	ldr	r1, [r6, #20]
 	mov	r0, r5
 	bl	_ZN4Midi7writeToEPKc
 	mov	r0, r5
@@ -548,7 +687,7 @@ setup:                                  @ @setup
 	bl	_ZN4Midi12enableParserEb
 	mov	r0, r5
 	mov	r1, #1
-	ldr	r4, [r6, #12]
+	ldr	r4, [r6, #20]
 	bl	_ZN4Midi12enableParserEb
 	mov	r0, r5
 	bl	_ZN4Midi9getParserEv
@@ -565,10 +704,13 @@ setup:                                  @ @setup
 	strb	r0, [sp, #7]
 	mov	r0, r5
 	bl	_ZN4Midi11writeOutputEPhj
-	vldr	s0, [r8, #48]
+	vldr	s0, [r8, #32]
+	movw	r0, :lower16:.L.str.33
+	movt	r0, :upper16:.L.str.33
 	vcvt.u32.f32	d0, d0
-	vmov	r0, s0
-	str	r0, [r6]
+	vmov	r1, s0
+	str	r1, [r6]
+	bl	rt_printf
 	movw	r0, :lower16:.Lstr
 	movt	r0, :upper16:.Lstr
 	bl	puts
@@ -585,7 +727,7 @@ setup:                                  @ @setup
 .Ltmp1:
 @ BB#1:
 	mov	r0, #1065353216
-	str	r5, [r6, #4]
+	str	r5, [r6, #12]
 	str	r0, [r5, #84]
 	movw	r0, :lower16:.Lstr.1
 	movt	r0, :upper16:.Lstr.1
@@ -603,44 +745,69 @@ setup:                                  @ @setup
 .Ltmp4:
 @ BB#2:
 	mov	r0, #1073741824
-	str	r5, [r6, #8]
+	str	r5, [r6, #16]
 	str	r0, [r5, #84]
+	mov	r0, #120
+	bl	_Znwj
+	mov	r5, r0
+	ldr	r0, [r6]
+	vmov	s0, r0
+	vcvt.f32.u32	d0, d0
+.Ltmp6:
+	mov	r0, r5
+                                        @ kill: %S0<def> %S0<kill> %D0<kill>
+	bl	_ZN8freeverbC1Ef
+.Ltmp7:
+@ BB#3:
+	str	r5, [r6, #4]
 	movw	r0, :lower16:scope
 	vldr	s0, [r8, #32]
 	movt	r0, :upper16:scope
 	mov	r1, #4
 	bl	_ZN5Scope5setupEjf
-	movw	r0, :lower16:.L.str.32
-	movt	r0, :upper16:.L.str.32
+	mov	r4, #0
+.LBB6_4:                                @ =>This Inner Loop Header: Depth=1
+	mov	r0, r4
+	mov	r1, #0
+	bl	_Z15process_midi_ccii
+	add	r4, r4, #1
+	cmp	r4, #40
+	bne	.LBB6_4
+@ BB#5:                                 @ %_Z11zero_all_ccv.exit
+	movw	r0, :lower16:.L.str.36
+	movt	r0, :upper16:.L.str.36
 	bl	rt_printf
 	mov	r0, #1
 	sub	sp, r11, #24
 	pop	{r4, r5, r6, r7, r8, r10, r11, pc}
-.LBB4_3:
+.LBB6_6:
+.Ltmp8:
+	b	.LBB6_9
+.LBB6_7:
 .Ltmp5:
-	b	.LBB4_5
-.LBB4_4:
+	b	.LBB6_9
+.LBB6_8:
 .Ltmp2:
-.LBB4_5:
+.LBB6_9:
 	mov	r4, r0
 	mov	r0, r5
 	bl	_ZdlPv
 	mov	r0, r4
 	mov	lr, pc
 	b	_Unwind_Resume
-.Lfunc_end4:
-	.size	setup, .Lfunc_end4-setup
+.Lfunc_end6:
+	.size	setup, .Lfunc_end6-setup
 	.globl	__gxx_personality_v0
 	.personality __gxx_personality_v0
 	.handlerdata
 	.p2align	2
-GCC_except_table4:
+GCC_except_table6:
 .Lexception0:
 	.byte	255                     @ @LPStart Encoding = omit
 	.byte	0                       @ @TType Encoding = absptr
-	.asciz	"\303\200"              @ @TType base offset
+	.byte	93                      @ @TType base offset
 	.byte	3                       @ Call site Encoding = udata4
-	.byte	65                      @ Call site table length
+	.byte	91                      @ Call site table length
 	.long	.Lfunc_begin0-.Lfunc_begin0 @ >> Call Site 1 <<
 	.long	.Ltmp0-.Lfunc_begin0    @   Call between .Lfunc_begin0 and .Ltmp0
 	.long	0                       @     has no landing pad
@@ -658,7 +825,15 @@ GCC_except_table4:
 	.long	.Ltmp5-.Lfunc_begin0    @     jumps to .Ltmp5
 	.byte	0                       @   On action: cleanup
 	.long	.Ltmp4-.Lfunc_begin0    @ >> Call Site 5 <<
-	.long	.Lfunc_end4-.Ltmp4      @   Call between .Ltmp4 and .Lfunc_end4
+	.long	.Ltmp6-.Ltmp4           @   Call between .Ltmp4 and .Ltmp6
+	.long	0                       @     has no landing pad
+	.byte	0                       @   On action: cleanup
+	.long	.Ltmp6-.Lfunc_begin0    @ >> Call Site 6 <<
+	.long	.Ltmp7-.Ltmp6           @   Call between .Ltmp6 and .Ltmp7
+	.long	.Ltmp8-.Lfunc_begin0    @     jumps to .Ltmp8
+	.byte	0                       @   On action: cleanup
+	.long	.Ltmp7-.Lfunc_begin0    @ >> Call Site 7 <<
+	.long	.Lfunc_end6-.Ltmp7      @   Call between .Ltmp7 and .Lfunc_end6
 	.long	0                       @     has no landing pad
 	.byte	0                       @   On action: cleanup
 	.p2align	2
@@ -681,14 +856,14 @@ render:                                 @ @render
 	mov	r4, r0
 	ldr	r0, [r4, #20]
 	cmp	r0, #0
-	beq	.LBB5_3
+	beq	.LBB7_3
 @ BB#1:                                 @ %.lr.ph
 	movw	r7, :lower16:.L_MergedGlobals
 	movw	r5, :lower16:scope
 	mov	r6, #0
 	movt	r7, :upper16:.L_MergedGlobals
 	movt	r5, :upper16:scope
-.LBB5_2:                                @ =>This Inner Loop Header: Depth=1
+.LBB7_2:                                @ =>This Inner Loop Header: Depth=1
 	ldr	r1, [r4, #24]
 	ldr	r0, [r4]
 	mul	r1, r1, r6
@@ -702,23 +877,30 @@ render:                                 @ @render
 	add	r0, r0, r1, lsl #2
 	vldr	s0, [r0]
 	bl	_Z16distortion_clampf
-	vmov.f32	s18, s0
-	ldr	r0, [r7, #4]
+	vmov.f32	s20, s0
+	ldr	r0, [r7, #12]
 	vmov.f32	s0, s16
 	bl	_ZN11hit_manager4tickEf
-	vmov.f32	s20, s0
-	ldr	r0, [r7, #8]
-	vmov.f32	s0, s18
-	bl	_ZN11hit_manager4tickEf
-	vmov.f32	s18, s0
+	vmov.f64	d9, d0
+	ldr	r0, [r7, #16]
 	vmov.f32	s0, s20
+	bl	_ZN11hit_manager4tickEf
+	vmov.f32	s20, s0
+	ldr	r0, [r7, #4]
+	vmov.f32	s0, s18
+	bl	_ZN8freeverb4tickEf
+                                        @ kill: %S0<def> %S0<kill> %D0<def>
+	vldr	s2, [r7, #8]
+	vmul.f32	d16, d1, d0
+	vadd.f32	d0, d16, d9
+                                        @ kill: %S0<def> %S0<kill> %D0<kill>
 	bl	_Z15distortion_atanf
 	ldr	r1, [r4, #28]
 	ldr	r0, [r4, #4]
 	mul	r1, r1, r6
 	add	r0, r0, r1, lsl #2
 	vstr	s0, [r0, #4]
-	vmov.f32	s0, s18
+	vmov.f32	s0, s20
 	bl	_Z15distortion_atanf
 	vabs.f32	d1, d8
 	ldr	r1, [r4, #28]
@@ -728,8 +910,8 @@ render:                                 @ @render
 	add	r0, r0, r1, lsl #2
 	vmov	r2, r3, d16
 	vstr	s0, [r0]
-	ldr	r0, [r7, #4]
-	vcvt.f64.f32	d16, s20
+	ldr	r0, [r7, #12]
+	vcvt.f64.f32	d16, s18
 	ldr	r1, [r0, #80]
 	vldr	s0, [r0, #96]
 	mov	r0, r5
@@ -742,13 +924,13 @@ render:                                 @ @render
 	add	r6, r6, #1
 	ldr	r0, [r4, #20]
 	cmp	r6, r0
-	blo	.LBB5_2
-.LBB5_3:                                @ %._crit_edge
+	blo	.LBB7_2
+.LBB7_3:                                @ %._crit_edge
 	sub	sp, r11, #40
 	vpop	{d8, d9, d10}
 	pop	{r4, r5, r6, r7, r11, pc}
-.Lfunc_end5:
-	.size	render, .Lfunc_end5-render
+.Lfunc_end7:
+	.size	render, .Lfunc_end7-render
 	.fnend
 
 	.globl	cleanup
@@ -758,8 +940,8 @@ cleanup:                                @ @cleanup
 	.fnstart
 @ BB#0:
 	bx	lr
-.Lfunc_end6:
-	.size	cleanup, .Lfunc_end6-cleanup
+.Lfunc_end8:
+	.size	cleanup, .Lfunc_end8-cleanup
 	.fnend
 
 	.section	.text.startup,"ax",%progbits
@@ -793,8 +975,8 @@ _GLOBAL__sub_I_render.ii:               @ @_GLOBAL__sub_I_render.ii
 	mov	r2, r5
 	pop	{r4, r5, r11, lr}
 	b	__cxa_atexit
-.Lfunc_end7:
-	.size	_GLOBAL__sub_I_render.ii, .Lfunc_end7-_GLOBAL__sub_I_render.ii
+.Lfunc_end9:
+	.size	_GLOBAL__sub_I_render.ii, .Lfunc_end9-_GLOBAL__sub_I_render.ii
 	.fnend
 
 	.type	scope,%object           @ @scope
@@ -950,13 +1132,28 @@ midi:
 
 	.type	.L.str.28,%object       @ @.str.28
 .L.str.28:
-	.asciz	"cc%d: stut pmod_up: %s\n"
-	.size	.L.str.28, 24
+	.asciz	"cc%d: hi pitch up: %s\n"
+	.size	.L.str.28, 23
 
 	.type	.L.str.29,%object       @ @.str.29
 .L.str.29:
+	.asciz	"cc%d: low pitch up: %s\n"
+	.size	.L.str.29, 24
+
+	.type	.L.str.30,%object       @ @.str.30
+.L.str.30:
+	.asciz	"cc%d: stut pmod_up: %s\n"
+	.size	.L.str.30, 24
+
+	.type	.L.str.31,%object       @ @.str.31
+.L.str.31:
+	.asciz	"cc%d: reverb hold: %s\n"
+	.size	.L.str.31, 23
+
+	.type	.L.str.32,%object       @ @.str.32
+.L.str.32:
 	.asciz	"getting system message!\n"
-	.size	.L.str.29, 25
+	.size	.L.str.32, 25
 
 	.type	td1,%object             @ @td1
 	.bss
@@ -966,11 +1163,16 @@ td1:
 	.long	0
 	.size	td1, 4
 
-	.type	.L.str.32,%object       @ @.str.32
+	.type	.L.str.33,%object       @ @.str.33
 	.section	.rodata.str1.1,"aMS",%progbits,1
-.L.str.32:
+.L.str.33:
+	.asciz	"sample rate is: %d\n"
+	.size	.L.str.33, 20
+
+	.type	.L.str.36,%object       @ @.str.36
+.L.str.36:
 	.asciz	"setup complete"
-	.size	.L.str.32, 15
+	.size	.L.str.36, 15
 
 	.type	skip_first_samples,%object @ @skip_first_samples
 	.bss
@@ -1004,26 +1206,34 @@ skip_count:
 
 	.type	.L_MergedGlobals,%object @ @_MergedGlobals
 	.data
-	.p2align	2
+	.p2align	4
 .L_MergedGlobals:
 	.long	0                       @ 0x0
 	.long	0
+	.long	0                       @ float 0
+	.long	0
 	.long	0
 	.long	.L.str
-	.size	.L_MergedGlobals, 16
+	.size	.L_MergedGlobals, 24
 
 
 	.globl	sample_rate
 sample_rate = .L_MergedGlobals
 	.size	sample_rate, 4
+	.globl	ourReverb
+ourReverb = .L_MergedGlobals+4
+	.size	ourReverb, 4
+	.globl	reverbVol
+reverbVol = .L_MergedGlobals+8
+	.size	reverbVol, 4
 	.globl	snare_channel
-snare_channel = .L_MergedGlobals+4
+snare_channel = .L_MergedGlobals+12
 	.size	snare_channel, 4
 	.globl	kick_channel
-kick_channel = .L_MergedGlobals+8
+kick_channel = .L_MergedGlobals+16
 	.size	kick_channel, 4
 	.globl	gMidiPort0
-gMidiPort0 = .L_MergedGlobals+12
+gMidiPort0 = .L_MergedGlobals+20
 	.size	gMidiPort0, 4
 	.ident	"clang version 3.9.1-9 (tags/RELEASE_391/rc2)"
 	.section	".note.GNU-stack","",%progbits

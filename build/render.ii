@@ -3135,9 +3135,6 @@ static inline float min(float x, float y){
 
 }
 # 2 "/root/Bela/projects/bucket-drums/render.cpp" 2
-# 1 "./include/legacy/sndfile.h" 1
-
-
 # 1 "./libraries/sndfile/sndfile.h" 1
 # 1 "/usr/include/sndfile.h" 1 3 4
 # 32 "/usr/include/sndfile.h" 3 4
@@ -4511,7 +4508,6 @@ sf_get_chunk_data (const SF_CHUNK_ITERATOR * it, SF_CHUNK_INFO * chunk_info) ;
 
 }
 # 2 "./libraries/sndfile/sndfile.h" 2
-# 4 "./include/legacy/sndfile.h" 2
 # 3 "/root/Bela/projects/bucket-drums/render.cpp" 2
 # 1 "/usr/xenomai/include/cobalt/stdio.h" 1
 # 20 "/usr/xenomai/include/cobalt/stdio.h" 3
@@ -44866,11 +44862,111 @@ private:
    int _read_pos;
 };
 # 11 "/root/Bela/projects/bucket-drums/render.cpp" 2
-
-unsigned int sample_rate;
-
+# 1 "/root/Bela/projects/bucket-drums/freeverb.h" 1
 
 
+# 1 "/root/Bela/projects/bucket-drums/allpass_filter.h" 1
+
+
+
+
+class allpass_filter
+{
+public:
+   allpass_filter(float sample_rate, float max_delay_seconds);
+
+   void set_delay_time(float dt);
+   void set_delay_samples(int delay_samples);
+   void set_feedback(float f);
+
+   float tick(float input);
+
+private:
+   unsigned int _delay_line_max;
+   float *_delay_line;
+
+   float _sample_rate;
+   int _current_delay;
+   float _feedback;
+
+   int _read_pos;
+
+
+   float prev_val;
+};
+# 4 "/root/Bela/projects/bucket-drums/freeverb.h" 2
+# 1 "/root/Bela/projects/bucket-drums/feedback_comb_filter.h" 1
+
+
+
+
+class feedback_comb_filter
+{
+public:
+   feedback_comb_filter(float sample_rate, float max_delay_seconds);
+
+   void set_delay_time(float dt);
+   void set_delay_samples(int delay_samples);
+   void set_feedback(float f);
+   void set_lowpass(float val);
+
+   float tick(float input);
+
+private:
+   unsigned int _delay_line_max;
+   float *_delay_line;
+
+   float _sample_rate;
+   int _current_delay;
+   float _feedback;
+   float effectMix;
+   int _read_pos;
+   int _write_pos;
+
+   float lowpassA, lowpassB, prev_val;
+};
+# 5 "/root/Bela/projects/bucket-drums/freeverb.h" 2
+
+
+class freeverb
+{
+private:
+   float sampleRate;
+
+   float delay_times[8]={1116.0f/44100.0f,
+                         1188.0f/44100.0f,
+                         1277.0f/44100.0f,
+                         1356.0f/44100.0f,
+                         1422.0f/44100.0f,
+                         1491.0f/44100.0f,
+                         1557.0f/44100.0f,
+                         1617.0f/44100.0f};
+
+   float allpass_times[4]={225.0f/44100.0f,
+                           556.0f/44100.0f,
+                           441.0f/44100.0f,
+                           341.0f/44100.0f};
+
+   feedback_comb_filter *fbcf[8];
+   allpass_filter *apf[4];
+   bool is_holding=false;
+
+   float old_feedback;
+   float old_lowpass;
+
+   float current_feedback;
+   float current_lowpass;
+
+public:
+   void set_delay_times(float factor);
+   void set_feedback(float val);
+   void set_lowpass(float val);
+   void set_hold(bool val);
+
+   freeverb(float sample_rate);
+   float tick(float in);
+};
+# 12 "/root/Bela/projects/bucket-drums/render.cpp" 2
 # 1 "/root/Bela/projects/bucket-drums/hit_manager.h" 1
 
 
@@ -45013,9 +45109,9 @@ private:
     float delay_pitch_mod;
     float delay_smod;
 
+public:
     float map_to_range(float input, float min, float max);
 
-public:
  hit *current_hit;
     float sma_multiplier=1.0f;
 
@@ -45050,9 +45146,15 @@ public:
  friend class hit;
 
 };
-# 16 "/root/Bela/projects/bucket-drums/render.cpp" 2
+# 13 "/root/Bela/projects/bucket-drums/render.cpp" 2
+
+unsigned int sample_rate;
+
+freeverb *ourReverb;
+float reverbVol=0.0f;
 hit_manager *snare_channel;
 hit_manager *kick_channel;
+
 Scope scope;
 
 Midi midi;
@@ -45088,13 +45190,8 @@ void sysexCallback(std::vector<unsigned char>* v)
    rt_printf("\n");
 }
 
-
-void midiMessageCallback(MidiChannelMessage message, void* arg)
+void process_midi_cc(int cc, int val)
 {
- if(message.getType() == kmmControlChange)
- {
-  int cc= message.getDataByte(0);
-  int val= message.getDataByte(1);
   float float_val=(float)val/127.0f;
         bool bool_val=(val==127);
 
@@ -45136,9 +45233,11 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
     break;
    case 8:
        rt_printf("cc%d: rev len: %.02f\n",cc,float_val);
+       ourReverb->set_delay_times(snare_channel->map_to_range(float_val,1.0f,10.0f));
     break;
    case 9:
        rt_printf("cc%d: rev vol: %.02f\n",cc,float_val);
+       reverbVol=float_val;
     break;
    case 11:
        rt_printf("cc%d: hi threshold: %.02f\n",cc,float_val);
@@ -45174,6 +45273,7 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
     break;
    case 18:
        rt_printf("cc%d: rev feedback: %.02f\n",cc,float_val);
+       ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
     break;
    case 19:
        rt_printf("cc%d: early vol: %.02f\n",cc,float_val);
@@ -45183,18 +45283,48 @@ void midiMessageCallback(MidiChannelMessage message, void* arg)
        snare_channel->set_stut_lmod_up_button(bool_val);
        kick_channel->set_stut_lmod_up_button(bool_val);
     break;
+    case 31:
+       rt_printf("cc%d: hi pitch up: %s\n",cc,bool_val?"ON":"OFF");
+
+    break;
+      case 32:
+       rt_printf("cc%d: low pitch up: %s\n",cc,bool_val?"ON":"OFF");
+
+    break;
      case 35:
        rt_printf("cc%d: stut pmod_up: %s\n",cc,bool_val?"ON":"OFF");
        snare_channel->set_stut_pmod_up_button(bool_val);
        kick_channel->set_stut_pmod_up_button(bool_val);
     break;
+   case 38:
+       rt_printf("cc%d: reverb hold: %s\n",cc,bool_val?"ON":"OFF");
+       ourReverb->set_hold(bool_val);
+    break;
    default:
      break;
   }
+}
+
+void midiMessageCallback(MidiChannelMessage message, void* arg)
+{
+ if(message.getType() == kmmControlChange)
+ {
+  int cc= message.getDataByte(0);
+  int val= message.getDataByte(1);
+
+     process_midi_cc(cc,val);
  }
  if(message.getType()==kmmSystem)
  {
   rt_printf("getting system message!\n");
+ }
+}
+
+void zero_all_cc()
+{
+ for(int i=0;i<40;i++)
+ {
+  process_midi_cc(i,0);
  }
 }
 
@@ -45210,7 +45340,8 @@ bool setup(BelaContext *context, void *userData)
  midi.setParserCallback(midiMessageCallback, (void*) gMidiPort0);
 
  cc_write(21,127);
- sample_rate=context->analogSampleRate;
+ sample_rate=context->audioSampleRate;
+ rt_printf("sample rate is: %d\n",(int)sample_rate);
 
  printf("about to setup snare channel...\n");
  snare_channel=new hit_manager(sample_rate);
@@ -45220,8 +45351,12 @@ bool setup(BelaContext *context, void *userData)
     printf("about to setup kick channel...\n");
     kick_channel=new hit_manager(sample_rate);
     kick_channel->sma_multiplier=2.0f;
-# 194 "/root/Bela/projects/bucket-drums/render.cpp"
+
+    ourReverb=new freeverb(sample_rate);
+
     scope.setup(4, context->audioSampleRate);
+
+    zero_all_cc();
 
     rt_printf("setup complete");
 
@@ -45242,8 +45377,10 @@ void render(BelaContext *context, void *userData)
   float snare_out = snare_channel->tick(snare_sample);
   float kick_out = kick_channel->tick(kick_sample);
 
-        audioWrite(context,n,1,distortion_atan(snare_out*1.0f));
-        audioWrite(context,n,0,distortion_atan(kick_out*1.0f ));
+  float rev=ourReverb->tick(snare_out);
+
+        audioWrite(context,n,1,distortion_atan(snare_out + rev*reverbVol));
+        audioWrite(context,n,0,distortion_atan(kick_out));
 
         scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount, snare_out );
 

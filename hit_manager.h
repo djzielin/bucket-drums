@@ -44,9 +44,9 @@ private:
     float delay_pitch_mod;
     float delay_smod;
     
-    float map_to_range(float input, float min, float max);
-    
 public:
+    float map_to_range(float input, float min, float max);
+ 
 	hit *current_hit;
     float sma_multiplier=1.0f;	
     
