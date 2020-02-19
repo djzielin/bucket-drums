@@ -17,7 +17,7 @@ freeverb *ourReverb;
 float reverbVol=0.0f;
 hit_manager *snare_channel;
 hit_manager *kick_channel;
-
+float snare_vol=1.0f;
 Scope scope;
 
 Midi midi;
@@ -139,7 +139,8 @@ void process_midi_cc(int cc, int val)
 			    ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
 				break;
 			case 19:
-			    rt_printf("cc%d: early vol: %.02f\n",cc,float_val);
+			    rt_printf("cc%d: snare vol: %.02f\n",cc,float_val);
+			    snare_vol=1.0f-float_val;
 				break;
 			case 25:
 			    rt_printf("cc%d: stut lmod_up: %s\n",cc,bool_val?"ON":"OFF");
@@ -207,13 +208,15 @@ bool setup(BelaContext *context, void *userData)
 	rt_printf("sample rate is: %d\n",(int)sample_rate);
 	
 	printf("about to setup snare channel...\n");
-	snare_channel=new hit_manager(sample_rate);
+	snare_channel=new hit_manager(sample_rate,1000);
     snare_channel->sma_multiplier=1.0f;
+    snare_channel->lowest_pitch=0.25f;
 
     
     printf("about to setup kick channel...\n");
-    kick_channel=new hit_manager(sample_rate);
+    kick_channel=new hit_manager(sample_rate,1000);
     kick_channel->sma_multiplier=2.0f;
+    kick_channel->lowest_pitch=0.5f;
 
     ourReverb=new freeverb(sample_rate);
 
@@ -234,19 +237,19 @@ void render(BelaContext *context, void *userData)
 
 	for(unsigned int n = 0; n < context->audioFrames; n++) 
 	{   
-		float snare_sample=distortion_clamp(audioRead(context, n, 1)); //keep within -1 to 1 //TODO: check if that is really a problem!
-		float kick_sample= distortion_clamp(audioRead(context, n, 0)); //keep within -1 to 1
+		float snare_sample=audioRead(context, n, 1);
+		float kick_sample= audioRead(context, n, 0);
 		
-		float snare_out = snare_channel->tick(snare_sample);
+	    float snare_out = snare_channel->tick(snare_sample);
 		float kick_out  = kick_channel->tick(kick_sample);
 		
 		float rev=ourReverb->tick(snare_out);
 		
-        audioWrite(context,n,1,distortion_atan(snare_out + rev*reverbVol)); //keep within -1 to 1
-        audioWrite(context,n,0,distortion_atan(kick_out)); //keep within -1 to 1
+        audioWrite(context,n,1,distortion_clamp(snare_out*snare_vol + rev*reverbVol)); //keep within -1 to 1
+        audioWrite(context,n,0,distortion_clamp(kick_out)); //keep within -1 to 1
         
         scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount, snare_out );
-
+        //scope.log(fabs(kick_sample), kick_channel->current_sma, kick_channel->current_hit->advance_amount, kick_out );
    }
    
 }

@@ -273,7 +273,7 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	ldr	r0, [r5, #16]
 	bl	_ZN11hit_manager15set_stut_lengthEf
 	b	.LBB3_9
-.LBB3_8:                                @ %._crit_edge83
+.LBB3_8:                                @ %._crit_edge84
 	vcvt.f64.f32	d9, s16
 .LBB3_9:
 	vmov	r2, r3, d9
@@ -499,6 +499,11 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	mov	r1, #19
 	vmov	r2, r3, d16
 	bl	rt_printf
+	vmov.f32	d16, #1.000000e+00
+	movw	r0, :lower16:.L_MergedGlobals
+	movt	r0, :upper16:.L_MergedGlobals
+	vsub.f32	d0, d16, d8
+	vstr	s0, [r0, #20]
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r10, r11, pc}
 .LBB3_27:
@@ -674,11 +679,11 @@ setup:                                  @ @setup
 	movw	r5, :lower16:midi
 	movt	r6, :upper16:.L_MergedGlobals
 	movt	r5, :upper16:midi
-	ldr	r1, [r6, #20]
+	ldr	r1, [r6, #24]
 	mov	r8, r0
 	mov	r0, r5
 	bl	_ZN4Midi8readFromEPKc
-	ldr	r1, [r6, #20]
+	ldr	r1, [r6, #24]
 	mov	r0, r5
 	bl	_ZN4Midi7writeToEPKc
 	mov	r0, r5
@@ -687,7 +692,7 @@ setup:                                  @ @setup
 	bl	_ZN4Midi12enableParserEb
 	mov	r0, r5
 	mov	r1, #1
-	ldr	r4, [r6, #20]
+	ldr	r4, [r6, #24]
 	bl	_ZN4Midi12enableParserEb
 	mov	r0, r5
 	bl	_ZN4Midi9getParserEv
@@ -714,39 +719,45 @@ setup:                                  @ @setup
 	movw	r0, :lower16:.Lstr
 	movt	r0, :upper16:.Lstr
 	bl	puts
-	mov	r0, #100
+	mov	r0, #104
 	bl	_Znwj
 	mov	r5, r0
 	ldr	r0, [r6]
-	vmov	s0, r0
-	vcvt.f32.u32	d0, d0
+	vldr	s1, .LCPI6_0
+	vmov	s2, r0
+	vcvt.f32.u32	d1, d1
 .Ltmp0:
+	vmov.f32	s0, s2
 	mov	r0, r5
-                                        @ kill: %S0<def> %S0<kill> %D0<kill>
-	bl	_ZN11hit_managerC1Ef
+	bl	_ZN11hit_managerC1Eff
 .Ltmp1:
 @ BB#1:
 	mov	r0, #1065353216
 	str	r5, [r6, #12]
 	str	r0, [r5, #84]
+	mov	r0, #1048576000
+	str	r0, [r5, #100]
 	movw	r0, :lower16:.Lstr.1
 	movt	r0, :upper16:.Lstr.1
 	bl	puts
-	mov	r0, #100
+	mov	r0, #104
 	bl	_Znwj
 	mov	r5, r0
 	ldr	r0, [r6]
-	vmov	s0, r0
-	vcvt.f32.u32	d0, d0
+	vldr	s1, .LCPI6_0
+	vmov	s2, r0
+	vcvt.f32.u32	d1, d1
 .Ltmp3:
+	vmov.f32	s0, s2
 	mov	r0, r5
-                                        @ kill: %S0<def> %S0<kill> %D0<kill>
-	bl	_ZN11hit_managerC1Ef
+	bl	_ZN11hit_managerC1Eff
 .Ltmp4:
 @ BB#2:
 	mov	r0, #1073741824
 	str	r5, [r6, #16]
 	str	r0, [r5, #84]
+	mov	r0, #1056964608
+	str	r0, [r5, #100]
 	mov	r0, #120
 	bl	_Znwj
 	mov	r5, r0
@@ -795,6 +806,10 @@ setup:                                  @ @setup
 	mov	r0, r4
 	mov	lr, pc
 	b	_Unwind_Resume
+	.p2align	2
+@ BB#10:
+.LCPI6_0:
+	.long	1148846080              @ float 1000
 .Lfunc_end6:
 	.size	setup, .Lfunc_end6-setup
 	.globl	__gxx_personality_v0
@@ -864,45 +879,39 @@ render:                                 @ @render
 	movt	r7, :upper16:.L_MergedGlobals
 	movt	r5, :upper16:scope
 .LBB7_2:                                @ =>This Inner Loop Header: Depth=1
-	ldr	r1, [r4, #24]
-	ldr	r0, [r4]
-	mul	r1, r1, r6
-	add	r0, r0, r1, lsl #2
-	vldr	s0, [r0, #4]
-	bl	_Z16distortion_clampf
-	ldr	r1, [r4, #24]
-	vorr	d8, d0, d0
-	ldr	r0, [r4]
-	mul	r1, r1, r6
-	add	r0, r0, r1, lsl #2
-	vldr	s0, [r0]
-	bl	_Z16distortion_clampf
-	vmov.f32	s20, s0
+	ldr	r0, [r4, #24]
+	ldr	r1, [r4]
+	mul	r2, r0, r6
 	ldr	r0, [r7, #12]
-	vmov.f32	s0, s16
+	add	r1, r1, r2, lsl #2
+	vldr	s18, [r1, #4]
+	vldr	s20, [r1]
+	vmov.f32	s0, s18
 	bl	_ZN11hit_manager4tickEf
-	vmov.f64	d9, d0
+	vmov.f64	d8, d0
 	ldr	r0, [r7, #16]
 	vmov.f32	s0, s20
 	bl	_ZN11hit_manager4tickEf
 	vmov.f32	s20, s0
 	ldr	r0, [r7, #4]
-	vmov.f32	s0, s18
+	vmov.f32	s0, s16
 	bl	_ZN8freeverb4tickEf
+	vldr	s4, [r7, #20]
                                         @ kill: %S0<def> %S0<kill> %D0<def>
 	vldr	s2, [r7, #8]
-	vmul.f32	d16, d1, d0
-	vadd.f32	d0, d16, d9
+	vmul.f32	d16, d2, d8
+	vmul.f32	d17, d1, d0
+	vadd.f32	d0, d17, d16
                                         @ kill: %S0<def> %S0<kill> %D0<kill>
-	bl	_Z15distortion_atanf
+	bl	_Z16distortion_clampf
 	ldr	r1, [r4, #28]
 	ldr	r0, [r4, #4]
 	mul	r1, r1, r6
 	add	r0, r0, r1, lsl #2
 	vstr	s0, [r0, #4]
 	vmov.f32	s0, s20
-	bl	_Z15distortion_atanf
-	vabs.f32	d1, d8
+	bl	_Z16distortion_clampf
+	vabs.f32	d1, d9
 	ldr	r1, [r4, #28]
 	ldr	r0, [r4, #4]
 	mul	r1, r1, r6
@@ -911,7 +920,7 @@ render:                                 @ @render
 	vmov	r2, r3, d16
 	vstr	s0, [r0]
 	ldr	r0, [r7, #12]
-	vcvt.f64.f32	d16, s18
+	vcvt.f64.f32	d16, s16
 	ldr	r1, [r0, #80]
 	vldr	s0, [r0, #96]
 	mov	r0, r5
@@ -1112,7 +1121,7 @@ midi:
 
 	.type	.L.str.24,%object       @ @.str.24
 .L.str.24:
-	.asciz	"cc%d: early vol: %.02f\n"
+	.asciz	"cc%d: snare vol: %.02f\n"
 	.size	.L.str.24, 24
 
 	.type	.L.str.25,%object       @ @.str.25
@@ -1213,8 +1222,9 @@ skip_count:
 	.long	0                       @ float 0
 	.long	0
 	.long	0
+	.long	1065353216              @ float 1
 	.long	.L.str
-	.size	.L_MergedGlobals, 24
+	.size	.L_MergedGlobals, 28
 
 
 	.globl	sample_rate
@@ -1232,8 +1242,11 @@ snare_channel = .L_MergedGlobals+12
 	.globl	kick_channel
 kick_channel = .L_MergedGlobals+16
 	.size	kick_channel, 4
+	.globl	snare_vol
+snare_vol = .L_MergedGlobals+20
+	.size	snare_vol, 4
 	.globl	gMidiPort0
-gMidiPort0 = .L_MergedGlobals+20
+gMidiPort0 = .L_MergedGlobals+24
 	.size	gMidiPort0, 4
 	.ident	"clang version 3.9.1-9 (tags/RELEASE_391/rc2)"
 	.section	".note.GNU-stack","",%progbits

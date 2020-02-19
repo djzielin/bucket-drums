@@ -130,8 +130,8 @@ _ZN3hit10add_sampleEf:                  @ @_ZN3hit10add_sampleEf
 _ZN3hit18calc_normal_sampleEv:          @ @_ZN3hit18calc_normal_sampleEv
 	.fnstart
 @ BB#0:
-	.save	{r4, r10, r11, lr}
-	push	{r4, r10, r11, lr}
+	.save	{r4, r5, r11, lr}
+	push	{r4, r5, r11, lr}
 	.setfp	r11, sp, #8
 	add	r11, sp, #8
 	.vsave	{d8, d9, d10}
@@ -155,30 +155,32 @@ _ZN3hit18calc_normal_sampleEv:          @ @_ZN3hit18calc_normal_sampleEv
 	vmul.f32	d17, d0, d17
 	vstr	s2, [r4, #36]
 	vmul.f32	d16, d2, d16
-	ldr	r0, [r4, #4]
-	vldr	s0, [r0, #24]
+	ldr	r5, [r4, #4]
+	vldr	s0, [r5, #24]
 	vadd.f32	d8, d16, d17
 	vcmpe.f32	s0, #0
 	vmrs	APSR_nzcv, fpscr
 	beq	.LBB4_2
 @ BB#1:
 	ldr	r0, [r4, #20]
-	vmov.f32	d16, #1.000000e+00
 	vmov	s2, r0
 	vcvt.f32.s32	d1, d1
 	vdiv.f32	s0, s2, s0
-	vmin.f32	d16, d0, d16
-	vneg.f32	d0, d16
+	vneg.f32	d0, d0
 	vcvt.f64.f32	d0, s0
 	bl	__exp_finite
 	vcvt.f32.f64	s0, d0
 	vldr	s2, [r4, #40]
-	vmul.f32	d0, d1, d0
-	vstr	s0, [r4, #44]
+	vmul.f32	d1, d1, d0
+	vstr	s2, [r4, #44]
+	vldr	s0, [r5, #100]
+	vcmpe.f32	s2, s0
+	vmrs	APSR_nzcv, fpscr
+	vstrlt	s0, [r4, #44]
 .LBB4_2:
 	vmov.f32	s0, s16
 	vpop	{d8, d9, d10}
-	pop	{r4, r10, r11, pc}
+	pop	{r4, r5, r11, pc}
 .Lfunc_end4:
 	.size	_ZN3hit18calc_normal_sampleEv, .Lfunc_end4-_ZN3hit18calc_normal_sampleEv
 	.fnend
@@ -205,48 +207,48 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	cmp	r0, #0
 	beq	.LBB5_8
 @ BB#2:
-	ldr	r2, [r4, #28]
 	ldr	r1, [r4, #20]
+	ldr	r2, [r4, #28]
 	cmp	r1, r2
 	ble	.LBB5_8
 @ BB#3:
-	ldr	r1, [r4, #32]
-	add	r3, r1, #1
-	str	r3, [r4, #32]
+	ldr	r3, [r4, #32]
+	add	r6, r3, #1
+	str	r6, [r4, #32]
 	vldr	s0, [r5, #52]
-	ldrh	r3, [r5, #60]
+	ldrh	r6, [r5, #60]
 	vneg.f32	d1, d0
-	tst	r3, #255
+	tst	r6, #255
 	vmoveq.f32	s0, s2
 	vldr	s2, [r4, #40]
-	cmp	r3, #256
+	cmp	r6, #256
 	vadd.f32	d0, d1, d0
 	vstr	s0, [r4, #40]
+	vstr	s0, [r4, #44]
+	vldr	s0, [r5, #56]
 	bhs	.LBB5_6
 @ BB#4:
+	vmov.f32	d16, #2.000000e+00
+	vsub.f32	d16, d16, d0
 	vmov	s0, r2
-	vcvt.f32.s32	d16, d0
-	vldr	s0, [r5, #56]
-	vmul.f32	d16, d16, d0
+	vcvt.f32.s32	d17, d0
+	vmul.f32	d16, d17, d16
 	b	.LBB5_7
 .LBB5_5:
 	vmov.i32	d0, #0x0
-	b	.LBB5_14
+	b	.LBB5_16
 .LBB5_6:
-	vmov.f32	d16, #2.000000e+00
-	vldr	s0, [r5, #56]
 	vmov	s2, r2
-	vsub.f32	d16, d16, d0
-	vcvt.f32.s32	d17, d1
-	vmul.f32	d16, d17, d16
+	vcvt.f32.s32	d16, d1
+	vmul.f32	d16, d16, d0
 .LBB5_7:
 	vcvt.s32.f32	d0, d16
-	cmp	r1, r0
+	mov	r6, #0
+	cmp	r3, r0
 	vmov	r2, s0
 	str	r2, [r4, #28]
-	mov	r2, #0
-	str	r2, [r4, #36]
-	str	r2, [r4, #20]
+	str	r6, [r4, #36]
+	str	r6, [r4, #20]
 	bge	.LBB5_13
 .LBB5_8:
 	ldr	r0, [r4, #12]
@@ -255,13 +257,21 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	vcvt.f32.s32	d0, d0
 	vcmpe.f32	s16, s0
 	vmrs	APSR_nzcv, fpscr
-	ble	.LBB5_10
+	ble	.LBB5_11
 @ BB#9:
-	mov	r0, #0
-	vmov.i32	d0, #0x0
-	strb	r0, [r4]
-	b	.LBB5_14
-.LBB5_10:
+	mov	r6, r4
+	movw	r0, :lower16:.L.str.3
+	ldr	r1, [r6, #20]!
+	movt	r0, :upper16:.L.str.3
+	bl	rt_printf
+	ldr	r5, [r6, #-16]
+	ldr	r0, [r5, #48]
+	cmp	r0, #0
+	beq	.LBB5_14
+@ BB#10:
+	vmov.i32	d8, #0x0
+	b	.LBB5_15
+.LBB5_11:
 	vmov.f32	s0, s16
 	vldr	s20, [r4, #44]
 	vmov.f32	d9, #1.000000e+00
@@ -274,6 +284,7 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	vmov	r0, s2
 	vsub.f32	d17, d9, d16
 	add	r0, r6, r0, lsl #2
+	add	r6, r4, #20
 	vldr	s0, [r0]
 	vldr	s2, [r0, #4]
 	vmul.f32	d17, d0, d17
@@ -283,53 +294,51 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	vcmpe.f32	s0, #0
 	vmrs	APSR_nzcv, fpscr
 	vadd.f32	d8, d16, d17
-	beq	.LBB5_12
-@ BB#11:
+	beq	.LBB5_15
+@ BB#12:
 	ldr	r0, [r4, #20]
-	vmov.f32	d16, #1.000000e+00
 	vmov	s2, r0
 	vcvt.f32.s32	d1, d1
 	vdiv.f32	s0, s2, s0
-	vmin.f32	d16, d0, d16
-	vneg.f32	d0, d16
+	vneg.f32	d0, d0
 	vcvt.f64.f32	d0, s0
 	bl	__exp_finite
 	vcvt.f32.f64	s0, d0
 	vldr	s2, [r4, #40]
-	vmul.f32	d0, d1, d0
-	vstr	s0, [r4, #44]
-.LBB5_12:                               @ %_ZN3hit18calc_normal_sampleEv.exit
+	vmul.f32	d1, d1, d0
+	vstr	s2, [r4, #44]
+	vldr	s0, [r5, #100]
+	vcmpe.f32	s2, s0
+	vmrs	APSR_nzcv, fpscr
+	vstrlt	s0, [r4, #44]
+	b	.LBB5_15
+.LBB5_13:                               @ %.critedge
+	movw	r0, :lower16:.L.str.2
+	movt	r0, :upper16:.L.str.2
+	bl	rt_printf
+	vmov.i32	d0, #0x0
+	strb	r6, [r4]
+	b	.LBB5_16
+.LBB5_14:
+	mov	r0, #0
+	vmov.i32	d8, #0x0
+	strb	r0, [r4]
+.LBB5_15:                               @ %_ZN3hit18calc_normal_sampleEv.exit
 	vldr	s0, [r5, #36]
 	vmul.f32	d0, d0, d8
                                         @ kill: %S0<def> %S0<kill> %D0<kill>
-	bl	_Z15distortion_atanf
-	ldr	r2, [r4, #24]
-                                        @ kill: %S0<def> %S0<kill> %D0<def>
-	vmov.i32	d3, #0x0
+	bl	_Z16distortion_clampf
 	ldr	r0, [r4, #4]
-	ldr	r1, [r4, #20]
-	vmov	s8, r2
-	vcvt.f32.s32	d4, d4
-	vldr	s2, [r0, #32]
-	vldr	s4, [r0, #40]
+                                        @ kill: %S0<def> %S0<kill> %D0<def>
+	ldr	r1, [r6]
+	vldr	s2, [r0, #40]
 	add	r0, r1, #1
-	add	r1, r2, #1
-	str	r0, [r4, #20]
-	vmul.f32	d0, d2, d0
-	str	r1, [r4, #24]
-	vcmpe.f32	s8, s2
-	vmrs	APSR_nzcv, fpscr
-	vmov.f32	s4, s0
-	vmovgt.f32	s4, s6
-	vmov.f32	d3, #-1.000000e+00
-	vcmpe.f32	s2, s6
-	vmrs	APSR_nzcv, fpscr
-	vmovne.f32	s0, s4
-	b	.LBB5_14
-.LBB5_13:
-	vmov.i32	d0, #0x0
-	strb	r2, [r4]
-.LBB5_14:
+	str	r0, [r6]
+	vmul.f32	d0, d1, d0
+	ldr	r0, [r4, #24]
+	add	r0, r0, #1
+	str	r0, [r4, #24]
+.LBB5_16:
                                         @ kill: %S0<def> %S0<kill> %D0<kill>
 	vpop	{d8, d9, d10}
 	pop	{r4, r5, r6, r10, r11, pc}
@@ -342,6 +351,16 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 .L.str:
 	.asciz	"  trying to allocate hit huffer: %d samples\n"
 	.size	.L.str, 45
+
+	.type	.L.str.2,%object        @ @.str.2
+.L.str.2:
+	.asciz	"inside stut code. done playing at sample: %d. stut length: %d\n"
+	.size	.L.str.2, 63
+
+	.type	.L.str.3,%object        @ @.str.3
+.L.str.3:
+	.asciz	"done playing at sample: %d\n"
+	.size	.L.str.3, 28
 
 
 	.globl	_ZN3hitC1EP11hit_manager

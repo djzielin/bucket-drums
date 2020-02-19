@@ -69,6 +69,7 @@ freeverb::freeverb(float sample_rate)
 	
 	set_delay_times(1.0f);
 	set_feedback(0.84f);
+	set_lowpass(0.2f);
    
 	for(int i=0;i<4;i++)
 	{

@@ -12,12 +12,12 @@ float hit_manager::map_to_range(float input, float min, float max)
    	return min+input_range_adjusted;
 }
 
-hit_manager::hit_manager(float _sample_rate)
+hit_manager::hit_manager(float _sample_rate, float sma_length)
 {
-  sma = new simple_moving_average(2000);
+  sma = new simple_moving_average(sma_length);
   sample_rate = _sample_rate;
 
-  max_samples_to_record=(int)(0.250f*sample_rate);
+  max_samples_to_record=(int)(0.25f*sample_rate);
   printf("  max samples to record: %d\n",(int)max_samples_to_record);
   max_transient_samples=(int)(0.030f*sample_rate);
   
@@ -33,16 +33,16 @@ void hit_manager::set_pitch_bend(float knob)
     
 void hit_manager::set_hit_threshold(float knob)
 { 
-   	hit_threshold=map_to_range(knob,0.1f,0.3f); 
+   	hit_threshold=map_to_range(knob,0.05f,0.15f); 
    	rt_printf("   computed threshold: %.02f\n",hit_threshold);
 
 }
 
 void hit_manager::set_gate_time(float knob) 
 { 
-	gate_time=map_to_range(knob,max_samples_to_record*2.0f,0.0f);
+	gate_time=map_to_range(knob,max_samples_to_record*2.0f,0.3f);
 	
-	if(knob==1.0f)
+	if(knob==0.0f)
 	  gate_time=-1;
 	  
 	rt_printf("   computed gate time: %.02f\n",gate_time);
@@ -59,7 +59,7 @@ void hit_manager::set_boost(float knob)
    
 void hit_manager::set_stut_length(float knob) 
 { 
-     stut_length=map_to_range(knob,0.0,0.050f*sample_rate);	
+     stut_length=map_to_range(knob,0.006f*sample_rate,0.050f*sample_rate);	
       rt_printf("   computed stut_length: %d\n",stut_length);
 }
     
@@ -77,7 +77,7 @@ void hit_manager::set_stut_pitch_mod(float knob)
     
 void hit_manager::set_stut_length_mod(float knob) 
 { 
-    stut_length_mod=1.0f-knob;
+    stut_length_mod=map_to_range(knob,1.0f,0.9f);
 }
 
 void hit_manager::set_delay_length(float knob) 
@@ -135,6 +135,7 @@ float hit_manager::tick(float input)
   {
     if (counter >= max_samples_to_record)
     {
+    	rt_printf("recorded too many samples: %d\n",counter);
       current_hit->add_sample(input);
       state = STATE_WAITING;
       //current_hit->recording_done();
@@ -143,9 +144,15 @@ float hit_manager::tick(float input)
     {
       if (fabs(input) > (current_sma + hit_threshold))
       {
+      	rt_printf("another hit interrupted!\n");
         hit_happened();
         current_hit->add_sample(input);
         counter++;
+      }
+      else
+      {
+      	 current_hit->add_sample(input);
+         counter++;
       }
     }
     else

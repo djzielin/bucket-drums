@@ -38,60 +38,75 @@ _ZN11hit_manager12map_to_rangeEfff:     @ @_ZN11hit_manager12map_to_rangeEfff
 	.size	_ZN11hit_manager12map_to_rangeEfff, .Lfunc_end0-_ZN11hit_manager12map_to_rangeEfff
 	.fnend
 
-	.globl	_ZN11hit_managerC2Ef
+	.globl	_ZN11hit_managerC2Eff
 	.p2align	4
-	.type	_ZN11hit_managerC2Ef,%function
-_ZN11hit_managerC2Ef:                   @ @_ZN11hit_managerC2Ef
+	.type	_ZN11hit_managerC2Eff,%function
+_ZN11hit_managerC2Eff:                  @ @_ZN11hit_managerC2Eff
 .Lfunc_begin0:
 	.fnstart
 @ BB#0:
-	.save	{r4, r5, r6, r10, r11, lr}
-	push	{r4, r5, r6, r10, r11, lr}
-	.setfp	r11, sp, #16
-	add	r11, sp, #16
-	.vsave	{d8}
-	vpush	{d8}
+	.save	{r4, r5, r6, r7, r8, r9, r11, lr}
+	push	{r4, r5, r6, r7, r8, r9, r11, lr}
+	.setfp	r11, sp, #24
+	add	r11, sp, #24
+	.vsave	{d8, d9}
+	vpush	{d8, d9}
+	vmov.f32	s2, s1
 	mov	r4, r0
-	adr	r0, .LCPI1_0
-	vld1.64	{d16, d17}, [r0:128]
 	movw	r0, #13107
+	mov	r7, #0
 	movt	r0, #16179
-	mov	r6, #0
-	str	r0, [r4]
-	add	r0, r4, #24
-	str	r6, [r4, #12]
 	movw	r1, #3000
-	str	r6, [r4, #20]
-	vorr	d8, d0, d0
+	str	r0, [r4]
+	adr	r3, .LCPI1_0
+	vld1.64	{d16, d17}, [r3:128]
+	add	r0, r4, #24
+	mov	r2, #1065353216
+	mov	r3, #4
+	vcvt.s32.f32	d9, d1
+	str	r7, [r4, #12]
+	str	r7, [r4, #20]
+	vmov.f64	d8, d0
+	vmov	r8, s18
 	vst1.32	{d16, d17}, [r0]
-	mov	r0, #1065353216
-	str	r0, [r4, #40]
+	mov	r0, #1056964608
+	str	r2, [r4, #40]
 	str	r1, [r4, #44]
-	str	r6, [r4, #52]
-	str	r6, [r4, #48]
-	str	r6, [r4, #58]
-	str	r6, [r4, #54]
-	str	r6, [r4, #96]
-	str	r0, [r4, #84]
+	str	r7, [r4, #52]
+	str	r7, [r4, #48]
+	str	r7, [r4, #58]
+	str	r7, [r4, #54]
+	str	r2, [r4, #84]
+	str	r7, [r4, #88]
+	str	r7, [r4, #96]
+	str	r0, [r4, #100]
 	mov	r0, #20
-	str	r6, [r4, #88]
+	umull	r9, r6, r8, r3
 	bl	_Znwj
+	cmp	r6, #0
 	mov	r5, r0
-	mov	r0, #2000
-	str	r0, [r5, #12]
+	movwne	r6, #1
+	cmp	r6, #0
+	str	r8, [r5, #12]
+	mvnne	r9, #0
 .Ltmp0:
-	mov	r0, #8000
+	mov	r0, r9
 	bl	_Znaj
 .Ltmp1:
-@ BB#1:
-	movw	r1, #4719
-	mov	r2, #8000
-	movt	r1, #14851
-	str	r1, [r5, #16]
+@ BB#1:                                 @ %.noexc
+	vcvt.f32.s32	d1, d9
+	cmp	r8, #1
+	vmov.f32	d0, #1.000000e+00
+	vdiv.f32	s0, s0, s2
+	vstr	s0, [r5, #16]
+	stm	r5, {r0, r7}
+	str	r7, [r5, #8]
+	blt	.LBB1_3
+@ BB#2:                                 @ %.lr.ph.i.i
+	lsl	r2, r8, #2
 	mov	r1, #0
-	stm	r5, {r0, r6}
-	str	r6, [r5, #8]
 	bl	memset
+.LBB1_3:                                @ %_ZN21simple_moving_averageC2Ei.exit
 	vmov.f32	d16, #2.500000e-01
 	movw	r0, :lower16:.L.str
 	movt	r0, :upper16:.L.str
@@ -115,17 +130,17 @@ _ZN11hit_managerC2Ef:                   @ @_ZN11hit_managerC2Ef
 	mov	r1, r4
 	bl	_ZN3hitC1EP11hit_manager
 .Ltmp4:
-@ BB#2:
+@ BB#4:
 	str	r5, [r4, #80]
 	mov	r0, r4
-	vpop	{d8}
-	pop	{r4, r5, r6, r10, r11, pc}
-.LBB1_3:
-.Ltmp5:
-	b	.LBB1_5
-.LBB1_4:
-.Ltmp2:
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r7, r8, r9, r11, pc}
 .LBB1_5:
+.Ltmp5:
+	b	.LBB1_7
+.LBB1_6:
+.Ltmp2:
+.LBB1_7:
 	mov	r4, r0
 	mov	r0, r5
 	bl	_ZdlPv
@@ -133,7 +148,7 @@ _ZN11hit_managerC2Ef:                   @ @_ZN11hit_managerC2Ef
 	mov	lr, pc
 	b	_Unwind_Resume
 	.p2align	4
-@ BB#6:
+@ BB#8:
 .LCPI1_0:
 	.long	0                       @ float 0
 	.long	1036831949              @ float 0.100000001
@@ -142,7 +157,7 @@ _ZN11hit_managerC2Ef:                   @ @_ZN11hit_managerC2Ef
 .LCPI1_1:
 	.long	1022739087              @ float 0.0299999993
 .Lfunc_end1:
-	.size	_ZN11hit_managerC2Ef, .Lfunc_end1-_ZN11hit_managerC2Ef
+	.size	_ZN11hit_managerC2Eff, .Lfunc_end1-_ZN11hit_managerC2Eff
 	.globl	__gxx_personality_v0
 	.personality __gxx_personality_v0
 	.handlerdata
@@ -228,9 +243,9 @@ _ZN11hit_manager17set_hit_thresholdEf:  @ @_ZN11hit_manager17set_hit_thresholdEf
 	.p2align	2
 @ BB#1:
 .LCPI3_0:
-	.long	1045220558              @ float 0.200000018
+	.long	1036831950              @ float 0.100000009
 .LCPI3_1:
-	.long	1036831949              @ float 0.100000001
+	.long	1028443341              @ float 0.0500000007
 .Lfunc_end3:
 	.size	_ZN11hit_manager17set_hit_thresholdEf, .Lfunc_end3-_ZN11hit_manager17set_hit_thresholdEf
 	.fnend
@@ -245,25 +260,30 @@ _ZN11hit_manager13set_gate_timeEf:      @ @_ZN11hit_manager13set_gate_timeEf
 	push	{r11, lr}
 	.setfp	r11, sp
 	mov	r11, sp
-	ldr	r1, [r0, #4]
                                         @ kill: %S0<def> %S0<kill> %D0<def>
-	vmov.f32	d2, #-1.000000e+00
+	ldr	r1, [r0, #4]
+	vcmpe.f32	s0, #0
+	vmrs	APSR_nzcv, fpscr
 	vmov	s2, r1
 	vcvt.f32.s32	d16, d1
-	vmov.f32	d1, #1.000000e+00
-	vcmpe.f32	s0, s2
-	vmrs	APSR_nzcv, fpscr
+	vldr	s2, .LCPI4_0
 	vadd.f32	d16, d16, d16
-	vmul.f32	d17, d16, d0
-	vsub.f32	d3, d16, d17
-	vmoveq.f32	s6, s4
-	vcvt.f64.f32	d16, s6
+	vsub.f32	d17, d1, d16
+	vmov.f32	d1, #-1.000000e+00
+	vmul.f32	d17, d17, d0
+	vadd.f32	d2, d17, d16
+	vmoveq.f32	s4, s2
+	vcvt.f64.f32	d16, s4
 	vmov	r2, r3, d16
-	vstr	s6, [r0, #32]
+	vstr	s4, [r0, #32]
 	movw	r0, :lower16:.L.str.3
 	movt	r0, :upper16:.L.str.3
 	bl	rt_printf
 	pop	{r11, pc}
+	.p2align	2
+@ BB#1:
+.LCPI4_0:
+	.long	1050253722              @ float 0.300000012
 .Lfunc_end4:
 	.size	_ZN11hit_manager13set_gate_timeEf, .Lfunc_end4-_ZN11hit_manager13set_gate_timeEf
 	.fnend
@@ -306,8 +326,10 @@ _ZN11hit_manager15set_stut_lengthEf:    @ @_ZN11hit_manager15set_stut_lengthEf
 	mov	r11, sp
 	vldr	s2, .LCPI6_0
                                         @ kill: %S0<def> %S0<kill> %D0<def>
+	vldr	s4, .LCPI6_1
 	vmul.f32	d16, d0, d1
 	vldr	s0, [r0, #92]
+	vadd.f32	d16, d16, d2
 	vmul.f32	d16, d16, d0
 	vcvt.s32.f32	d0, d16
 	vmov	r1, s0
@@ -319,7 +341,9 @@ _ZN11hit_manager15set_stut_lengthEf:    @ @_ZN11hit_manager15set_stut_lengthEf
 	.p2align	2
 @ BB#1:
 .LCPI6_0:
-	.long	1028443341              @ float 0.0500000007
+	.long	1026832728              @ float 0.0439999998
+.LCPI6_1:
+	.long	1002740646              @ float 0.00600000005
 .Lfunc_end6:
 	.size	_ZN11hit_manager15set_stut_lengthEf, .Lfunc_end6-_ZN11hit_manager15set_stut_lengthEf
 	.fnend
@@ -382,11 +406,17 @@ _ZN11hit_manager18set_stut_pitch_modEf: @ @_ZN11hit_manager18set_stut_pitch_modE
 _ZN11hit_manager19set_stut_length_modEf: @ @_ZN11hit_manager19set_stut_length_modEf
 	.fnstart
 @ BB#0:
-	vmov.f32	d16, #1.000000e+00
+	vldr	s2, .LCPI9_0
                                         @ kill: %S0<def> %S0<kill> %D0<def>
-	vsub.f32	d0, d16, d0
+	vmov.f32	d16, #1.000000e+00
+	vmul.f32	d17, d0, d1
+	vadd.f32	d0, d17, d16
 	vstr	s0, [r0, #56]
 	bx	lr
+	.p2align	2
+@ BB#1:
+.LCPI9_0:
+	.long	3184315600              @ float -0.100000024
 .Lfunc_end9:
 	.size	_ZN11hit_manager19set_stut_length_modEf, .Lfunc_end9-_ZN11hit_manager19set_stut_length_modEf
 	.fnend
@@ -527,7 +557,7 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	vadd.f32	d0, d1, d0
 	vcmpe.f32	s18, s0
 	vmrs	APSR_nzcv, fpscr
-	ble	.LBB17_10
+	ble	.LBB17_8
 @ BB#2:
 	movw	r0, :lower16:.L.str.8
 	movt	r0, :upper16:.L.str.8
@@ -541,16 +571,16 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	ldr	r0, [r4, #20]
 .LBB17_3:                               @ %thread-pre-split
 	cmp	r0, #1
-	bne	.LBB17_10
+	bne	.LBB17_8
 @ BB#4:
-	ldr	r0, [r4, #12]
-	ldr	r1, [r4, #4]
-	cmp	r0, r1
+	ldr	r1, [r4, #12]
+	ldr	r0, [r4, #4]
+	cmp	r1, r0
 	bge	.LBB17_9
 @ BB#5:
-	ldr	r1, [r4, #8]
-	cmp	r0, r1
-	blt	.LBB17_8
+	ldr	r0, [r4, #8]
+	cmp	r1, r0
+	blt	.LBB17_10
 @ BB#6:
 	vldr	s0, [r4, #28]
 	vldr	s2, [r4, #96]
@@ -559,31 +589,49 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	vmrs	APSR_nzcv, fpscr
 	ble	.LBB17_10
 @ BB#7:
+	movw	r0, :lower16:.L.str.10
+	movt	r0, :upper16:.L.str.10
+	bl	rt_printf
 	movw	r0, :lower16:.L.str.8
 	movt	r0, :upper16:.L.str.8
 	bl	rt_printf
 	mov	r0, #1
+	mov	r5, r4
 	str	r0, [r4, #20]
 	mov	r0, #0
 	str	r0, [r4, #12]
-	ldr	r0, [r4, #80]
+	ldr	r0, [r5, #80]!
 	bl	_ZN3hit5resetEv
-.LBB17_8:
 	vmov.f32	s0, s16
-	ldr	r0, [r4, #80]
+	ldr	r0, [r5]
 	bl	_ZN3hit10add_sampleEf
 	ldr	r0, [r4, #12]
 	add	r0, r0, #1
 	str	r0, [r4, #12]
-	b	.LBB17_10
+	mov	r4, r5
+	b	.LBB17_11
+.LBB17_8:                               @ %._crit_edge
+	add	r4, r4, #80
+	b	.LBB17_11
 .LBB17_9:
+	movw	r0, :lower16:.L.str.9
+	movt	r0, :upper16:.L.str.9
+	bl	rt_printf
 	vmov.f32	s0, s16
-	ldr	r0, [r4, #80]
+	ldr	r0, [r4, #80]!
 	bl	_ZN3hit10add_sampleEf
 	mov	r0, #0
-	str	r0, [r4, #20]
-.LBB17_10:                              @ %thread-pre-split.thread
-	ldr	r0, [r4, #80]
+	str	r0, [r4, #-60]
+	b	.LBB17_11
+.LBB17_10:
+	vmov.f32	s0, s16
+	ldr	r0, [r4, #80]!
+	bl	_ZN3hit10add_sampleEf
+	ldr	r0, [r4, #-68]
+	add	r0, r0, #1
+	str	r0, [r4, #-68]
+.LBB17_11:
+	ldr	r0, [r4]
 	vpop	{d8, d9}
 	pop	{r4, r5, r11, lr}
 	b	_ZN3hit4tickEv
@@ -637,10 +685,20 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	.asciz	"hit happened!\n"
 	.size	.L.str.8, 15
 
+	.type	.L.str.9,%object        @ @.str.9
+.L.str.9:
+	.asciz	"recorded too many samples: %d\n"
+	.size	.L.str.9, 31
 
-	.globl	_ZN11hit_managerC1Ef
-	.type	_ZN11hit_managerC1Ef,%function
-_ZN11hit_managerC1Ef = _ZN11hit_managerC2Ef
+	.type	.L.str.10,%object       @ @.str.10
+.L.str.10:
+	.asciz	"another hit interrupted!\n"
+	.size	.L.str.10, 26
+
+
+	.globl	_ZN11hit_managerC1Eff
+	.type	_ZN11hit_managerC1Eff,%function
+_ZN11hit_managerC1Eff = _ZN11hit_managerC2Eff
 	.ident	"clang version 3.9.1-9 (tags/RELEASE_391/rc2)"
 	.section	".note.GNU-stack","",%progbits
 	.eabi_attribute	30, 2	@ Tag_ABI_optimization_goals

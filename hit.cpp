@@ -97,11 +97,14 @@
         if(our_manager->pitch_bend!=0)
         {
 		   float percent_complete=(float)samples_played/(float)our_manager->pitch_bend;
-		   if(percent_complete>1.0f)
-	       	 percent_complete=1.0f;
+		  // if(percent_complete>1.0f)
+	      // 	 percent_complete=1.0f;
 		
 	       float expo=exp(-1.0f*percent_complete);
 		   advance_amount=base_pitch*expo;
+		   
+		   if(advance_amount<our_manager->lowest_pitch)
+		   advance_amount=our_manager->lowest_pitch;
         }
         
 	 	return sample;
@@ -125,14 +128,19 @@ float hit::tick()
 			if(our_manager->is_stut_pmod_up) base_pitch+=our_manager->stut_pitch_mod;
 		    else                             base_pitch-=our_manager->stut_pitch_mod;
 		       
-		    if(our_manager->is_stut_lmod_up) stut_length=stut_length*=((1.0f-our_manager->stut_length_mod)+1.0f); //1.0 to 2.0
-		    else                             stut_length=stut_length*our_manager->stut_length_mod;   //1 to 0
+		    advance_amount=base_pitch;
+		       
+		    if(our_manager->is_stut_lmod_up) stut_length=stut_length*=our_manager->stut_length_mod;   //1 to 0
+		    else                             stut_length=stut_length*=((1.0f-our_manager->stut_length_mod)+1.0f); //1.0 to 2.0
 		    
-		    play_index=0;
+		    
+		    int sp=samples_played;
+		    play_index=0; //go back to beginning of sample
 		   	samples_played=0;
 		  
 		    if(stut_hits_occured>our_manager->stut_max_count)
 		    {
+		    	rt_printf("inside stut code. done playing at sample: %d. stut length: %d\n",sp,stut_length);
 		        playing=false;
 		        return 0.0f;
 		    }
@@ -143,21 +151,24 @@ float hit::tick()
 		
 	if(play_index>samples_available) //out of samples, ending playback
 	{   
-       playing=false;
-	   return 0.0f;
+	   rt_printf("done playing at sample: %d\n",samples_played);
+       sample=0;
+       
+       if(our_manager->stut_max_count==0.0f) 
+          playing=false;
 	}    
-
-	sample=calc_normal_sample();
+    else
+       sample=calc_normal_sample();
 	    
-	sample=distortion_atan(sample*our_manager->boost_amount)*our_manager->volume;
+	sample=distortion_clamp(sample*our_manager->boost_amount)*our_manager->volume;
 		
 
 		
-    if(our_manager->gate_time!=-1) //do gating
+   /* if(our_manager->gate_time!=-1) //do gating
 	{
 	   if(total_played>(our_manager->gate_time))  
 	      sample=0;
-	}
+	}*/
 	
 	samples_played++;
 	total_played++;

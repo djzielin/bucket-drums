@@ -66,15 +66,13 @@ public:
     void set_delay_smod(float knob);
     void set_stut_lmod_up_button(bool value);
     void set_stut_pmod_up_button(bool value);
-
-  
-    
     
     unsigned int total_samples=0;
     float sample_rate;
     float current_sma=0;
+    float lowest_pitch=0.5f;
     
-  	hit_manager(float _sample_rate);
+  	hit_manager(float _sample_rate, float sma_length);
     void hit_happened();
 	float tick(float input);
 	
