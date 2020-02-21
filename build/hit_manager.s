@@ -20,24 +20,6 @@
 	.eabi_attribute	14, 0	@ Tag_ABI_PCS_R9_use
 	.eabi_attribute	68, 1	@ Tag_Virtualization_use
 	.file	"/root/Bela/projects/bucket-drums/build/hit_manager.bc"
-	.globl	_ZN11hit_manager12map_to_rangeEfff
-	.p2align	2
-	.type	_ZN11hit_manager12map_to_rangeEfff,%function
-_ZN11hit_manager12map_to_rangeEfff:     @ @_ZN11hit_manager12map_to_rangeEfff
-	.fnstart
-@ BB#0:
-	vmov.f32	s4, s1
-                                        @ kill: %S2<def> %S2<kill> %D1<def>
-                                        @ kill: %S0<def> %S0<kill> %D0<def>
-	vsub.f32	d16, d1, d2
-	vmul.f32	d16, d16, d0
-	vadd.f32	d0, d16, d2
-                                        @ kill: %S0<def> %S0<kill> %D0<kill>
-	bx	lr
-.Lfunc_end0:
-	.size	_ZN11hit_manager12map_to_rangeEfff, .Lfunc_end0-_ZN11hit_manager12map_to_rangeEfff
-	.fnend
-
 	.globl	_ZN11hit_managerC2Eff
 	.p2align	4
 	.type	_ZN11hit_managerC2Eff,%function
@@ -58,7 +40,7 @@ _ZN11hit_managerC2Eff:                  @ @_ZN11hit_managerC2Eff
 	movt	r0, #16179
 	movw	r1, #3000
 	str	r0, [r4]
-	adr	r3, .LCPI1_0
+	adr	r3, .LCPI0_0
 	vld1.64	{d16, d17}, [r3:128]
 	add	r0, r4, #24
 	mov	r2, #1065353216
@@ -74,8 +56,8 @@ _ZN11hit_managerC2Eff:                  @ @_ZN11hit_managerC2Eff
 	str	r1, [r4, #44]
 	str	r7, [r4, #52]
 	str	r7, [r4, #48]
-	str	r7, [r4, #58]
-	str	r7, [r4, #54]
+	str	r7, [r4, #59]
+	str	r7, [r4, #55]
 	str	r2, [r4, #84]
 	str	r7, [r4, #88]
 	str	r7, [r4, #96]
@@ -101,12 +83,12 @@ _ZN11hit_managerC2Eff:                  @ @_ZN11hit_managerC2Eff
 	vstr	s0, [r5, #16]
 	stm	r5, {r0, r7}
 	str	r7, [r5, #8]
-	blt	.LBB1_3
+	blt	.LBB0_3
 @ BB#2:                                 @ %.lr.ph.i.i
 	lsl	r2, r8, #2
 	mov	r1, #0
 	bl	memset
-.LBB1_3:                                @ %_ZN21simple_moving_averageC2Ei.exit
+.LBB0_3:                                @ %_ZN21simple_moving_averageC2Ei.exit
 	vmov.f32	d16, #2.500000e-01
 	movw	r0, :lower16:.L.str
 	movt	r0, :upper16:.L.str
@@ -117,7 +99,7 @@ _ZN11hit_managerC2Eff:                  @ @_ZN11hit_managerC2Eff
 	vmov	r1, s0
 	str	r1, [r4, #4]
 	bl	printf
-	vldr	s0, .LCPI1_1
+	vldr	s0, .LCPI0_1
 	vldr	s2, [r4, #92]
 	vmul.f32	d16, d1, d0
 	vcvt.s32.f32	d0, d16
@@ -135,12 +117,12 @@ _ZN11hit_managerC2Eff:                  @ @_ZN11hit_managerC2Eff
 	mov	r0, r4
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r7, r8, r9, r11, pc}
-.LBB1_5:
+.LBB0_5:
 .Ltmp5:
-	b	.LBB1_7
-.LBB1_6:
+	b	.LBB0_7
+.LBB0_6:
 .Ltmp2:
-.LBB1_7:
+.LBB0_7:
 	mov	r4, r0
 	mov	r0, r5
 	bl	_ZdlPv
@@ -149,20 +131,20 @@ _ZN11hit_managerC2Eff:                  @ @_ZN11hit_managerC2Eff
 	b	_Unwind_Resume
 	.p2align	4
 @ BB#8:
-.LCPI1_0:
+.LCPI0_0:
 	.long	0                       @ float 0
 	.long	1036831949              @ float 0.100000001
 	.long	1065353216              @ float 1
 	.long	1065353216              @ float 1
-.LCPI1_1:
+.LCPI0_1:
 	.long	1022739087              @ float 0.0299999993
-.Lfunc_end1:
-	.size	_ZN11hit_managerC2Eff, .Lfunc_end1-_ZN11hit_managerC2Eff
+.Lfunc_end0:
+	.size	_ZN11hit_managerC2Eff, .Lfunc_end0-_ZN11hit_managerC2Eff
 	.globl	__gxx_personality_v0
 	.personality __gxx_personality_v0
 	.handlerdata
 	.p2align	2
-GCC_except_table1:
+GCC_except_table0:
 .Lexception0:
 	.byte	255                     @ @LPStart Encoding = omit
 	.byte	0                       @ @TType Encoding = absptr
@@ -186,10 +168,45 @@ GCC_except_table1:
 	.long	.Ltmp5-.Lfunc_begin0    @     jumps to .Ltmp5
 	.byte	0                       @   On action: cleanup
 	.long	.Ltmp4-.Lfunc_begin0    @ >> Call Site 5 <<
-	.long	.Lfunc_end1-.Ltmp4      @   Call between .Ltmp4 and .Lfunc_end1
+	.long	.Lfunc_end0-.Ltmp4      @   Call between .Ltmp4 and .Lfunc_end0
 	.long	0                       @     has no landing pad
 	.byte	0                       @   On action: cleanup
 	.p2align	2
+	.fnend
+
+	.globl	_ZN11hit_manager12map_to_rangeEfff
+	.p2align	2
+	.type	_ZN11hit_manager12map_to_rangeEfff,%function
+_ZN11hit_manager12map_to_rangeEfff:     @ @_ZN11hit_manager12map_to_rangeEfff
+	.fnstart
+@ BB#0:
+	vmov.f32	s4, s1
+                                        @ kill: %S2<def> %S2<kill> %D1<def>
+                                        @ kill: %S0<def> %S0<kill> %D0<def>
+	vsub.f32	d16, d1, d2
+	vmul.f32	d16, d16, d0
+	vadd.f32	d0, d16, d2
+                                        @ kill: %S0<def> %S0<kill> %D0<kill>
+	bx	lr
+.Lfunc_end1:
+	.size	_ZN11hit_manager12map_to_rangeEfff, .Lfunc_end1-_ZN11hit_manager12map_to_rangeEfff
+	.fnend
+
+	.globl	_ZN11hit_manager14set_base_pitchEf
+	.p2align	2
+	.type	_ZN11hit_manager14set_base_pitchEf,%function
+_ZN11hit_manager14set_base_pitchEf:     @ @_ZN11hit_manager14set_base_pitchEf
+	.fnstart
+@ BB#0:
+	vmov.f32	d16, #-5.000000e-01
+                                        @ kill: %S0<def> %S0<kill> %D0<def>
+	vmov.f32	d17, #1.000000e+00
+	vmul.f32	d16, d0, d16
+	vadd.f32	d0, d16, d17
+	vstr	s0, [r0]
+	bx	lr
+.Lfunc_end2:
+	.size	_ZN11hit_manager14set_base_pitchEf, .Lfunc_end2-_ZN11hit_manager14set_base_pitchEf
 	.fnend
 
 	.globl	_ZN11hit_manager14set_pitch_bendEf
@@ -214,8 +231,8 @@ _ZN11hit_manager14set_pitch_bendEf:     @ @_ZN11hit_manager14set_pitch_bendEf
 	movt	r0, :upper16:.L.str.1
 	bl	rt_printf
 	pop	{r11, pc}
-.Lfunc_end2:
-	.size	_ZN11hit_manager14set_pitch_bendEf, .Lfunc_end2-_ZN11hit_manager14set_pitch_bendEf
+.Lfunc_end3:
+	.size	_ZN11hit_manager14set_pitch_bendEf, .Lfunc_end3-_ZN11hit_manager14set_pitch_bendEf
 	.fnend
 
 	.globl	_ZN11hit_manager17set_hit_thresholdEf
@@ -228,9 +245,9 @@ _ZN11hit_manager17set_hit_thresholdEf:  @ @_ZN11hit_manager17set_hit_thresholdEf
 	push	{r11, lr}
 	.setfp	r11, sp
 	mov	r11, sp
-	vldr	s2, .LCPI3_0
+	vldr	s2, .LCPI4_0
                                         @ kill: %S0<def> %S0<kill> %D0<def>
-	vldr	s4, .LCPI3_1
+	vldr	s4, .LCPI4_1
 	vmul.f32	d16, d0, d1
 	vadd.f32	d0, d16, d2
 	vcvt.f64.f32	d16, s0
@@ -242,12 +259,12 @@ _ZN11hit_manager17set_hit_thresholdEf:  @ @_ZN11hit_manager17set_hit_thresholdEf
 	pop	{r11, pc}
 	.p2align	2
 @ BB#1:
-.LCPI3_0:
+.LCPI4_0:
 	.long	1036831950              @ float 0.100000009
-.LCPI3_1:
+.LCPI4_1:
 	.long	1028443341              @ float 0.0500000007
-.Lfunc_end3:
-	.size	_ZN11hit_manager17set_hit_thresholdEf, .Lfunc_end3-_ZN11hit_manager17set_hit_thresholdEf
+.Lfunc_end4:
+	.size	_ZN11hit_manager17set_hit_thresholdEf, .Lfunc_end4-_ZN11hit_manager17set_hit_thresholdEf
 	.fnend
 
 	.globl	_ZN11hit_manager13set_gate_timeEf
@@ -261,31 +278,29 @@ _ZN11hit_manager13set_gate_timeEf:      @ @_ZN11hit_manager13set_gate_timeEf
 	.setfp	r11, sp
 	mov	r11, sp
                                         @ kill: %S0<def> %S0<kill> %D0<def>
-	ldr	r1, [r0, #4]
+	vldr	s2, .LCPI5_0
+	vmov.f32	d16, #1.000000e+00
+	vmov.f32	d2, #-1.000000e+00
 	vcmpe.f32	s0, #0
 	vmrs	APSR_nzcv, fpscr
-	vmov	s2, r1
-	vcvt.f32.s32	d16, d1
-	vldr	s2, .LCPI4_0
-	vadd.f32	d16, d16, d16
-	vsub.f32	d17, d1, d16
-	vmov.f32	d1, #-1.000000e+00
-	vmul.f32	d17, d17, d0
-	vadd.f32	d2, d17, d16
-	vmoveq.f32	s4, s2
-	vcvt.f64.f32	d16, s4
+	vmul.f32	d17, d0, d1
+	vldr	s2, [r0, #92]
+	vadd.f32	d16, d17, d16
+	vmul.f32	d1, d1, d16
+	vmoveq.f32	s2, s4
+	vcvt.f64.f32	d16, s2
 	vmov	r2, r3, d16
-	vstr	s4, [r0, #32]
+	vstr	s2, [r0, #32]
 	movw	r0, :lower16:.L.str.3
 	movt	r0, :upper16:.L.str.3
 	bl	rt_printf
 	pop	{r11, pc}
 	.p2align	2
 @ BB#1:
-.LCPI4_0:
-	.long	1050253722              @ float 0.300000012
-.Lfunc_end4:
-	.size	_ZN11hit_manager13set_gate_timeEf, .Lfunc_end4-_ZN11hit_manager13set_gate_timeEf
+.LCPI5_0:
+	.long	3212333548              @ float -0.970000028
+.Lfunc_end5:
+	.size	_ZN11hit_manager13set_gate_timeEf, .Lfunc_end5-_ZN11hit_manager13set_gate_timeEf
 	.fnend
 
 	.globl	_ZN11hit_manager9set_boostEf
@@ -310,8 +325,8 @@ _ZN11hit_manager9set_boostEf:           @ @_ZN11hit_manager9set_boostEf
 	movt	r0, :upper16:.L.str.4
 	bl	rt_printf
 	pop	{r11, pc}
-.Lfunc_end5:
-	.size	_ZN11hit_manager9set_boostEf, .Lfunc_end5-_ZN11hit_manager9set_boostEf
+.Lfunc_end6:
+	.size	_ZN11hit_manager9set_boostEf, .Lfunc_end6-_ZN11hit_manager9set_boostEf
 	.fnend
 
 	.globl	_ZN11hit_manager15set_stut_lengthEf
@@ -324,9 +339,9 @@ _ZN11hit_manager15set_stut_lengthEf:    @ @_ZN11hit_manager15set_stut_lengthEf
 	push	{r11, lr}
 	.setfp	r11, sp
 	mov	r11, sp
-	vldr	s2, .LCPI6_0
+	vldr	s2, .LCPI7_0
                                         @ kill: %S0<def> %S0<kill> %D0<def>
-	vldr	s4, .LCPI6_1
+	vldr	s4, .LCPI7_1
 	vmul.f32	d16, d0, d1
 	vldr	s0, [r0, #92]
 	vadd.f32	d16, d16, d2
@@ -340,12 +355,12 @@ _ZN11hit_manager15set_stut_lengthEf:    @ @_ZN11hit_manager15set_stut_lengthEf
 	pop	{r11, pc}
 	.p2align	2
 @ BB#1:
-.LCPI6_0:
+.LCPI7_0:
 	.long	1026832728              @ float 0.0439999998
-.LCPI6_1:
+.LCPI7_1:
 	.long	1002740646              @ float 0.00600000005
-.Lfunc_end6:
-	.size	_ZN11hit_manager15set_stut_lengthEf, .Lfunc_end6-_ZN11hit_manager15set_stut_lengthEf
+.Lfunc_end7:
+	.size	_ZN11hit_manager15set_stut_lengthEf, .Lfunc_end7-_ZN11hit_manager15set_stut_lengthEf
 	.fnend
 
 	.globl	_ZN11hit_manager18set_stut_max_countEf
@@ -368,8 +383,8 @@ _ZN11hit_manager18set_stut_max_countEf: @ @_ZN11hit_manager18set_stut_max_countE
 	movt	r0, :upper16:.L.str.6
 	bl	rt_printf
 	pop	{r11, pc}
-.Lfunc_end7:
-	.size	_ZN11hit_manager18set_stut_max_countEf, .Lfunc_end7-_ZN11hit_manager18set_stut_max_countEf
+.Lfunc_end8:
+	.size	_ZN11hit_manager18set_stut_max_countEf, .Lfunc_end8-_ZN11hit_manager18set_stut_max_countEf
 	.fnend
 
 	.globl	_ZN11hit_manager18set_stut_pitch_modEf
@@ -382,7 +397,7 @@ _ZN11hit_manager18set_stut_pitch_modEf: @ @_ZN11hit_manager18set_stut_pitch_modE
 	push	{r11, lr}
 	.setfp	r11, sp
 	mov	r11, sp
-	vldr	s2, .LCPI8_0
+	vldr	s2, .LCPI9_0
                                         @ kill: %S0<def> %S0<kill> %D0<def>
 	vmul.f32	d0, d0, d1
 	vcvt.f64.f32	d16, s0
@@ -394,10 +409,10 @@ _ZN11hit_manager18set_stut_pitch_modEf: @ @_ZN11hit_manager18set_stut_pitch_modE
 	pop	{r11, pc}
 	.p2align	2
 @ BB#1:
-.LCPI8_0:
+.LCPI9_0:
 	.long	1028443341              @ float 0.0500000007
-.Lfunc_end8:
-	.size	_ZN11hit_manager18set_stut_pitch_modEf, .Lfunc_end8-_ZN11hit_manager18set_stut_pitch_modEf
+.Lfunc_end9:
+	.size	_ZN11hit_manager18set_stut_pitch_modEf, .Lfunc_end9-_ZN11hit_manager18set_stut_pitch_modEf
 	.fnend
 
 	.globl	_ZN11hit_manager19set_stut_length_modEf
@@ -406,7 +421,7 @@ _ZN11hit_manager18set_stut_pitch_modEf: @ @_ZN11hit_manager18set_stut_pitch_modE
 _ZN11hit_manager19set_stut_length_modEf: @ @_ZN11hit_manager19set_stut_length_modEf
 	.fnstart
 @ BB#0:
-	vldr	s2, .LCPI9_0
+	vldr	s2, .LCPI10_0
                                         @ kill: %S0<def> %S0<kill> %D0<def>
 	vmov.f32	d16, #1.000000e+00
 	vmul.f32	d17, d0, d1
@@ -415,10 +430,10 @@ _ZN11hit_manager19set_stut_length_modEf: @ @_ZN11hit_manager19set_stut_length_mo
 	bx	lr
 	.p2align	2
 @ BB#1:
-.LCPI9_0:
+.LCPI10_0:
 	.long	3184315600              @ float -0.100000024
-.Lfunc_end9:
-	.size	_ZN11hit_manager19set_stut_length_modEf, .Lfunc_end9-_ZN11hit_manager19set_stut_length_modEf
+.Lfunc_end10:
+	.size	_ZN11hit_manager19set_stut_length_modEf, .Lfunc_end10-_ZN11hit_manager19set_stut_length_modEf
 	.fnend
 
 	.globl	_ZN11hit_manager16set_delay_lengthEf
@@ -428,8 +443,8 @@ _ZN11hit_manager16set_delay_lengthEf:   @ @_ZN11hit_manager16set_delay_lengthEf
 	.fnstart
 @ BB#0:
 	bx	lr
-.Lfunc_end10:
-	.size	_ZN11hit_manager16set_delay_lengthEf, .Lfunc_end10-_ZN11hit_manager16set_delay_lengthEf
+.Lfunc_end11:
+	.size	_ZN11hit_manager16set_delay_lengthEf, .Lfunc_end11-_ZN11hit_manager16set_delay_lengthEf
 	.fnend
 
 	.globl	_ZN11hit_manager15set_delay_countEf
@@ -439,8 +454,8 @@ _ZN11hit_manager15set_delay_countEf:    @ @_ZN11hit_manager15set_delay_countEf
 	.fnstart
 @ BB#0:
 	bx	lr
-.Lfunc_end11:
-	.size	_ZN11hit_manager15set_delay_countEf, .Lfunc_end11-_ZN11hit_manager15set_delay_countEf
+.Lfunc_end12:
+	.size	_ZN11hit_manager15set_delay_countEf, .Lfunc_end12-_ZN11hit_manager15set_delay_countEf
 	.fnend
 
 	.globl	_ZN11hit_manager14set_delay_pmodEf
@@ -450,8 +465,8 @@ _ZN11hit_manager14set_delay_pmodEf:     @ @_ZN11hit_manager14set_delay_pmodEf
 	.fnstart
 @ BB#0:
 	bx	lr
-.Lfunc_end12:
-	.size	_ZN11hit_manager14set_delay_pmodEf, .Lfunc_end12-_ZN11hit_manager14set_delay_pmodEf
+.Lfunc_end13:
+	.size	_ZN11hit_manager14set_delay_pmodEf, .Lfunc_end13-_ZN11hit_manager14set_delay_pmodEf
 	.fnend
 
 	.globl	_ZN11hit_manager14set_delay_smodEf
@@ -461,8 +476,8 @@ _ZN11hit_manager14set_delay_smodEf:     @ @_ZN11hit_manager14set_delay_smodEf
 	.fnstart
 @ BB#0:
 	bx	lr
-.Lfunc_end13:
-	.size	_ZN11hit_manager14set_delay_smodEf, .Lfunc_end13-_ZN11hit_manager14set_delay_smodEf
+.Lfunc_end14:
+	.size	_ZN11hit_manager14set_delay_smodEf, .Lfunc_end14-_ZN11hit_manager14set_delay_smodEf
 	.fnend
 
 	.globl	_ZN11hit_manager23set_stut_lmod_up_buttonEb
@@ -473,8 +488,8 @@ _ZN11hit_manager23set_stut_lmod_up_buttonEb: @ @_ZN11hit_manager23set_stut_lmod_
 @ BB#0:
 	strb	r1, [r0, #61]
 	bx	lr
-.Lfunc_end14:
-	.size	_ZN11hit_manager23set_stut_lmod_up_buttonEb, .Lfunc_end14-_ZN11hit_manager23set_stut_lmod_up_buttonEb
+.Lfunc_end15:
+	.size	_ZN11hit_manager23set_stut_lmod_up_buttonEb, .Lfunc_end15-_ZN11hit_manager23set_stut_lmod_up_buttonEb
 	.fnend
 
 	.globl	_ZN11hit_manager23set_stut_pmod_up_buttonEb
@@ -485,8 +500,20 @@ _ZN11hit_manager23set_stut_pmod_up_buttonEb: @ @_ZN11hit_manager23set_stut_pmod_
 @ BB#0:
 	strb	r1, [r0, #60]
 	bx	lr
-.Lfunc_end15:
-	.size	_ZN11hit_manager23set_stut_pmod_up_buttonEb, .Lfunc_end15-_ZN11hit_manager23set_stut_pmod_up_buttonEb
+.Lfunc_end16:
+	.size	_ZN11hit_manager23set_stut_pmod_up_buttonEb, .Lfunc_end16-_ZN11hit_manager23set_stut_pmod_up_buttonEb
+	.fnend
+
+	.globl	_ZN11hit_manager11set_bend_upEb
+	.p2align	2
+	.type	_ZN11hit_manager11set_bend_upEb,%function
+_ZN11hit_manager11set_bend_upEb:        @ @_ZN11hit_manager11set_bend_upEb
+	.fnstart
+@ BB#0:
+	strb	r1, [r0, #62]
+	bx	lr
+.Lfunc_end17:
+	.size	_ZN11hit_manager11set_bend_upEb, .Lfunc_end17-_ZN11hit_manager11set_bend_upEb
 	.fnend
 
 	.globl	_ZN11hit_manager12hit_happenedEv
@@ -510,8 +537,8 @@ _ZN11hit_manager12hit_happenedEv:       @ @_ZN11hit_manager12hit_happenedEv
 	ldr	r0, [r4, #80]
 	pop	{r4, r10, r11, lr}
 	b	_ZN3hit5resetEv
-.Lfunc_end16:
-	.size	_ZN11hit_manager12hit_happenedEv, .Lfunc_end16-_ZN11hit_manager12hit_happenedEv
+.Lfunc_end18:
+	.size	_ZN11hit_manager12hit_happenedEv, .Lfunc_end18-_ZN11hit_manager12hit_happenedEv
 	.fnend
 
 	.globl	_ZN11hit_manager4tickEf
@@ -551,13 +578,13 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	vstr	s0, [r4, #96]
 	ldr	r0, [r4, #20]
 	cmp	r0, #0
-	bne	.LBB17_3
+	bne	.LBB19_3
 @ BB#1:
 	vldr	s2, [r4, #28]
 	vadd.f32	d0, d1, d0
 	vcmpe.f32	s18, s0
 	vmrs	APSR_nzcv, fpscr
-	ble	.LBB17_8
+	ble	.LBB19_8
 @ BB#2:
 	movw	r0, :lower16:.L.str.8
 	movt	r0, :upper16:.L.str.8
@@ -569,25 +596,25 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	ldr	r0, [r4, #80]
 	bl	_ZN3hit5resetEv
 	ldr	r0, [r4, #20]
-.LBB17_3:                               @ %thread-pre-split
+.LBB19_3:                               @ %thread-pre-split
 	cmp	r0, #1
-	bne	.LBB17_8
+	bne	.LBB19_8
 @ BB#4:
 	ldr	r1, [r4, #12]
 	ldr	r0, [r4, #4]
 	cmp	r1, r0
-	bge	.LBB17_9
+	bge	.LBB19_9
 @ BB#5:
 	ldr	r0, [r4, #8]
 	cmp	r1, r0
-	blt	.LBB17_10
+	blt	.LBB19_10
 @ BB#6:
 	vldr	s0, [r4, #28]
 	vldr	s2, [r4, #96]
 	vadd.f32	d0, d0, d1
 	vcmpe.f32	s18, s0
 	vmrs	APSR_nzcv, fpscr
-	ble	.LBB17_10
+	ble	.LBB19_10
 @ BB#7:
 	movw	r0, :lower16:.L.str.10
 	movt	r0, :upper16:.L.str.10
@@ -609,11 +636,11 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	add	r0, r0, #1
 	str	r0, [r4, #12]
 	mov	r4, r5
-	b	.LBB17_11
-.LBB17_8:                               @ %._crit_edge
+	b	.LBB19_11
+.LBB19_8:                               @ %._crit_edge
 	add	r4, r4, #80
-	b	.LBB17_11
-.LBB17_9:
+	b	.LBB19_11
+.LBB19_9:
 	movw	r0, :lower16:.L.str.9
 	movt	r0, :upper16:.L.str.9
 	bl	rt_printf
@@ -622,21 +649,21 @@ _ZN11hit_manager4tickEf:                @ @_ZN11hit_manager4tickEf
 	bl	_ZN3hit10add_sampleEf
 	mov	r0, #0
 	str	r0, [r4, #-60]
-	b	.LBB17_11
-.LBB17_10:
+	b	.LBB19_11
+.LBB19_10:
 	vmov.f32	s0, s16
 	ldr	r0, [r4, #80]!
 	bl	_ZN3hit10add_sampleEf
 	ldr	r0, [r4, #-68]
 	add	r0, r0, #1
 	str	r0, [r4, #-68]
-.LBB17_11:
+.LBB19_11:
 	ldr	r0, [r4]
 	vpop	{d8, d9}
 	pop	{r4, r5, r11, lr}
 	b	_ZN3hit4tickEv
-.Lfunc_end17:
-	.size	_ZN11hit_manager4tickEf, .Lfunc_end17-_ZN11hit_manager4tickEf
+.Lfunc_end19:
+	.size	_ZN11hit_manager4tickEf, .Lfunc_end19-_ZN11hit_manager4tickEf
 	.fnend
 
 	.type	.L.str,%object          @ @.str

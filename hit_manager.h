@@ -38,12 +38,12 @@ private:
     float stut_length_mod=0.0;
     bool is_stut_pmod_up=false;
     bool is_stut_lmod_up=false;
-   
+    bool bend_up=false;
+
     int delay_count;
     int delay_length;
     float delay_pitch_mod;
     float delay_smod;
-    
 public:
     float map_to_range(float input, float min, float max);
  
@@ -54,6 +54,7 @@ public:
     void set_hit_threshold(float knob);
     void set_gate_time(float knob);
     void set_boost(float knob);
+    void set_base_pitch(float knob);
     
     void set_stut_length(float knob);
     void set_stut_max_count(float knob);
@@ -66,6 +67,7 @@ public:
     void set_delay_smod(float knob);
     void set_stut_lmod_up_button(bool value);
     void set_stut_pmod_up_button(bool value);
+    void set_bend_up(bool value);
     
     unsigned int total_samples=0;
     float sample_rate;

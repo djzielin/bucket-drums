@@ -160,7 +160,7 @@ _ZN3hit18calc_normal_sampleEv:          @ @_ZN3hit18calc_normal_sampleEv
 	vadd.f32	d8, d16, d17
 	vcmpe.f32	s0, #0
 	vmrs	APSR_nzcv, fpscr
-	beq	.LBB4_2
+	beq	.LBB4_4
 @ BB#1:
 	ldr	r0, [r4, #20]
 	vmov	s2, r0
@@ -170,14 +170,29 @@ _ZN3hit18calc_normal_sampleEv:          @ @_ZN3hit18calc_normal_sampleEv
 	vcvt.f64.f32	d0, s0
 	bl	__exp_finite
 	vcvt.f32.f64	s0, d0
+	ldrb	r0, [r5, #62]
+	cmp	r0, #0
+	vmov.f32	d16, #5.000000e-01
 	vldr	s2, [r4, #40]
-	vmul.f32	d1, d1, d0
-	vstr	s2, [r4, #44]
-	vldr	s0, [r5, #100]
-	vcmpe.f32	s2, s0
+	vsub.f32	d16, d16, d0
+	vmul.f32	d2, d1, d0
+	vadd.f32	d0, d16, d1
+	vmoveq.f32	s0, s4
+	vstr	s0, [r4, #44]
+	vldr	s2, [r5, #100]
+	vcmpe.f32	s0, s2
 	vmrs	APSR_nzcv, fpscr
-	vstrlt	s0, [r4, #44]
-.LBB4_2:
+	bge	.LBB4_3
+@ BB#2:
+	vorr	d0, d1, d1
+	vstr	s2, [r4, #44]
+.LBB4_3:
+	vmov.f32	d1, #1.000000e+00
+	vcmpe.f32	s0, s2
+	vmrs	APSR_nzcv, fpscr
+	movgt	r0, #1065353216
+	strgt	r0, [r4, #44]
+.LBB4_4:
 	vmov.f32	s0, s16
 	vpop	{d8, d9, d10}
 	pop	{r4, r5, r11, pc}
@@ -236,7 +251,7 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	b	.LBB5_7
 .LBB5_5:
 	vmov.i32	d0, #0x0
-	b	.LBB5_16
+	b	.LBB5_18
 .LBB5_6:
 	vmov	s2, r2
 	vcvt.f32.s32	d16, d1
@@ -249,7 +264,7 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	str	r2, [r4, #28]
 	str	r6, [r4, #36]
 	str	r6, [r4, #20]
-	bge	.LBB5_13
+	bge	.LBB5_15
 .LBB5_8:
 	ldr	r0, [r4, #12]
 	vldr	s16, [r4, #36]
@@ -259,18 +274,17 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	vmrs	APSR_nzcv, fpscr
 	ble	.LBB5_11
 @ BB#9:
-	mov	r6, r4
+	ldr	r1, [r4, #20]
 	movw	r0, :lower16:.L.str.3
-	ldr	r1, [r6, #20]!
 	movt	r0, :upper16:.L.str.3
 	bl	rt_printf
-	ldr	r5, [r6, #-16]
+	ldr	r5, [r4, #4]
 	ldr	r0, [r5, #48]
 	cmp	r0, #0
-	beq	.LBB5_14
+	beq	.LBB5_16
 @ BB#10:
 	vmov.i32	d8, #0x0
-	b	.LBB5_15
+	b	.LBB5_17
 .LBB5_11:
 	vmov.f32	s0, s16
 	vldr	s20, [r4, #44]
@@ -284,7 +298,6 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	vmov	r0, s2
 	vsub.f32	d17, d9, d16
 	add	r0, r6, r0, lsl #2
-	add	r6, r4, #20
 	vldr	s0, [r0]
 	vldr	s2, [r0, #4]
 	vmul.f32	d17, d0, d17
@@ -294,7 +307,7 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	vcmpe.f32	s0, #0
 	vmrs	APSR_nzcv, fpscr
 	vadd.f32	d8, d16, d17
-	beq	.LBB5_15
+	beq	.LBB5_17
 @ BB#12:
 	ldr	r0, [r4, #20]
 	vmov	s2, r0
@@ -304,41 +317,68 @@ _ZN3hit4tickEv:                         @ @_ZN3hit4tickEv
 	vcvt.f64.f32	d0, s0
 	bl	__exp_finite
 	vcvt.f32.f64	s0, d0
+	ldrb	r0, [r5, #62]
+	cmp	r0, #0
+	vmov.f32	d16, #5.000000e-01
 	vldr	s2, [r4, #40]
-	vmul.f32	d1, d1, d0
-	vstr	s2, [r4, #44]
-	vldr	s0, [r5, #100]
-	vcmpe.f32	s2, s0
+	vsub.f32	d16, d16, d0
+	vmul.f32	d2, d1, d0
+	vadd.f32	d0, d16, d1
+	vmoveq.f32	s0, s4
+	vstr	s0, [r4, #44]
+	vldr	s2, [r5, #100]
+	vcmpe.f32	s0, s2
 	vmrs	APSR_nzcv, fpscr
-	vstrlt	s0, [r4, #44]
-	b	.LBB5_15
-.LBB5_13:                               @ %.critedge
+	bge	.LBB5_14
+@ BB#13:
+	vorr	d0, d1, d1
+	vstr	s2, [r4, #44]
+.LBB5_14:
+	vmov.f32	d1, #1.000000e+00
+	vcmpe.f32	s0, s2
+	vmrs	APSR_nzcv, fpscr
+	movgt	r0, #1065353216
+	strgt	r0, [r4, #44]
+	b	.LBB5_17
+.LBB5_15:                               @ %.critedge
 	movw	r0, :lower16:.L.str.2
 	movt	r0, :upper16:.L.str.2
 	bl	rt_printf
 	vmov.i32	d0, #0x0
 	strb	r6, [r4]
-	b	.LBB5_16
-.LBB5_14:
+	b	.LBB5_18
+.LBB5_16:
 	mov	r0, #0
 	vmov.i32	d8, #0x0
 	strb	r0, [r4]
-.LBB5_15:                               @ %_ZN3hit18calc_normal_sampleEv.exit
+.LBB5_17:                               @ %_ZN3hit18calc_normal_sampleEv.exit
 	vldr	s0, [r5, #36]
 	vmul.f32	d0, d0, d8
                                         @ kill: %S0<def> %S0<kill> %D0<kill>
 	bl	_Z16distortion_clampf
-	ldr	r0, [r4, #4]
+	ldr	r2, [r4, #24]
                                         @ kill: %S0<def> %S0<kill> %D0<def>
-	ldr	r1, [r6]
-	vldr	s2, [r0, #40]
+	vmov.i32	d3, #0x0
+	ldr	r0, [r4, #4]
+	ldr	r1, [r4, #20]
+	vmov	s8, r2
+	vcvt.f32.s32	d4, d4
+	vldr	s2, [r0, #32]
+	vldr	s4, [r0, #40]
 	add	r0, r1, #1
-	str	r0, [r6]
-	vmul.f32	d0, d1, d0
-	ldr	r0, [r4, #24]
-	add	r0, r0, #1
-	str	r0, [r4, #24]
-.LBB5_16:
+	add	r1, r2, #1
+	str	r0, [r4, #20]
+	vmul.f32	d0, d2, d0
+	str	r1, [r4, #24]
+	vcmpe.f32	s8, s2
+	vmrs	APSR_nzcv, fpscr
+	vmov.f32	s4, s0
+	vmovgt.f32	s4, s6
+	vmov.f32	d3, #-1.000000e+00
+	vcmpe.f32	s2, s6
+	vmrs	APSR_nzcv, fpscr
+	vmovne.f32	s0, s4
+.LBB5_18:
                                         @ kill: %S0<def> %S0<kill> %D0<kill>
 	vpop	{d8, d9, d10}
 	pop	{r4, r5, r6, r10, r11, pc}

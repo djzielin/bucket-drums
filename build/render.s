@@ -155,15 +155,15 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	add	r11, sp, #16
 	.vsave	{d8, d9}
 	vpush	{d8, d9}
-	mov	r5, r1
-	mov	r4, r0
+	mov	r4, r1
+	mov	r5, r0
 	movw	r0, :lower16:.L.str.6
-	mov	r1, r4
+	mov	r1, r5
 	movt	r0, :upper16:.L.str.6
-	mov	r2, r5
+	mov	r2, r4
 	bl	rt_printf
-	vmov	s2, r5
-	sub	r0, r4, #1
+	vmov	s2, r4
+	sub	r0, r5, #1
 	vcvt.f32.s32	d16, d1
 	vldr	s0, .LCPI3_3
 	cmp	r0, #37
@@ -191,29 +191,29 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	.long	.LBB3_18
 	.long	.LBB3_19
 	.long	.LBB3_20
+	.long	.LBB3_22
 	.long	.LBB3_23
 	.long	.LBB3_24
+	.long	.LBB3_14
+	.long	.LBB3_14
 	.long	.LBB3_25
 	.long	.LBB3_26
 	.long	.LBB3_14
 	.long	.LBB3_14
-	.long	.LBB3_14
-	.long	.LBB3_14
-	.long	.LBB3_14
-	.long	.LBB3_27
-	.long	.LBB3_14
-	.long	.LBB3_14
-	.long	.LBB3_14
-	.long	.LBB3_14
-	.long	.LBB3_14
 	.long	.LBB3_28
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_14
 	.long	.LBB3_29
-	.long	.LBB3_14
-	.long	.LBB3_14
-	.long	.LBB3_31
+	.long	.LBB3_30
 	.long	.LBB3_14
 	.long	.LBB3_14
 	.long	.LBB3_32
+	.long	.LBB3_14
+	.long	.LBB3_14
+	.long	.LBB3_33
 .LBB3_3:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.7
@@ -239,7 +239,7 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	vmov.f32	s0, s16
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r10, r11, lr}
-	b	_ZN11hit_manager14set_pitch_bendEf
+	b	_ZN11hit_manager14set_base_pitchEf
 .LBB3_6:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.9
@@ -265,21 +265,21 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	vmov	r2, r3, d9
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #12]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager15set_stut_lengthEf
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #16]
+	ldr	r0, [r4, #16]
 	bl	_ZN11hit_manager15set_stut_lengthEf
 	b	.LBB3_9
-.LBB3_8:                                @ %._crit_edge84
+.LBB3_8:                                @ %._crit_edge
 	vcvt.f64.f32	d9, s16
 .LBB3_9:
 	vmov	r2, r3, d9
 	movw	r0, :lower16:.L.str.11
 	movt	r0, :upper16:.L.str.11
-	mov	r1, r4
+	mov	r1, r5
 	bl	rt_printf
 	vmov.f32	s0, s16
 	movw	r4, :lower16:.L_MergedGlobals
@@ -402,28 +402,28 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	pop	{r4, r5, r6, r10, r11, lr}
 	b	_ZN11hit_manager9set_boostEf
 .LBB3_19:
-	vcvt.f64.f32	d9, s16
+	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.19
 	movt	r0, :upper16:.L.str.19
 	mov	r1, #14
-	vmov	r2, r3, d9
+	vmov	r2, r3, d16
 	bl	rt_printf
 	vmov.f32	s0, s16
-	movw	r5, :lower16:.L_MergedGlobals
-	movt	r5, :upper16:.L_MergedGlobals
-	ldr	r0, [r5, #12]
+	movw	r4, :lower16:.L_MergedGlobals
+	movt	r4, :upper16:.L_MergedGlobals
+	ldr	r0, [r4, #12]
 	bl	_ZN11hit_manager18set_stut_max_countEf
+	ldr	r0, [r4, #16]
 	vmov.f32	s0, s16
-	ldr	r0, [r5, #16]
-	bl	_ZN11hit_manager18set_stut_max_countEf
-	b	.LBB3_21
-.LBB3_20:                               @ %._crit_edge
-	vcvt.f64.f32	d9, s16
-.LBB3_21:
-	vmov	r2, r3, d9
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager18set_stut_max_countEf
+.LBB3_20:
+	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.20
 	movt	r0, :upper16:.L.str.20
-	mov	r1, r4
+	mov	r1, #15
+	vmov	r2, r3, d16
 	bl	rt_printf
 	vmov.f32	s0, s16
 	movw	r4, :lower16:.L_MergedGlobals
@@ -436,10 +436,10 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	pop	{r4, r5, r6, r10, r11, lr}
 	b	_ZN11hit_manager19set_stut_length_modEf
 	.p2align	2
-@ BB#22:
+@ BB#21:
 .LCPI3_3:
 	.long	1006699012              @ float 0.00787401571
-.LBB3_23:
+.LBB3_22:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.21
 	movt	r0, :upper16:.L.str.21
@@ -456,7 +456,7 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r10, r11, lr}
 	b	_ZN11hit_manager15set_delay_countEf
-.LBB3_24:
+.LBB3_23:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.22
 	movt	r0, :upper16:.L.str.22
@@ -473,7 +473,7 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r10, r11, lr}
 	b	_ZN11hit_manager14set_delay_smodEf
-.LBB3_25:
+.LBB3_24:
 	vcvt.f64.f32	d16, s16
 	movw	r0, :lower16:.L.str.23
 	movt	r0, :upper16:.L.str.23
@@ -492,99 +492,139 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r10, r11, lr}
 	b	_ZN8freeverb12set_feedbackEf
-.LBB3_26:
-	vcvt.f64.f32	d16, s16
+.LBB3_25:
+	movw	r0, :lower16:.L.str.25
+	movw	r2, :lower16:.L.str.26
+	movt	r0, :upper16:.L.str.25
+	movt	r2, :upper16:.L.str.26
+	cmp	r4, #127
+	mov	r1, #21
+	moveq	r2, r0
 	movw	r0, :lower16:.L.str.24
 	movt	r0, :upper16:.L.str.24
-	mov	r1, #19
-	vmov	r2, r3, d16
 	bl	rt_printf
-	vmov.f32	d16, #1.000000e+00
+	vmov.f32	d1, #5.000000e-01
+	cmp	r4, #127
+	vmov.i32	d0, #0x0
 	movw	r0, :lower16:.L_MergedGlobals
 	movt	r0, :upper16:.L_MergedGlobals
-	vsub.f32	d0, d16, d8
-	vstr	s0, [r0, #20]
-	vpop	{d8, d9}
-	pop	{r4, r5, r6, r10, r11, pc}
+	vmoveq.f32	s0, s2
+	ldr	r0, [r0, #12]
+	b	.LBB3_27
+.LBB3_26:
+	movw	r0, :lower16:.L.str.25
+	movw	r2, :lower16:.L.str.26
+	movt	r0, :upper16:.L.str.25
+	movt	r2, :upper16:.L.str.26
+	cmp	r4, #127
+	mov	r1, #22
+	moveq	r2, r0
+	movw	r0, :lower16:.L.str.24
+	movt	r0, :upper16:.L.str.24
+	bl	rt_printf
+	vmov.f32	d1, #5.000000e-01
+	movw	r0, :lower16:.L_MergedGlobals
+	movt	r0, :upper16:.L_MergedGlobals
+	vmov.i32	d0, #0x0
+	cmp	r4, #127
+	ldr	r0, [r0, #16]
+	vmoveq.f32	s0, s2
 .LBB3_27:
-	movw	r0, :lower16:.L.str.26
-	movw	r2, :lower16:.L.str.27
-	movt	r0, :upper16:.L.str.26
-	movt	r2, :upper16:.L.str.27
-	cmp	r5, #127
+                                        @ kill: %S0<def> %S0<kill> %D0<kill>
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager14set_pitch_bendEf
+.LBB3_28:
+	movw	r0, :lower16:.L.str.25
+	movw	r2, :lower16:.L.str.26
+	movt	r0, :upper16:.L.str.25
+	movt	r2, :upper16:.L.str.26
+	cmp	r4, #127
 	mov	r1, #25
 	moveq	r2, r0
-	movw	r0, :lower16:.L.str.25
-	movt	r0, :upper16:.L.str.25
+	movw	r0, :lower16:.L.str.27
+	movt	r0, :upper16:.L.str.27
 	bl	rt_printf
 	movw	r6, :lower16:.L_MergedGlobals
-	mov	r4, #0
+	mov	r5, #0
 	movt	r6, :upper16:.L_MergedGlobals
-	cmp	r5, #127
+	cmp	r4, #127
 	ldr	r0, [r6, #12]
-	movweq	r4, #1
-	mov	r1, r4
+	movweq	r5, #1
+	mov	r1, r5
 	bl	_ZN11hit_manager23set_stut_lmod_up_buttonEb
 	ldr	r0, [r6, #16]
-	mov	r1, r4
+	mov	r1, r5
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r10, r11, lr}
 	b	_ZN11hit_manager23set_stut_lmod_up_buttonEb
-.LBB3_28:
-	movw	r0, :lower16:.L.str.26
-	movw	r2, :lower16:.L.str.27
-	movt	r0, :upper16:.L.str.26
-	movt	r2, :upper16:.L.str.27
-	cmp	r5, #127
+.LBB3_29:
+	movw	r0, :lower16:.L.str.25
+	movw	r2, :lower16:.L.str.26
+	movt	r0, :upper16:.L.str.25
+	movt	r2, :upper16:.L.str.26
+	cmp	r4, #127
 	mov	r1, #31
 	moveq	r2, r0
 	movw	r0, :lower16:.L.str.28
 	movt	r0, :upper16:.L.str.28
-	b	.LBB3_30
-.LBB3_29:
-	movw	r0, :lower16:.L.str.26
-	movw	r2, :lower16:.L.str.27
-	movt	r0, :upper16:.L.str.26
-	movt	r2, :upper16:.L.str.27
-	cmp	r5, #127
+	bl	rt_printf
+	movw	r0, :lower16:.L_MergedGlobals
+	mov	r1, #0
+	movt	r0, :upper16:.L_MergedGlobals
+	ldr	r0, [r0, #12]
+	b	.LBB3_31
+.LBB3_30:
+	movw	r0, :lower16:.L.str.25
+	movw	r2, :lower16:.L.str.26
+	movt	r0, :upper16:.L.str.25
+	movt	r2, :upper16:.L.str.26
+	cmp	r4, #127
 	mov	r1, #32
 	moveq	r2, r0
 	movw	r0, :lower16:.L.str.29
 	movt	r0, :upper16:.L.str.29
-.LBB3_30:
 	bl	rt_printf
-	vpop	{d8, d9}
-	pop	{r4, r5, r6, r10, r11, pc}
+	movw	r0, :lower16:.L_MergedGlobals
+	mov	r1, #0
+	movt	r0, :upper16:.L_MergedGlobals
+	ldr	r0, [r0, #16]
 .LBB3_31:
-	movw	r0, :lower16:.L.str.26
-	movw	r2, :lower16:.L.str.27
-	movt	r0, :upper16:.L.str.26
-	movt	r2, :upper16:.L.str.27
-	cmp	r5, #127
+	cmp	r4, #127
+	movweq	r1, #1
+	vpop	{d8, d9}
+	pop	{r4, r5, r6, r10, r11, lr}
+	b	_ZN11hit_manager11set_bend_upEb
+.LBB3_32:
+	movw	r0, :lower16:.L.str.25
+	movw	r2, :lower16:.L.str.26
+	movt	r0, :upper16:.L.str.25
+	movt	r2, :upper16:.L.str.26
+	cmp	r4, #127
 	mov	r1, #35
 	moveq	r2, r0
 	movw	r0, :lower16:.L.str.30
 	movt	r0, :upper16:.L.str.30
 	bl	rt_printf
 	movw	r6, :lower16:.L_MergedGlobals
-	mov	r4, #0
+	mov	r5, #0
 	movt	r6, :upper16:.L_MergedGlobals
-	cmp	r5, #127
+	cmp	r4, #127
 	ldr	r0, [r6, #12]
-	movweq	r4, #1
-	mov	r1, r4
+	movweq	r5, #1
+	mov	r1, r5
 	bl	_ZN11hit_manager23set_stut_pmod_up_buttonEb
 	ldr	r0, [r6, #16]
-	mov	r1, r4
+	mov	r1, r5
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r10, r11, lr}
 	b	_ZN11hit_manager23set_stut_pmod_up_buttonEb
-.LBB3_32:
-	movw	r0, :lower16:.L.str.26
-	movw	r2, :lower16:.L.str.27
-	movt	r0, :upper16:.L.str.26
-	movt	r2, :upper16:.L.str.27
-	cmp	r5, #127
+.LBB3_33:
+	movw	r0, :lower16:.L.str.25
+	movw	r2, :lower16:.L.str.26
+	movt	r0, :upper16:.L.str.25
+	movt	r2, :upper16:.L.str.26
+	cmp	r4, #127
 	mov	r1, #38
 	moveq	r2, r0
 	movw	r0, :lower16:.L.str.31
@@ -593,14 +633,14 @@ _Z15process_midi_ccii:                  @ @_Z15process_midi_ccii
 	movw	r0, :lower16:.L_MergedGlobals
 	mov	r1, #0
 	movt	r0, :upper16:.L_MergedGlobals
-	cmp	r5, #127
+	cmp	r4, #127
 	ldr	r0, [r0, #4]
 	movweq	r1, #1
 	vpop	{d8, d9}
 	pop	{r4, r5, r6, r10, r11, lr}
 	b	_ZN8freeverb8set_holdEb
 	.p2align	2
-@ BB#33:
+@ BB#34:
 .LCPI3_1:
 	.long	1062668861              @ float 0.839999973
 .Lfunc_end3:
@@ -679,11 +719,11 @@ setup:                                  @ @setup
 	movw	r5, :lower16:midi
 	movt	r6, :upper16:.L_MergedGlobals
 	movt	r5, :upper16:midi
-	ldr	r1, [r6, #24]
+	ldr	r1, [r6, #20]
 	mov	r8, r0
 	mov	r0, r5
 	bl	_ZN4Midi8readFromEPKc
-	ldr	r1, [r6, #24]
+	ldr	r1, [r6, #20]
 	mov	r0, r5
 	bl	_ZN4Midi7writeToEPKc
 	mov	r0, r5
@@ -692,7 +732,7 @@ setup:                                  @ @setup
 	bl	_ZN4Midi12enableParserEb
 	mov	r0, r5
 	mov	r1, #1
-	ldr	r4, [r6, #24]
+	ldr	r4, [r6, #20]
 	bl	_ZN4Midi12enableParserEb
 	mov	r0, r5
 	bl	_ZN4Midi9getParserEv
@@ -732,13 +772,13 @@ setup:                                  @ @setup
 	bl	_ZN11hit_managerC1Eff
 .Ltmp1:
 @ BB#1:
-	mov	r0, #1065353216
-	str	r5, [r6, #12]
+	mov	r0, #1069547520
+	mov	r7, #0
 	str	r0, [r5, #84]
-	mov	r0, #1048576000
-	str	r0, [r5, #100]
 	movw	r0, :lower16:.Lstr.1
 	movt	r0, :upper16:.Lstr.1
+	str	r5, [r6, #12]
+	str	r7, [r5, #100]
 	bl	puts
 	mov	r0, #104
 	bl	_Znwj
@@ -756,9 +796,8 @@ setup:                                  @ @setup
 	mov	r0, #1073741824
 	str	r5, [r6, #16]
 	str	r0, [r5, #84]
-	mov	r0, #1056964608
-	str	r0, [r5, #100]
 	mov	r0, #120
+	str	r7, [r5, #100]
 	bl	_Znwj
 	mov	r5, r0
 	ldr	r0, [r6]
@@ -864,8 +903,8 @@ render:                                 @ @render
 	push	{r4, r5, r6, r7, r11, lr}
 	.setfp	r11, sp, #16
 	add	r11, sp, #16
-	.vsave	{d8, d9, d10}
-	vpush	{d8, d9, d10}
+	.vsave	{d8, d9, d10, d11}
+	vpush	{d8, d9, d10, d11}
 	.pad	#24
 	sub	sp, sp, #24
 	mov	r4, r0
@@ -873,6 +912,7 @@ render:                                 @ @render
 	cmp	r0, #0
 	beq	.LBB7_3
 @ BB#1:                                 @ %.lr.ph
+	vmov.f64	d11, #1.000000e+00
 	movw	r7, :lower16:.L_MergedGlobals
 	movw	r5, :lower16:scope
 	mov	r6, #0
@@ -884,34 +924,37 @@ render:                                 @ @render
 	mul	r2, r0, r6
 	ldr	r0, [r7, #12]
 	add	r1, r1, r2, lsl #2
-	vldr	s18, [r1, #4]
-	vldr	s20, [r1]
-	vmov.f32	s0, s18
-	bl	_ZN11hit_manager4tickEf
-	vmov.f64	d8, d0
-	ldr	r0, [r7, #16]
-	vmov.f32	s0, s20
+	vldr	s16, [r1, #4]
+	vldr	s18, [r1]
+	vmov.f32	s0, s16
 	bl	_ZN11hit_manager4tickEf
 	vmov.f32	s20, s0
+	ldr	r0, [r7, #16]
+	vmov.f32	s0, s18
+	bl	_ZN11hit_manager4tickEf
+	vmov.f32	s18, s0
 	ldr	r0, [r7, #4]
-	vmov.f32	s0, s16
+	vmov.f32	s0, s20
 	bl	_ZN8freeverb4tickEf
-	vldr	s4, [r7, #20]
-                                        @ kill: %S0<def> %S0<kill> %D0<def>
 	vldr	s2, [r7, #8]
-	vmul.f32	d16, d2, d8
-	vmul.f32	d17, d1, d0
-	vadd.f32	d0, d17, d16
-                                        @ kill: %S0<def> %S0<kill> %D0<kill>
+                                        @ kill: %S0<def> %S0<kill> %D0<def>
+	vcvt.f64.f32	d10, s20
+	vcvt.f64.f32	d16, s2
+	vsub.f64	d16, d11, d16
+	vmul.f64	d16, d16, d10
+	vmul.f32	d0, d1, d0
+	vcvt.f64.f32	d17, s0
+	vadd.f64	d16, d16, d17
+	vcvt.f32.f64	s0, d16
 	bl	_Z16distortion_clampf
 	ldr	r1, [r4, #28]
 	ldr	r0, [r4, #4]
 	mul	r1, r1, r6
 	add	r0, r0, r1, lsl #2
 	vstr	s0, [r0, #4]
-	vmov.f32	s0, s20
+	vmov.f32	s0, s18
 	bl	_Z16distortion_clampf
-	vabs.f32	d1, d9
+	vabs.f32	d1, d8
 	ldr	r1, [r4, #28]
 	ldr	r0, [r4, #4]
 	mul	r1, r1, r6
@@ -920,23 +963,22 @@ render:                                 @ @render
 	vmov	r2, r3, d16
 	vstr	s0, [r0]
 	ldr	r0, [r7, #12]
-	vcvt.f64.f32	d16, s16
 	ldr	r1, [r0, #80]
 	vldr	s0, [r0, #96]
 	mov	r0, r5
 	vldr	s2, [r1, #44]
-	vcvt.f64.f32	d17, s0
-	vcvt.f64.f32	d18, s2
-	vstmia	sp, {d17, d18}
-	vstr	d16, [sp, #16]
+	vcvt.f64.f32	d16, s0
+	vcvt.f64.f32	d17, s2
+	vstmia	sp, {d16, d17}
+	vstr	d10, [sp, #16]
 	bl	_ZN5Scope3logEdz
 	add	r6, r6, #1
 	ldr	r0, [r4, #20]
 	cmp	r6, r0
 	blo	.LBB7_2
 .LBB7_3:                                @ %._crit_edge
-	sub	sp, r11, #40
-	vpop	{d8, d9, d10}
+	sub	sp, r11, #48
+	vpop	{d8, d9, d10, d11}
 	pop	{r4, r5, r6, r7, r11, pc}
 .Lfunc_end7:
 	.size	render, .Lfunc_end7-render
@@ -1036,13 +1078,13 @@ midi:
 
 	.type	.L.str.7,%object        @ @.str.7
 .L.str.7:
-	.asciz	"cc%d: pitch bend1: %.02f\n"
-	.size	.L.str.7, 26
+	.asciz	"cc%d: hi pitch: %.02f\n"
+	.size	.L.str.7, 23
 
 	.type	.L.str.8,%object        @ @.str.8
 .L.str.8:
-	.asciz	"cc%d: pitch bend2: %.02f\n"
-	.size	.L.str.8, 26
+	.asciz	"cc%d: low pitch: %.02f\n"
+	.size	.L.str.8, 24
 
 	.type	.L.str.9,%object        @ @.str.9
 .L.str.9:
@@ -1076,7 +1118,7 @@ midi:
 
 	.type	.L.str.15,%object       @ @.str.15
 .L.str.15:
-	.asciz	"cc%d: rev vol: %.02f\n"
+	.asciz	"cc%d: rev mix: %.02f\n"
 	.size	.L.str.15, 22
 
 	.type	.L.str.16,%object       @ @.str.16
@@ -1121,23 +1163,23 @@ midi:
 
 	.type	.L.str.24,%object       @ @.str.24
 .L.str.24:
-	.asciz	"cc%d: snare vol: %.02f\n"
-	.size	.L.str.24, 24
+	.asciz	"cc%d: do_bend: %s\n"
+	.size	.L.str.24, 19
 
 	.type	.L.str.25,%object       @ @.str.25
 .L.str.25:
-	.asciz	"cc%d: stut lmod_up: %s\n"
-	.size	.L.str.25, 24
+	.asciz	"ON"
+	.size	.L.str.25, 3
 
 	.type	.L.str.26,%object       @ @.str.26
 .L.str.26:
-	.asciz	"ON"
-	.size	.L.str.26, 3
+	.asciz	"OFF"
+	.size	.L.str.26, 4
 
 	.type	.L.str.27,%object       @ @.str.27
 .L.str.27:
-	.asciz	"OFF"
-	.size	.L.str.27, 4
+	.asciz	"cc%d: stut lmod_up: %s\n"
+	.size	.L.str.27, 24
 
 	.type	.L.str.28,%object       @ @.str.28
 .L.str.28:
@@ -1222,9 +1264,8 @@ skip_count:
 	.long	0                       @ float 0
 	.long	0
 	.long	0
-	.long	1065353216              @ float 1
 	.long	.L.str
-	.size	.L_MergedGlobals, 28
+	.size	.L_MergedGlobals, 24
 
 
 	.globl	sample_rate
@@ -1233,20 +1274,17 @@ sample_rate = .L_MergedGlobals
 	.globl	ourReverb
 ourReverb = .L_MergedGlobals+4
 	.size	ourReverb, 4
-	.globl	reverbVol
-reverbVol = .L_MergedGlobals+8
-	.size	reverbVol, 4
+	.globl	reverbMix
+reverbMix = .L_MergedGlobals+8
+	.size	reverbMix, 4
 	.globl	snare_channel
 snare_channel = .L_MergedGlobals+12
 	.size	snare_channel, 4
 	.globl	kick_channel
 kick_channel = .L_MergedGlobals+16
 	.size	kick_channel, 4
-	.globl	snare_vol
-snare_vol = .L_MergedGlobals+20
-	.size	snare_vol, 4
 	.globl	gMidiPort0
-gMidiPort0 = .L_MergedGlobals+24
+gMidiPort0 = .L_MergedGlobals+20
 	.size	gMidiPort0, 4
 	.ident	"clang version 3.9.1-9 (tags/RELEASE_391/rc2)"
 	.section	".note.GNU-stack","",%progbits

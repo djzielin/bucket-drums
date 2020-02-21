@@ -6798,12 +6798,12 @@ private:
     float stut_length_mod=0.0;
     bool is_stut_pmod_up=false;
     bool is_stut_lmod_up=false;
+    bool bend_up=false;
 
     int delay_count;
     int delay_length;
     float delay_pitch_mod;
     float delay_smod;
-
 public:
     float map_to_range(float input, float min, float max);
 
@@ -6814,6 +6814,7 @@ public:
     void set_hit_threshold(float knob);
     void set_gate_time(float knob);
     void set_boost(float knob);
+    void set_base_pitch(float knob);
 
     void set_stut_length(float knob);
     void set_stut_max_count(float knob);
@@ -6826,6 +6827,7 @@ public:
     void set_delay_smod(float knob);
     void set_stut_lmod_up_button(bool value);
     void set_stut_pmod_up_button(bool value);
+    void set_bend_up(bool value);
 
     unsigned int total_samples=0;
     float sample_rate;
@@ -6841,14 +6843,6 @@ public:
 };
 # 6 "/root/Bela/projects/bucket-drums/hit_manager.cpp" 2
 
-
-float hit_manager::map_to_range(float input, float min, float max)
-{
- float range=max-min;
-    float input_range_adjusted=input*range;
-    return min+input_range_adjusted;
-}
-
 hit_manager::hit_manager(float _sample_rate, float sma_length)
 {
   sma = new simple_moving_average(sma_length);
@@ -6860,6 +6854,19 @@ hit_manager::hit_manager(float _sample_rate, float sma_length)
 
   current_hit = new hit(this);
 }
+
+float hit_manager::map_to_range(float input, float min, float max)
+{
+ float range=max-min;
+    float input_range_adjusted=input*range;
+    return min+input_range_adjusted;
+}
+
+void hit_manager::set_base_pitch(float knob)
+{
+   base_pitch=map_to_range(knob, 1.0, 0.5);
+}
+
 
 void hit_manager::set_pitch_bend(float knob)
 {
@@ -6877,7 +6884,7 @@ void hit_manager::set_hit_threshold(float knob)
 
 void hit_manager::set_gate_time(float knob)
 {
- gate_time=map_to_range(knob,max_samples_to_record*2.0f,0.3f);
+ gate_time=map_to_range(knob,1.0f,0.030f)*sample_rate;
 
  if(knob==0.0f)
    gate_time=-1;
@@ -6945,6 +6952,11 @@ void hit_manager::set_stut_lmod_up_button(bool value)
 void hit_manager::set_stut_pmod_up_button(bool value)
 {
  is_stut_pmod_up=value;
+}
+
+void hit_manager::set_bend_up(bool value)
+{
+ bend_up=value;
 }
 
 void hit_manager::hit_happened()

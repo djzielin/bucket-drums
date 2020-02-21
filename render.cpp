@@ -14,10 +14,9 @@
 unsigned int sample_rate;
 
 freeverb *ourReverb;
-float reverbVol=0.0f;
+float reverbMix=0.0f;
 hit_manager *snare_channel;
 hit_manager *kick_channel;
-float snare_vol=1.0f;
 Scope scope;
 
 Midi midi;
@@ -63,12 +62,12 @@ void process_midi_cc(int cc, int val)
 		switch (cc)
 		{
 			case 1:
-			    rt_printf("cc%d: pitch bend1: %.02f\n",cc,float_val);
-        		snare_channel->set_pitch_bend(float_val);
+			    rt_printf("cc%d: hi pitch: %.02f\n",cc,float_val);
+		     	snare_channel->set_base_pitch(float_val);
         		break;
         	case 2:
-        		rt_printf("cc%d: pitch bend2: %.02f\n",cc,float_val);
-        		kick_channel->set_pitch_bend(float_val); 
+        		rt_printf("cc%d: low pitch: %.02f\n",cc,float_val);
+		     	kick_channel->set_base_pitch(float_val);
         		break;
     		case 3:
 				rt_printf("cc%d: gate time: %.02f\n",cc,float_val);
@@ -99,8 +98,8 @@ void process_midi_cc(int cc, int val)
 			    ourReverb->set_delay_times(snare_channel->map_to_range(float_val,1.0f,10.0f));
 				break;		
 			case 9:
-			    rt_printf("cc%d: rev vol: %.02f\n",cc,float_val);
-			    reverbVol=float_val;
+			    rt_printf("cc%d: rev mix: %.02f\n",cc,float_val);
+			    reverbMix=float_val;
 				break;		
 			case 11:
 			    rt_printf("cc%d: hi threshold: %.02f\n",cc,float_val);
@@ -119,6 +118,7 @@ void process_midi_cc(int cc, int val)
 			    rt_printf("cc%d: stut count: %.02f\n",cc,float_val);
 			    snare_channel->set_stut_max_count(float_val);
                 kick_channel->set_stut_max_count(float_val);
+                break;
 			case 15:
 			    rt_printf("cc%d: stut length mmod: %.02f\n",cc,float_val);
 				snare_channel->set_stut_length_mod(float_val);
@@ -138,9 +138,13 @@ void process_midi_cc(int cc, int val)
 			    rt_printf("cc%d: rev feedback: %.02f\n",cc,float_val);
 			    ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
 				break;
-			case 19:
-			    rt_printf("cc%d: snare vol: %.02f\n",cc,float_val);
-			    snare_vol=1.0f-float_val;
+			case 21:
+		        rt_printf("cc%d: do_bend: %s\n",cc,bool_val?"ON":"OFF");
+		     	snare_channel->set_pitch_bend(bool_val?0.5f:0.0f);
+		     	break;
+         	case 22:
+         	    rt_printf("cc%d: do_bend: %s\n",cc,bool_val?"ON":"OFF");
+		     	kick_channel->set_pitch_bend(bool_val?0.5f:0.0f);
 				break;
 			case 25:
 			    rt_printf("cc%d: stut lmod_up: %s\n",cc,bool_val?"ON":"OFF");
@@ -149,11 +153,11 @@ void process_midi_cc(int cc, int val)
 				break;
 			 case 31:
 			    rt_printf("cc%d: hi pitch up: %s\n",cc,bool_val?"ON":"OFF");
-			    //snare_channel->set_stut_pmod_up_button(bool_val);
+			    snare_channel->set_bend_up(bool_val);
 				break;
 		    case 32:
 			    rt_printf("cc%d: low pitch up: %s\n",cc,bool_val?"ON":"OFF");
-			    //kick_channel->set_stut_pmod_up_button(bool_val);
+			    kick_channel->set_bend_up(bool_val);
 				break;
 		   case 35:
 			    rt_printf("cc%d: stut pmod_up: %s\n",cc,bool_val?"ON":"OFF");
@@ -209,14 +213,13 @@ bool setup(BelaContext *context, void *userData)
 	
 	printf("about to setup snare channel...\n");
 	snare_channel=new hit_manager(sample_rate,1000);
-    snare_channel->sma_multiplier=1.0f;
-    snare_channel->lowest_pitch=0.25f;
+    snare_channel->sma_multiplier=1.5f;
+    snare_channel->lowest_pitch=0.0f;
 
-    
     printf("about to setup kick channel...\n");
     kick_channel=new hit_manager(sample_rate,1000);
     kick_channel->sma_multiplier=2.0f;
-    kick_channel->lowest_pitch=0.5f;
+    kick_channel->lowest_pitch=0.0f;
 
     ourReverb=new freeverb(sample_rate);
 
@@ -245,7 +248,7 @@ void render(BelaContext *context, void *userData)
 		
 		float rev=ourReverb->tick(snare_out);
 		
-        audioWrite(context,n,1,distortion_clamp(snare_out*snare_vol + rev*reverbVol)); //keep within -1 to 1
+        audioWrite(context,n,1,distortion_clamp(snare_out*(1.0-reverbMix) + rev*reverbMix)); //keep within -1 to 1
         audioWrite(context,n,0,distortion_clamp(kick_out)); //keep within -1 to 1
         
         scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount, snare_out );

@@ -4,14 +4,6 @@
 
 #include "hit_manager.h"
 
-
-float hit_manager::map_to_range(float input, float min, float max)
-{
-	float range=max-min;
-   	float input_range_adjusted=input*range;
-   	return min+input_range_adjusted;
-}
-
 hit_manager::hit_manager(float _sample_rate, float sma_length)
 {
   sma = new simple_moving_average(sma_length);
@@ -23,6 +15,19 @@ hit_manager::hit_manager(float _sample_rate, float sma_length)
   
   current_hit = new hit(this);
 }
+
+float hit_manager::map_to_range(float input, float min, float max)
+{
+	float range=max-min;
+   	float input_range_adjusted=input*range;
+   	return min+input_range_adjusted;
+}
+
+void hit_manager::set_base_pitch(float knob)
+{
+   base_pitch=map_to_range(knob, 1.0, 0.5);	
+}
+
 
 void hit_manager::set_pitch_bend(float knob)    
 { 
@@ -40,7 +45,7 @@ void hit_manager::set_hit_threshold(float knob)
 
 void hit_manager::set_gate_time(float knob) 
 { 
-	gate_time=map_to_range(knob,max_samples_to_record*2.0f,0.3f);
+	gate_time=map_to_range(knob,1.0f,0.030f)*sample_rate;
 	
 	if(knob==0.0f)
 	  gate_time=-1;
@@ -82,22 +87,22 @@ void hit_manager::set_stut_length_mod(float knob)
 
 void hit_manager::set_delay_length(float knob) 
 { 
-    //int stut_length_mod=0.0;
+
 }
 
 void hit_manager::set_delay_count(float knob) 
 { 
-    //int stut_length_mod=0.0;
+
 }
 
 void hit_manager::set_delay_pmod(float knob) 
 { 
-    //int stut_length_mod=0.0;
+
 }
 
 void hit_manager::set_delay_smod(float knob) 
 { 
-    //int stut_length_mod=0.0;
+
 }
 
 void hit_manager::set_stut_lmod_up_button(bool value)
@@ -108,6 +113,11 @@ void hit_manager::set_stut_lmod_up_button(bool value)
 void hit_manager::set_stut_pmod_up_button(bool value)
 {
 	is_stut_pmod_up=value;
+}
+
+void hit_manager::set_bend_up(bool value)
+{
+	bend_up=value;
 }
 
 void hit_manager::hit_happened()

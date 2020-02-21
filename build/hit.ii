@@ -8404,12 +8404,12 @@ private:
     float stut_length_mod=0.0;
     bool is_stut_pmod_up=false;
     bool is_stut_lmod_up=false;
+    bool bend_up=false;
 
     int delay_count;
     int delay_length;
     float delay_pitch_mod;
     float delay_smod;
-
 public:
     float map_to_range(float input, float min, float max);
 
@@ -8420,6 +8420,7 @@ public:
     void set_hit_threshold(float knob);
     void set_gate_time(float knob);
     void set_boost(float knob);
+    void set_base_pitch(float knob);
 
     void set_stut_length(float knob);
     void set_stut_max_count(float knob);
@@ -8432,6 +8433,7 @@ public:
     void set_delay_smod(float knob);
     void set_stut_lmod_up_button(bool value);
     void set_stut_pmod_up_button(bool value);
+    void set_bend_up(bool value);
 
     unsigned int total_samples=0;
     float sample_rate;
@@ -8531,14 +8533,17 @@ float distortion_clamp(float input);
         if(our_manager->pitch_bend!=0)
         {
      float percent_complete=(float)samples_played/(float)our_manager->pitch_bend;
-
-
-
         float expo=exp(-1.0f*percent_complete);
-     advance_amount=base_pitch*expo;
+
+           if(our_manager->bend_up==false)
+        advance_amount=base_pitch*expo;
+     else
+        advance_amount=1.0f-expo+(base_pitch-0.5f);
 
      if(advance_amount<our_manager->lowest_pitch)
-     advance_amount=our_manager->lowest_pitch;
+        advance_amount=our_manager->lowest_pitch;
+     if(advance_amount>1.0)
+        advance_amount=1.0;
         }
 
    return sample;
@@ -8595,7 +8600,15 @@ float hit::tick()
        sample=calc_normal_sample();
 
  sample=distortion_clamp(sample*our_manager->boost_amount)*our_manager->volume;
-# 173 "/root/Bela/projects/bucket-drums/hit.cpp"
+
+
+
+    if(our_manager->gate_time!=-1)
+ {
+    if(total_played>(our_manager->gate_time))
+       sample=0;
+ }
+
  samples_played++;
  total_played++;
 

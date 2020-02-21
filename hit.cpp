@@ -97,14 +97,17 @@
         if(our_manager->pitch_bend!=0)
         {
 		   float percent_complete=(float)samples_played/(float)our_manager->pitch_bend;
-		  // if(percent_complete>1.0f)
-	      // 	 percent_complete=1.0f;
-		
 	       float expo=exp(-1.0f*percent_complete);
-		   advance_amount=base_pitch*expo;
-		   
+
+           if(our_manager->bend_up==false)
+		      advance_amount=base_pitch*expo;
+		   else
+		      advance_amount=1.0f-expo+(base_pitch-0.5f);
+		      
 		   if(advance_amount<our_manager->lowest_pitch)
-		   advance_amount=our_manager->lowest_pitch;
+		      advance_amount=our_manager->lowest_pitch;
+		   if(advance_amount>1.0)
+		      advance_amount=1.0;
         }
         
 	 	return sample;
@@ -164,11 +167,11 @@ float hit::tick()
 		
 
 		
-   /* if(our_manager->gate_time!=-1) //do gating
+    if(our_manager->gate_time!=-1) //do gating
 	{
 	   if(total_played>(our_manager->gate_time))  
 	      sample=0;
-	}*/
+	}
 	
 	samples_played++;
 	total_played++;
