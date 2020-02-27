@@ -1,3 +1,0 @@
--include libraries/Midi/build/Makefile.link
--include libraries/Scope/build/Makefile.link
--include libraries/sndfile/build/Makefile.link

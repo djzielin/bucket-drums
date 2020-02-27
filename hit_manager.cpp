@@ -13,7 +13,11 @@ hit_manager::hit_manager(float _sample_rate, float sma_length)
   printf("  max samples to record: %d\n",(int)max_samples_to_record);
   max_transient_samples=(int)(0.030f*sample_rate);
   
-  current_hit = new hit(this);
+  for(int i=0;i<HIT_POOL_SIZE;i++)
+     hit_pool[i]=new hit(this);
+  
+  
+  current_hit = find_free_hit();
 }
 
 float hit_manager::map_to_range(float input, float min, float max)
@@ -70,7 +74,7 @@ void hit_manager::set_stut_length(float knob)
     
 void hit_manager::set_stut_max_count(float knob) 
 { 
-     stut_max_count=map_to_range(knob,0.0f,20.0f);	
+     stut_max_count=(int)map_to_range(knob,0.0f,40.0f);	
       rt_printf("   computed stut_max_count: %d\n",stut_max_count);
 }
     
@@ -105,6 +109,12 @@ void hit_manager::set_delay_smod(float knob)
 
 }
 
+void hit_manager::set_poly_mode(bool value)
+{
+	is_poly_mode=value;
+}
+
+
 void hit_manager::set_stut_lmod_up_button(bool value)
 {
 	is_stut_lmod_up=value;
@@ -125,9 +135,15 @@ void hit_manager::hit_happened()
   rt_printf("hit happened!\n");
   state = STATE_HIT;
   counter = 0;
-  current_hit->reset();
-  //current_hit->set_manager(this);
+  
+  
+   if(is_poly_mode==true)
+      current_hit=find_free_hit();
+     
+     
+    current_hit->reset();
 }
+
 
 float hit_manager::tick(float input)
 {
@@ -148,7 +164,6 @@ float hit_manager::tick(float input)
     	rt_printf("recorded too many samples: %d\n",counter);
       current_hit->add_sample(input);
       state = STATE_WAITING;
-      //current_hit->recording_done();
     }
     else if (counter >= max_transient_samples) // wait for transient to go away to allow next.
     {
@@ -156,58 +171,66 @@ float hit_manager::tick(float input)
       {
       	rt_printf("another hit interrupted!\n");
         hit_happened();
-        current_hit->add_sample(input);
-        counter++;
       }
-      else
-      {
-      	 current_hit->add_sample(input);
-         counter++;
-      }
+      
+      current_hit->add_sample(input);
     }
     else
     {
       current_hit->add_sample(input);
-      counter++;
     }
+    
+    counter++;
   }
 
-  float out = current_hit->tick();
 
+  float out = 0.0f;
+  if(is_poly_mode==false)
+     out+=current_hit->tick();
+  else
+  {
+  	for(int i=0;i<HIT_POOL_SIZE;i++)
+      out+=hit_pool[i]->tick();
+  }
+  total_played++;
+  
+ /*  if(total_played%10000==0)
+  {
+  	for(int i=0;i<HIT_POOL_SIZE;i++)
+     	rt_printf("%d",hit_pool[i]->is_playing());
+     	
+       rt_printf("\n");
+  	
+   }*/
+
+  
   return out;
 }
 
+hit *hit_manager::find_free_hit()
+{
+    bool blank_found=false;
+    unsigned int oldest_time=0;
+    unsigned int oldest_index=0;
 
-/* //TODO or look for oldest hit
-   int find_free_slot()
-   {
-           bool blank_found=false;
-           unsigned int oldest_time=0;
-           unsigned int oldest_index=0;
-
-           for(int i=0;i<POOL_SIZE;i++) //make number of entries a DEFINE
-           {
-                   if(hit_pool[i].is_playing()==false)
-                   {
+    for(int i=0;i<HIT_POOL_SIZE;i++) //make number of entries a DEFINE
+    {
+        if(hit_pool[i]->is_playing()==false)
+        {
+           rt_printf("found a unused hit at index: %d\n",i);
            blank_found=true;
-                   return i;
-                   }
-                   else
-                   {
-                           if(hit_pool[i].time_running>oldest_time)
-                           {
-                                   oldest_time=hit_pool[i].time_running;
-                                   oldest_index=i;
-                           }
+           return hit_pool[i];
+        }
+        else
+        {
+           if(hit_pool[i]->total_played > oldest_time)
+           {
+               oldest_time=hit_pool[i]->total_played;
+               oldest_index=i;
+            }
+        }
+    }
 
-                   }
-           }
-
-           //rt_printf("had to find oldest one at: index: %d
-   time%d\n",oldest_index,oldest_time);
-           //if we made it here, no free slots found, so lets take over the
-   oldest one
-           return oldest_index;
-
-
-   }      	*/
+   rt_printf("had to find oldest one at: index: %d time%d\n",oldest_index,oldest_time);
+   return hit_pool[oldest_index];
+}

@@ -21,7 +21,6 @@ private:
 
 	int rec_index;
 	int samples_played;
-	int total_played;
 	int stut_length;
 	
 	int stut_hits_occured=0;
@@ -34,7 +33,7 @@ private:
 
 public:
     float advance_amount; //advance play head at different rates to achieve pitch bends (need to make public so scope can get access)
-
+	int total_played;
 
     hit(hit_manager *hm);
     void recording_done();

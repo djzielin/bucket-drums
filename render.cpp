@@ -151,6 +151,11 @@ void process_midi_cc(int cc, int val)
 			    snare_channel->set_stut_lmod_up_button(bool_val);
 			    kick_channel->set_stut_lmod_up_button(bool_val);
 				break;
+			case 29:
+			    rt_printf("cc%d: poly?: %s\n",cc,bool_val?"ON":"OFF");
+			    snare_channel->set_poly_mode(bool_val);
+			    kick_channel->set_poly_mode(bool_val);
+				break;
 			 case 31:
 			    rt_printf("cc%d: hi pitch up: %s\n",cc,bool_val?"ON":"OFF");
 			    snare_channel->set_bend_up(bool_val);

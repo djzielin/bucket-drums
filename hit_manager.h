@@ -6,7 +6,7 @@
 #include "hit.h"
 #include "simple_moving_average.h"
 
-#define POOL_SIZE 7
+#define HIT_POOL_SIZE 10
 
 class hit_manager
 {
@@ -18,7 +18,7 @@ private:
     int max_transient_samples;
     
 	int counter=0;
-	//hit hit_pool[POOL_SIZE]; //TODO: use when we bring back polyphony
+	hit *hit_pool[HIT_POOL_SIZE]; 
 	
 	simple_moving_average *sma;
 
@@ -38,12 +38,17 @@ private:
     float stut_length_mod=0.0;
     bool is_stut_pmod_up=false;
     bool is_stut_lmod_up=false;
+    bool is_poly_mode=false;
     bool bend_up=false;
 
     int delay_count;
     int delay_length;
     float delay_pitch_mod;
     float delay_smod;
+    
+    hit *find_free_hit();
+    unsigned int total_played=0;
+
 public:
     float map_to_range(float input, float min, float max);
  
@@ -68,6 +73,7 @@ public:
     void set_stut_lmod_up_button(bool value);
     void set_stut_pmod_up_button(bool value);
     void set_bend_up(bool value);
+    void set_poly_mode(bool value);
     
     unsigned int total_samples=0;
     float sample_rate;

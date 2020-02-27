@@ -36,7 +36,7 @@
 	{
         play_index=0;
         rec_index=0;
-        playing=false;
+        playing=true;
         samples_played=0;
         samples_available=0;
         total_played=0;
@@ -58,6 +58,9 @@
 	
 	void hit::add_sample(float sample)
 	{
+		if(playing==false)
+		   return;
+		   
 		//float low_passed=low_pass_prev*low_pass_A+sample*low_pass_B;
 		//low_pass_prev=low_passed;
 		//content[rec_index]=low_passed;
@@ -143,9 +146,13 @@ float hit::tick()
 		  
 		    if(stut_hits_occured>our_manager->stut_max_count)
 		    {
-		    	rt_printf("inside stut code. done playing at sample: %d. stut length: %d\n",sp,stut_length);
+		    	rt_printf("setting playing=false. stuts_played: %d out of max: %d done playing at sample: %d. stut length: %d\n",stut_hits_occured,our_manager->stut_max_count,total_played,stut_length);
 		        playing=false;
 		        return 0.0f;
+		    }
+		    else
+		    {
+		    	//rt_printf("stuts played: %d\n",stut_hits_occured);
 		    }
 		}
 	}
@@ -170,7 +177,9 @@ float hit::tick()
     if(our_manager->gate_time!=-1) //do gating
 	{
 	   if(total_played>(our_manager->gate_time))  
-	      sample=0;
+	   {
+	   	  playing=false;
+	   }
 	}
 	
 	samples_played++;
