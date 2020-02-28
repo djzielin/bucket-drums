@@ -1,5 +1,7 @@
 /***** reverb.h *****/
 
+#ifndef DJZ_FREEVERB_H
+
 #include "allpass_filter.h"
 #include "feedback_comb_filter.h"
 
@@ -42,3 +44,5 @@ public:
    freeverb(float sample_rate);
    float tick(float in);
 };
+
+#endif

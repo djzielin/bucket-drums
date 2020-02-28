@@ -9,6 +9,8 @@ hit_manager::hit_manager(float _sample_rate, float sma_length)
   sma = new simple_moving_average(sma_length);
   sample_rate = _sample_rate;
 
+  ourReverb=new freeverb(sample_rate);
+ 
   max_samples_to_record=(int)(0.25f*sample_rate);
   printf("  max samples to record: %d\n",(int)max_samples_to_record);
   max_transient_samples=(int)(0.030f*sample_rate);
@@ -202,9 +204,10 @@ float hit_manager::tick(float input)
        rt_printf("\n");
   	
    }*/
-
-  
-  return out;
+   
+   float rev=ourReverb->tick(out);
+		
+   return out+rev*reverbMix;
 }
 
 hit *hit_manager::find_free_hit()

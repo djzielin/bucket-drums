@@ -8,13 +8,10 @@
 
 #include "distortion.h"
 #include "tapped_delay_line.h"
-#include "freeverb.h"
 #include "hit_manager.h"
 
 unsigned int sample_rate;
 
-freeverb *ourReverb;
-float reverbMix=0.0f;
 hit_manager *snare_channel;
 hit_manager *kick_channel;
 Scope scope;
@@ -95,11 +92,13 @@ void process_midi_cc(int cc, int val)
 				break;		
 			case 8:
 			    rt_printf("cc%d: rev len: %.02f\n",cc,float_val);
-			    ourReverb->set_delay_times(snare_channel->map_to_range(float_val,1.0f,10.0f));
+			    snare_channel->ourReverb->set_delay_times(snare_channel->map_to_range(float_val,1.0f,10.0f));
+			    kick_channel->ourReverb->set_delay_times(snare_channel->map_to_range(float_val,1.0f,10.0f));
 				break;		
 			case 9:
 			    rt_printf("cc%d: rev mix: %.02f\n",cc,float_val);
-			    reverbMix=float_val;
+			    snare_channel->reverbMix=float_val;
+			    kick_channel->reverbMix=float_val;
 				break;		
 			case 11:
 			    rt_printf("cc%d: hi threshold: %.02f\n",cc,float_val);
@@ -136,7 +135,8 @@ void process_midi_cc(int cc, int val)
 				break;
 			case 18:
 			    rt_printf("cc%d: rev feedback: %.02f\n",cc,float_val);
-			    ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
+			    snare_channel->ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
+			    kick_channel->ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
 				break;
 			case 21:
 		        rt_printf("cc%d: do_bend: %s\n",cc,bool_val?"ON":"OFF");
@@ -171,7 +171,8 @@ void process_midi_cc(int cc, int val)
 				break;
 			case 38:
 			    rt_printf("cc%d: reverb hold: %s\n",cc,bool_val?"ON":"OFF");
-			    ourReverb->set_hold(bool_val);
+			    snare_channel->ourReverb->set_hold(bool_val);
+			    kick_channel->ourReverb->set_hold(bool_val);
 				break;
 			default:
 			 	break;
@@ -226,7 +227,7 @@ bool setup(BelaContext *context, void *userData)
     kick_channel->sma_multiplier=2.0f;
     kick_channel->lowest_pitch=0.0f;
 
-    ourReverb=new freeverb(sample_rate);
+   
 
     scope.setup(4, context->audioSampleRate);
     
@@ -251,9 +252,7 @@ void render(BelaContext *context, void *userData)
 	    float snare_out = snare_channel->tick(snare_sample);
 		float kick_out  = kick_channel->tick(kick_sample);
 		
-		float rev=ourReverb->tick(snare_out);
-		
-        audioWrite(context,n,1,distortion_clamp(snare_out*(1.0-reverbMix) + rev*reverbMix)); //keep within -1 to 1
+        audioWrite(context,n,1,distortion_clamp(snare_out)); //keep within -1 to 1
         audioWrite(context,n,0,distortion_clamp(kick_out)); //keep within -1 to 1
         
         scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount, snare_out );

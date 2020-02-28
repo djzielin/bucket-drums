@@ -5,6 +5,7 @@
 
 #include "hit.h"
 #include "simple_moving_average.h"
+#include "freeverb.h"
 
 #define HIT_POOL_SIZE 10
 
@@ -16,6 +17,8 @@ private:
     float base_pitch=0.7f; //currently not exposed as parameter
     int max_samples_to_record;
     int max_transient_samples;
+    
+
     
 	int counter=0;
 	hit *hit_pool[HIT_POOL_SIZE]; 
@@ -54,6 +57,9 @@ public:
  
 	hit *current_hit;
     float sma_multiplier=1.0f;	
+    
+    freeverb *ourReverb;
+    float reverbMix=0.0f;
     
     void set_pitch_bend(float knob);
     void set_hit_threshold(float knob);
