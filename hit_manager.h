@@ -47,8 +47,7 @@ private:
     int delay_count;
     int delay_length;
     float delay_pitch_mod;
-    float delay_smod;
-    
+
     hit *find_free_hit();
     unsigned int total_played=0;
 

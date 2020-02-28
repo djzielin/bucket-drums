@@ -89,26 +89,26 @@ void hit_manager::set_stut_pitch_mod(float knob)
 void hit_manager::set_stut_length_mod(float knob) 
 { 
     stut_length_mod=map_to_range(knob,1.0f,0.9f);
+    rt_printf("   computed stut_length_mod: %.02f\n",stut_length_mod);
 }
 
 void hit_manager::set_delay_length(float knob) 
 { 
-
+    int divisor=(int)map_to_range(knob,1.0,5.0);
+    delay_length=0.25f*sample_rate/(float)divisor; //TODO - figure out good tempo
+    rt_printf("   computed delay_length: %d divisor: %d\n",delay_length,divisor);
 }
 
 void hit_manager::set_delay_count(float knob) 
 { 
-
+    delay_count=(int)map_to_range(knob,0.0,5.0);
+    rt_printf("   computed delay_count: %d\n",delay_count);
 }
 
 void hit_manager::set_delay_pmod(float knob) 
 { 
-
-}
-
-void hit_manager::set_delay_smod(float knob) 
-{ 
-
+   delay_pitch_mod=map_to_range(knob,0.0,0.05f);
+   rt_printf("   computed delay_pitch_mod: %.02f\n",delay_pitch_mod);
 }
 
 void hit_manager::set_poly_mode(bool value)

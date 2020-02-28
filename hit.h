@@ -19,6 +19,9 @@ private:
 	float *content;
 	int samples_available;
 
+    float *rendered_samples;
+    int rendered_sample_count;
+
 	int rec_index;
 	int samples_played;
 	int stut_length;
@@ -30,6 +33,7 @@ private:
     float base_pitch;
     	
     float calc_normal_sample();
+    bool  handle_stuts();
 
 public:
     float advance_amount; //advance play head at different rates to achieve pitch bends (need to make public so scope can get access)

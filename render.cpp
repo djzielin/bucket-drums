@@ -129,9 +129,6 @@ void process_midi_cc(int cc, int val)
 				kick_channel->set_delay_count(float_val);
 				break;
 			case 17:
-			    rt_printf("cc%d: delay smod: %.02f\n",cc,float_val);
-				snare_channel->set_delay_smod(float_val);
-				kick_channel->set_delay_smod(float_val);
 				break;
 			case 18:
 			    rt_printf("cc%d: rev feedback: %.02f\n",cc,float_val);

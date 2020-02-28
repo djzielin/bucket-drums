@@ -116,17 +116,9 @@
 	 	return sample;
 	}
 	
-
-float hit::tick()
+bool hit::handle_stuts()
 {
-	float sample=0.0;
-		
-	if(playing==false) 
-	   return 0.0f;
-		
-	
-	if(our_manager->stut_max_count!=0.0f) //do stutters!!
-	{
+
         if(samples_played>stut_length)
 		{
 			stut_hits_occured++;
@@ -148,27 +140,40 @@ float hit::tick()
 		    {
 		    	rt_printf("setting playing=false. stuts_played: %d out of max: %d done playing at sample: %d. stut length: %d\n",stut_hits_occured,our_manager->stut_max_count,total_played,stut_length);
 		        playing=false;
-		        return 0.0f;
+		        return false;
 		    }
 		    else
 		    {
 		    	//rt_printf("stuts played: %d\n",stut_hits_occured);
 		    }
 		}
-	}
+   return true;
+}
 
-		  
+float hit::tick()
+{
+	float sample=0.0;
+		
+	if(playing==false) 
+	   return 0.0f;
+		
+    if(our_manager->stut_max_count!=0.0f)
+       if(handle_stuts()==false)
+           return 0.0;
 		
 	if(play_index>samples_available) //out of samples, ending playback
 	{   
 	   rt_printf("done playing at sample: %d\n",samples_played);
        sample=0;
        
-       if(our_manager->stut_max_count==0.0f) 
+       if(our_manager->stut_max_count==0.0f) //if we aren't doing stuts this is the end of the li
           playing=false;
 	}    
     else
        sample=calc_normal_sample();
+       
+       
+       
 	    
 	sample=distortion_clamp(sample*our_manager->boost_amount)*our_manager->volume;
 		
