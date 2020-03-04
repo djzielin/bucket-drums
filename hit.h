@@ -21,12 +21,15 @@ private:
 
     float *rendered_samples;
     int rendered_sample_count;
+    float rendered_speed;
 
 	int rec_index;
 	int samples_played;
 	int stut_length;
 	
 	int stut_hits_occured=0;
+	
+	int delay_hits_occured=0;
 	
     float play_index;
     

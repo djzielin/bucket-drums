@@ -92,10 +92,16 @@ void hit_manager::set_stut_length_mod(float knob)
     rt_printf("   computed stut_length_mod: %.02f\n",stut_length_mod);
 }
 
+float possible_delay[5]={1.0/1.0, 
+                         2.0/3.0,
+                         1.0/2.0,
+                         1.0/3.0,
+                         1.0/4.0};
+
 void hit_manager::set_delay_length(float knob) 
 { 
-    int divisor=(int)map_to_range(knob,1.0,5.0);
-    delay_length=0.25f*sample_rate/(float)divisor; //TODO - figure out good tempo
+    int divisor=(int)map_to_range(knob,0.0,4.0);
+    delay_length=0.25f*sample_rate*possible_delay[divisor]; //TODO - figure out good tempo
     rt_printf("   computed delay_length: %d divisor: %d\n",delay_length,divisor);
 }
 

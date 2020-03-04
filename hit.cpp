@@ -16,6 +16,8 @@
     {
     	our_manager=hm;	
         samples_available=our_manager->max_samples_to_record*2;
+        rendered_samples=new float[(int)(2*our_manager->sample_rate)]; //TODO: be more careful about this
+        
         printf("  trying to allocate hit huffer: %d samples\n",samples_available);
         content=new float[(int)samples_available];
         if(content==NULL)
@@ -47,14 +49,15 @@
         base_pitch=our_manager->base_pitch;
         stut_length=our_manager->stut_length;
         advance_amount=base_pitch;
+        
+        rendered_speed=1.0f;
+        delay_hits_occured=0;
 	}
 	
 	bool hit::is_playing()
 	{
 	    return playing;
 	}
-	
-
 	
 	void hit::add_sample(float sample)
 	{
@@ -139,7 +142,6 @@ bool hit::handle_stuts()
 		    if(stut_hits_occured>our_manager->stut_max_count)
 		    {
 		    	rt_printf("setting playing=false. stuts_played: %d out of max: %d done playing at sample: %d. stut length: %d\n",stut_hits_occured,our_manager->stut_max_count,total_played,stut_length);
-		        playing=false;
 		        return false;
 		    }
 		    else
@@ -156,38 +158,71 @@ float hit::tick()
 		
 	if(playing==false) 
 	   return 0.0f;
-		
-    if(our_manager->stut_max_count!=0.0f)
-       if(handle_stuts()==false)
-           return 0.0;
-		
-	if(play_index>samples_available) //out of samples, ending playback
-	{   
-	   rt_printf("done playing at sample: %d\n",samples_played);
-       sample=0;
-       
-       if(our_manager->stut_max_count==0.0f) //if we aren't doing stuts this is the end of the li
-          playing=false;
-	}    
-    else
-       sample=calc_normal_sample();
-       
-       
-       
-	    
-	sample=distortion_clamp(sample*our_manager->boost_amount)*our_manager->volume;
-		
-
-		
-    if(our_manager->gate_time!=-1) //do gating
+	   
+	if(delay_hits_occured==0)
 	{
-	   if(total_played>(our_manager->gate_time))  
-	   {
-	   	  playing=false;
-	   }
+		
+		 if(our_manager->stut_max_count!=0.0f)
+    		  if(handle_stuts()==false)
+    		  {
+    	         sample=0.0;
+    	         if(our_manager->delay_count==0) //no delay_count 
+    	         {
+    	         	playing=false;
+    	            return sample;
+    	         }
+    		  }
+		if(play_index>samples_available) //out of samples, ending playback
+		{   
+     	   rt_printf("done playing at sample: %d\n",samples_played);
+           sample=0;
+       
+          if(our_manager->stut_max_count==0.0f && our_manager->delay_count==0) //if we aren't doing stuts or delay this is the end of the li
+             playing=false;
+	    }    
+        else
+          sample=calc_normal_sample();
+	    
+	   sample=distortion_clamp(sample*our_manager->boost_amount)*our_manager->volume;
+		
+       if(our_manager->gate_time!=-1) //do gating
+     	{
+	      if(total_played>(our_manager->gate_time))  
+	      {
+	   	    sample=0.0f;
+	      }
+	    }
+	
+
+	   rendered_samples[total_played]=sample; //store for later
+	   rendered_sample_count=total_played;
+	   
+	  samples_played++;
+	  
 	}
 	
-	samples_played++;
+	if(our_manager->delay_count>0)
+	{
+		if(delay_hits_occured>0)
+		{
+			sample=rendered_samples[(int)play_index]; //TODO: do interpolation
+			play_index+=rendered_speed;
+		}
+		
+		if((total_played % our_manager->delay_length==0) && total_played!=0)
+		{
+		   delay_hits_occured++;
+		   rt_printf("moving on to delay hit: %d\n",delay_hits_occured);
+		   play_index=0; //reset to begining of rendered sample
+		   rendered_speed-=our_manager->delay_pitch_mod; //drop pitch of successive delay_hits_occured
+		   
+		   if(delay_hits_occured>our_manager->delay_count)
+		   {
+		   	 playing=false;
+		   }
+		}
+	}
+	
 	total_played++;
 		
 	return sample; 
