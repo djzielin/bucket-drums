@@ -10,6 +10,7 @@ public:
    void set_delay_time(float dt);
    void set_delay_samples(int delay_samples);
    void set_feedback(float f);
+   void clear_memory();
    
    float tick(float input);
 
@@ -23,7 +24,8 @@ private:
 
    int _read_pos;
    //int _write_pos;
-   
+      int _clear_countdown;
+
    float prev_val;
 };
 

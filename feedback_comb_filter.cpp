@@ -6,6 +6,7 @@
 #include <Bela.h>
 #include <stdio.h>
 #include <stdlib.h> 
+#include <string.h>
 
 #include "feedback_comb_filter.h"
 
@@ -18,6 +19,7 @@ feedback_comb_filter::feedback_comb_filter(float sample_rate, float max_delay_se
    prev_val=0;
    
    _sample_rate=sample_rate;
+   _clear_countdown=0;
    _delay_line_max=max_delay_seconds*sample_rate;
    _delay_line=new float[_delay_line_max];
    effectMix=0.5f;
@@ -31,6 +33,13 @@ feedback_comb_filter::feedback_comb_filter(float sample_rate, float max_delay_se
 
   // printf("   DONE!\n");
 }
+
+void feedback_comb_filter::clear_memory()
+{
+	_clear_countdown=_current_delay;
+	prev_val=0;
+}
+
 
 void feedback_comb_filter::set_delay_time(float dt)
 {
@@ -66,7 +75,16 @@ void feedback_comb_filter::set_lowpass(float val)
 
 float feedback_comb_filter::tick(float input)
 {
-   float read_val=_delay_line[_read_pos];     //read the oldest value from the delay line
+   float read_val=0;
+	   
+   if(_clear_countdown==0)	
+   {
+   	  read_val=_delay_line[_read_pos];     //read the oldest value from the delay line
+   }
+   else
+   {
+      _clear_countdown--;	
+   }
    
    float computed=input - _feedback*read_val; //used to use + operation, but in CCRMA says should be -
    

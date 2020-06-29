@@ -58,6 +58,16 @@ void hit_manager::set_gate_time(float knob)
 	  
 	rt_printf("   computed gate time: %.02f\n",gate_time);
 }
+
+void hit_manager::set_final_gate_time(float knob)
+{
+	final_gate_time=map_to_range(knob,1.0f,0.030f)*sample_rate;
+	
+	if(knob==0.0f)
+	  final_gate_time=-1;
+	  
+	rt_printf("   computed final gate time: %.02f\n",final_gate_time);
+}
     
 void hit_manager::set_boost(float knob)
 { 
@@ -150,6 +160,15 @@ void hit_manager::hit_happened()
      
      
     current_hit->reset();
+}
+
+void hit_manager::hit_completed()
+{
+	if(is_poly_mode==false) //and we are doing gated reverb
+	{
+		rt_printf("asking reverb to clear memory (achieve gating effect)\n");
+		ourReverb->clear_memory();
+	}
 }
 
 

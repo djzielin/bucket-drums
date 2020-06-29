@@ -40,6 +40,7 @@ public:
    void set_feedback(float val);
    void set_lowpass(float val);
    void set_hold(bool val);
+   void clear_memory();
    
    freeverb(float sample_rate);
    float tick(float in);

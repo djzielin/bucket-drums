@@ -42,6 +42,11 @@
         samples_played=0;
         samples_available=0;
         total_played=0;
+        
+        requested_delay_clear=false;
+        
+        foundZeroCrossing=false;
+        zeroCrossing=0;
 
         //max_transient_sample=0.0f;
         stut_hits_occured=0;
@@ -77,6 +82,40 @@
 				max_transient_sample=sample_fabs;
 			}
 		}*/
+		
+		if(rec_index==0)
+		{
+		   if(sample>0.0f)
+		      initialPositive=true;
+		   else
+			  initialPositive=false;
+			  
+		   rt_printf("initialPositive is: %d\n", initialPositive);
+		}
+		
+		if(foundZeroCrossing==false && rec_index>0)
+		{
+		   	bool currentPositive;
+		   	if(sample>0.0f)
+		   	   currentPositive=true;
+		   	else
+		   	   currentPositive=false;
+		   	   
+		   	
+		   	if(initialPositive!=currentPositive)
+		   	{
+		   		rt_printf("saw first zero crossing at: %d\n",rec_index);
+		   		foundZeroCrossing=true;
+		   		if(rec_index<20)
+		   		{
+		   			rt_printf("RIM\n");
+		   		}
+		   		else
+		   		{
+		   			rt_printf("HEAD\n");
+		   		}
+		   	}
+		}
 
 		content[rec_index]=sample;
 		rec_index++;
@@ -152,22 +191,46 @@ bool hit::handle_stuts()
    return true;
 }
 
+void hit::end_playback()
+{
+	playing=false;
+}
+
 float hit::tick()
 {
 	float sample=0.0;
+	
+	if(our_manager->final_gate_time!=-1) //do gating
+    {
+	     if(total_played>(our_manager->final_gate_time))  
+	      {
+	   	    	end_playback();
+	   	    	
+	   	    	if(requested_delay_clear==false){ //make sure we only do this once
+	   	    	   our_manager->hit_completed();
+	   	    	   requested_delay_clear=true;
+	   	    	}
+	   	    
+
+	      }
+	}
+	    
 		
-	if(playing==false) 
+	if(playing==false){
+		total_played++; //to make final gating (above) work properly	 
 	   return 0.0f;
+	}
 	   
 	if(delay_hits_occured==0)
 	{
 		
 		 if(our_manager->stut_max_count!=0.0f)
-    		  if(handle_stuts()==false)
+    		  if(handle_stuts()==false) //done with stuts
     		  {
     	         sample=0.0;
     	         if(our_manager->delay_count==0) //no delay_count 
     	         {
+    	         	rt_printf("stuts are done, so end playback");
     	         	playing=false;
     	            return sample;
     	         }
@@ -178,7 +241,10 @@ float hit::tick()
            sample=0;
        
           if(our_manager->stut_max_count==0.0f && our_manager->delay_count==0) //if we aren't doing stuts or delay this is the end of the li
-             playing=false;
+          {
+          	rt_printf("  we have no stuts or delays, so stopping playback here\n");
+          	end_playback();
+          }
 	    }    
         else
           sample=calc_normal_sample();
@@ -187,7 +253,7 @@ float hit::tick()
 		
        if(our_manager->gate_time!=-1) //do gating
      	{
-	      if(total_played>(our_manager->gate_time))  
+	      if(samples_played>(our_manager->gate_time))  
 	      {
 	   	    sample=0.0f;
 	      }
@@ -218,10 +284,13 @@ float hit::tick()
 		   
 		   if(delay_hits_occured>our_manager->delay_count)
 		   {
-		   	 playing=false;
+		   	rt_printf("out of delays. ending playback\n");
+		   	 end_playback();
 		   }
 		}
 	}
+
+	
 	
 	total_played++;
 		

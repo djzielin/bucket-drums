@@ -11,8 +11,10 @@ public:
    void set_delay_samples(int delay_samples);
    void set_feedback(float f);
    void set_lowpass(float val);
+   void clear_memory();
    
    float tick(float input);
+   
 
 private:
    unsigned int _delay_line_max;
@@ -24,8 +26,8 @@ private:
    float effectMix;
    int _read_pos;
    int _write_pos;
-   
-   float lowpassA, lowpassB, prev_val;
+   int _clear_countdown;
+    float lowpassA, lowpassB, prev_val;
 };
 
 

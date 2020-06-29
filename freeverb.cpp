@@ -79,6 +79,18 @@ freeverb::freeverb(float sample_rate)
 	}	
 }
 
+void freeverb::clear_memory()
+{
+	for(int i=0;i<8;i++)
+	{
+       fbcf[i]->clear_memory();
+	}
+	for(int i=0;i<4;i++)
+	{
+		apf[i]->clear_memory();
+	}	
+}
+
 float freeverb::tick(float in)
 {
 	 float out=0.0f;

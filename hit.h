@@ -37,6 +37,13 @@ private:
     	
     float calc_normal_sample();
     bool  handle_stuts();
+    void end_playback();
+    
+    bool foundZeroCrossing;
+    bool initialPositive;
+    int zeroCrossing;
+    
+    bool requested_delay_clear=false;
 
 public:
     float advance_amount; //advance play head at different rates to achieve pitch bends (need to make public so scope can get access)

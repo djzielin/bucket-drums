@@ -97,8 +97,8 @@ void process_midi_cc(int cc, int val)
 				break;		
 			case 9:
 			    rt_printf("cc%d: rev mix: %.02f\n",cc,float_val);
-			    snare_channel->reverbMix=float_val;
-			    kick_channel->reverbMix=float_val;
+			    snare_channel->reverbMix=float_val*2.0f;
+			    kick_channel->reverbMix=float_val*2.0f;
 				break;		
 			case 11:
 			    rt_printf("cc%d: hi threshold: %.02f\n",cc,float_val);
@@ -135,6 +135,11 @@ void process_midi_cc(int cc, int val)
 			    snare_channel->ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
 			    kick_channel->ourReverb->set_feedback(snare_channel->map_to_range(float_val,0.84f,1.0f));
 				break;
+			case 19:
+				rt_printf("cc%d: final gate: %.02f\n",cc,float_val);
+				 snare_channel->set_final_gate_time(float_val);
+				 kick_channel->set_final_gate_time(float_val);
+				 break;
 			case 21:
 		        rt_printf("cc%d: do_bend: %s\n",cc,bool_val?"ON":"OFF");
 		     	snare_channel->set_pitch_bend(bool_val?0.5f:0.0f);
@@ -252,8 +257,8 @@ void render(BelaContext *context, void *userData)
         audioWrite(context,n,1,distortion_clamp(snare_out)); //keep within -1 to 1
         audioWrite(context,n,0,distortion_clamp(kick_out)); //keep within -1 to 1
         
-        scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount, snare_out );
-        //scope.log(fabs(kick_sample), kick_channel->current_sma, kick_channel->current_hit->advance_amount, kick_out );
+        //scope.log(fabs(snare_sample), snare_channel->current_sma, snare_channel->current_hit->advance_amount, snare_out );
+        scope.log(kick_sample, kick_channel->current_sma, kick_channel->current_hit->advance_amount, kick_out );
    }
    
 }

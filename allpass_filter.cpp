@@ -1,6 +1,7 @@
 /***** allpass_filter *****/
 #include <stdio.h>
 #include <stdlib.h> 
+#include <string.h>
 
 #include "allpass_filter.h"
 
@@ -19,6 +20,8 @@ allpass_filter::allpass_filter(float sample_rate, float max_delay_seconds)
    _delay_line_max=max_delay_seconds*sample_rate;
    _delay_line=new float[_delay_line_max];
 
+   _clear_countdown=0;
+
    set_delay_time(max_delay_seconds*0.5f);
    set_feedback(0.75f);
 
@@ -26,6 +29,12 @@ allpass_filter::allpass_filter(float sample_rate, float max_delay_seconds)
       _delay_line[i]=0.0f;
 
  //  printf("   DONE!\n");
+}
+
+void allpass_filter::clear_memory()
+{
+	//memset(_delay_line,0,_delay_line_max*sizeof(float));
+	_clear_countdown=_current_delay;
 }
 
 void allpass_filter::set_delay_time(float dt)
@@ -55,11 +64,20 @@ void allpass_filter::set_feedback(float f) //feedback corresponds to the Am para
 
 float allpass_filter::tick(float input)
 {
-   float read_val=_delay_line[_read_pos];     //read the oldest value from the delay line
+	float read_val=0;
+	   
+   if(_clear_countdown==0)	
+   {
+   	  read_val=_delay_line[_read_pos];     //read the oldest value from the delay line
+   }
+   else
+   {
+      _clear_countdown--;	
+   }
    
    float delay_input=input - _feedback*read_val; //used to use + operation, but in CCRMA says should be -
    
-   _delay_line[_read_pos]=delay_input;          //store the low passed value in the delay line
+   _delay_line[_read_pos]=delay_input;          //store the value in the delay line
 
    _read_pos=(_read_pos+1) % _current_delay;
    //_write_pos=(_write_pos+1) % _current_delay; //don't need this is we aren't modulating

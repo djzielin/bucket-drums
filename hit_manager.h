@@ -31,7 +31,9 @@ private:
     float pitch_bend=0;
 	float hit_threshold=0.1f; 
 	
-	float gate_time=1.0f;  
+	float gate_time=-1.0f;  
+	float final_gate_time=-1.0f;
+	
 	float boost_amount=1.0f;
     float volume=1.0f;
 
@@ -79,6 +81,9 @@ public:
     void set_stut_pmod_up_button(bool value);
     void set_bend_up(bool value);
     void set_poly_mode(bool value);
+    
+    void set_final_gate_time( float knob);
+    void hit_completed();
     
     unsigned int total_samples=0;
     float sample_rate;
